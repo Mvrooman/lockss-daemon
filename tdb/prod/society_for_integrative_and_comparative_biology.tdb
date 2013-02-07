@@ -1,0 +1,80 @@
+{
+
+  publisher <
+    name = Society for Integrative and Comparative Biology
+  >
+
+  {
+
+    title <
+      name = American Zoologist ;
+      issn = 0003-1569 ;
+      issnl = 0003-1569
+    >
+
+    comment[continued_by] = 1540-7063
+    
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0003-1569
+  
+      au < down ; 2001 ; American Zoologist Volume 41 ; 41 >
+
+    }
+
+    {
+    
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = azoo
+
+      au < ready ; 2000 ; American Zoologist Volume 40 ; 40 >
+      au < doNotProcess ; 2001 ; American Zoologist Volume 41 ; 41 >
+
+    }
+
+  }
+  
+  {
+
+    title <
+      name = Integrative and Comparative Biology ;
+      issn = 1540-7063 ;
+      eissn = 1557-7023 ;
+      issnl = 1540-7063
+    >
+
+    comment[0] = there is an incarnation of this journal under OUP
+    comment[continues] = 0003-1569
+
+    {
+    
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1540-7063
+  
+      au < down ; 2004 ; Integrative and Comparative Biology Volume 44 ; 044 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = icbi
+
+      au < ready ; 2002 ; Integrative and Comparative Biology Volume 42 ; 42 >
+      au < ready ; 2003 ; Integrative and Comparative Biology Volume 43 ; 43 >
+      au < doNotProcess; 2004 ; Integrative and Comparative Biology Volume 44 ; 44 >
+      au < ready ; 2005 ; Integrative and Comparative Biology Volume 45 ; 45 >
+
+    }
+
+  }
+
+}

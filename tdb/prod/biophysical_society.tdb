@@ -1,0 +1,33 @@
+{
+  publisher <
+    name = Biophysical Society
+  >
+
+  {
+    title <
+      name = Biophysical Journal ;
+      issn = 0006-3495 ;
+      eissn = 1542-0086 ;
+      issnl = 0006-3495
+    >
+
+    comment[not_highwire] = moved to Elsevier
+
+    {
+
+      plugin = org.lockss.plugin.highwire.HighWireStrVolPlugin
+      param[base_url] = http://www.biophysj.org/
+      implicit < status ; year ; name ; param[volume_name] >
+
+      au < down ; 2003 ; Biophysical Journal Volume 88 ; 88 >
+      au < down ; 2004 ; Biophysical Journal Volume 89 ; 89 >
+      au < down ; 2005 ; Biophysical Journal Volume 90 ; 90 >
+      au < down ; 2006 ; Biophysical Journal Volume 91 ; 91 >
+      au < down ; 2007 ; Biophysical Journal Volume 92 ; 92 >
+
+    }
+
+  }
+
+}
+

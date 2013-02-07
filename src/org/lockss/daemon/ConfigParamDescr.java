@@ -1,0 +1,878 @@
+/*
+ * $Id: ConfigParamDescr.java,v 1.51 2013/01/08 21:08:02 tlipkis Exp $
+ */
+
+/*
+
+Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
+all rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+DERIVED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+STANFORD UNIVERSITY BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Stanford University shall not
+be used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization from Stanford University.
+
+*/
+
+package org.lockss.daemon;
+
+import java.net.*;
+import java.util.*;
+import java.util.regex.*;
+
+import org.apache.commons.lang.math.NumberUtils;
+import org.lockss.app.LockssApp;
+import org.lockss.util.*;
+
+/**
+ * Descriptor for a configuration parameter, and instances of descriptors
+ * for common parameters.  These have a sort order equal to the sort order
+ * of their displayName.
+ */
+public class ConfigParamDescr implements Comparable, LockssSerializable {
+
+  private static Logger log = Logger.getLogger("ConfigParamDescr");
+
+  /** Value is any string */
+  public static final int TYPE_STRING = 1;
+  /** Value is an integer */
+  public static final int TYPE_INT = 2;
+  /** Value is a URL */
+  public static final int TYPE_URL = 3;
+  /** Value is a 4 digit year */
+  public static final int TYPE_YEAR = 4;
+  /** Value is a true or false */
+  public static final int TYPE_BOOLEAN = 5;
+  /** Value is a positive integer */
+  public static final int TYPE_POS_INT = 6;
+  /** Value is a range string */
+  public static final int TYPE_RANGE = 7;
+  /** Value is a numeric range string */
+  public static final int TYPE_NUM_RANGE = 8;
+  /** Value is a set string */
+  public static final int TYPE_SET = 9;
+  /** Value is a user:passwd pair (colon separated) */
+  public static final int TYPE_USER_PASSWD = 10;
+  /** Value is a long */
+  public static final int TYPE_LONG = 11;
+  /** Value is a time interval string */
+  public static final int TYPE_TIME_INTERVAL = 12;
+
+  /** Largest set allowed by TYPE_SET */
+  public static final int MAX_SET_SIZE = 10000;
+
+  public static final String[] TYPE_STRINGS = {
+      "String", "Integer", "URL", "Year", "Boolean", "Positive Integer",
+      "Range", "Numeric Range", "Set", "User:Passwd String", "Long"};
+
+  static Map<Integer,String> SAMPLE_VALUES = new HashMap<Integer,String>();
+  static {
+    SAMPLE_VALUES.put(TYPE_STRING, "SampleString");
+    SAMPLE_VALUES.put(TYPE_INT, "-42");
+    SAMPLE_VALUES.put(TYPE_URL, "http://example.com/path/file.ext");
+    SAMPLE_VALUES.put(TYPE_YEAR, "2038");
+    SAMPLE_VALUES.put(TYPE_BOOLEAN, "true");
+    SAMPLE_VALUES.put(TYPE_POS_INT, "42");
+    SAMPLE_VALUES.put(TYPE_RANGE, "abc-def");
+    SAMPLE_VALUES.put(TYPE_NUM_RANGE, "52-63");
+    SAMPLE_VALUES.put(TYPE_SET, "winter,spring,summer,fall");
+    SAMPLE_VALUES.put(TYPE_USER_PASSWD, "username:passwd");
+    SAMPLE_VALUES.put(TYPE_LONG, "1099511627776");
+    SAMPLE_VALUES.put(TYPE_TIME_INTERVAL, "10d");
+  };
+
+  /** An element of a set that's a brace-enclosed integer range will be
+   * expanded into multiple set elements.  */
+  public static final String SET_RANGE_OPEN = "{";
+  public static final String SET_RANGE_CLOSE = "}";
+
+  public static final ConfigParamDescr VOLUME_NUMBER =
+    new ConfigParamDescr()
+    .setKey("volume")
+    .setDisplayName("Volume No.")
+    .setType(TYPE_POS_INT)
+    .setSize(8);
+
+  public static final ConfigParamDescr VOLUME_NAME =
+    new ConfigParamDescr()
+    .setKey("volume_name")
+    .setDisplayName("Volume Name")
+    .setType(TYPE_STRING)
+    .setSize(20);
+
+  public static final ConfigParamDescr ISSUE_RANGE =
+    new ConfigParamDescr()
+    .setKey("issue_range")
+    .setDisplayName("Issue Range")
+    .setType(TYPE_RANGE)
+    .setSize(20)
+    .setDescription("A Range of issues in the form: aaa-zzz");
+
+  public static final ConfigParamDescr NUM_ISSUE_RANGE =
+    new ConfigParamDescr()
+    .setKey("num_issue_range")
+    .setDisplayName("Numeric Issue Range")
+    .setType(TYPE_NUM_RANGE)
+    .setSize(20)
+    .setDescription("A Range of issues in the form: min-max");
+
+  public static final ConfigParamDescr ISSUE_SET =
+    new ConfigParamDescr()
+    .setKey("issue_set")
+    .setDisplayName("Issue Set")
+    .setType(TYPE_SET)
+    .setSize(20)
+    .setDescription("A comma delimited list of issues. (eg issue1, issue2)");
+
+  public static final ConfigParamDescr YEAR =
+    new ConfigParamDescr()
+    .setKey("year")
+    .setDisplayName("Year")
+    .setType(TYPE_YEAR)
+    .setSize(4)
+    .setDescription("Four digit year (e.g., 2004)");
+
+  public static final ConfigParamDescr BASE_URL =
+    new ConfigParamDescr()
+    .setKey("base_url")
+    .setDisplayName("Base URL")
+    .setType(TYPE_URL)
+    .setSize(40)
+    .setDescription("Usually of the form http://<journal-name>.com/");
+
+  public static final ConfigParamDescr BASE_URL2 =
+    new ConfigParamDescr()
+    .setKey("base_url2")
+    .setDisplayName("Second Base URL")
+    .setType(TYPE_URL)
+    .setSize(40)
+    .setDescription("Use if AU spans two hosts");
+
+  public static final ConfigParamDescr JOURNAL_DIR =
+    new ConfigParamDescr()
+    .setKey("journal_dir")
+    .setDisplayName("Journal Directory")
+    .setType(TYPE_STRING)
+    .setSize(40)
+    .setDescription("Directory name for journal content (i.e. 'american_imago').");
+
+  public static final ConfigParamDescr JOURNAL_ABBR =
+    new ConfigParamDescr()
+    .setKey("journal_abbr")
+    .setDisplayName("Journal Abbreviation")
+    .setType(TYPE_STRING)
+    .setSize(10)
+    .setDescription("Abbreviation for journal (often used as part of file names).");
+
+  public static final ConfigParamDescr JOURNAL_ID =
+    new ConfigParamDescr()
+    .setKey("journal_id")
+    .setDisplayName("Journal Identifier")
+    .setType(TYPE_STRING)
+    .setSize(40)
+    .setDescription("Identifier for journal (often used as part of file names)");
+
+  public static final ConfigParamDescr JOURNAL_ISSN =
+    new ConfigParamDescr()
+    .setKey("journal_issn")
+    .setDisplayName("Journal ISSN")
+    .setType(TYPE_STRING)
+    .setSize(20)
+    .setDescription("International Standard Serial Number.");
+
+  public static final ConfigParamDescr PUBLISHER_NAME =
+    new ConfigParamDescr()
+    .setKey("publisher_name")
+    .setDisplayName("Publisher Name")
+    .setType(TYPE_STRING)
+    .setSize(40)
+    .setDescription("Publisher Name for Archival Unit");
+
+  public static final ConfigParamDescr OAI_REQUEST_URL =
+    new ConfigParamDescr()
+    .setKey("oai_request_url")
+    .setDisplayName("OAI Request URL")
+    .setType(TYPE_URL)
+    .setSize(40)
+    .setDescription("Usually of the form http://<journal-name>.com/");
+
+  public static final ConfigParamDescr OAI_SPEC =
+    new ConfigParamDescr()
+    .setKey("oai_spec")
+    .setDisplayName("OAI Journal Spec")
+    .setType(TYPE_STRING)
+    .setSize(40)
+    .setDescription("Spec for journal in the OAI crawl");
+
+  public static final ConfigParamDescr USER_CREDENTIALS =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setKey("user_pass")
+    .setDisplayName("Username:Password")
+    .setType(TYPE_USER_PASSWD)
+    .setSize(30);
+
+  public static final ConfigParamDescr COLLECTION =
+    new ConfigParamDescr()
+    .setKey("collection")
+    .setDisplayName("Collection")
+    .setType(TYPE_STRING)
+    .setSize(20)
+    .setDescription("Name of ArchiveIt collection");
+
+  // Internal use
+  public static final ConfigParamDescr AU_CLOSED =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("au_closed")
+    .setDisplayName("AU Closed")
+    .setType(TYPE_BOOLEAN)
+    .setDescription("If true, AU is complete, no more content will be added");
+
+  public static final ConfigParamDescr PUB_DOWN =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("pub_down")
+    .setDisplayName("Pub Down")
+    .setType(TYPE_BOOLEAN)
+    .setDescription("If true, AU is no longer available from the publisher");
+
+  // See ProxyHandler
+  public static final ConfigParamDescr PUB_NEVER =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("pub_never")
+    .setDisplayName("Pub Never")
+    .setType(TYPE_BOOLEAN)
+    .setDescription("If true, don't try to access any content from publisher");
+
+  public static final ConfigParamDescr PROTOCOL_VERSION =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("protocol_version")
+    .setDisplayName("Polling Protocol Version")
+    .setType(TYPE_POS_INT)
+    .setDescription("The polling protocol version for the AU to use ('1' "
+                    + "for V1 polling, or '3' for V3 polling)");
+
+  public static final ConfigParamDescr CRAWL_PROXY =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("crawl_proxy")
+    .setDisplayName("Crawl Proxy")
+    .setType(TYPE_STRING)
+    .setSize(40)
+    .setDescription("If set to host:port, crawls of this AU will be proxied." +
+		    " If set to DIRECT, crawls will not be proxied," +
+		    " even if a global crawl proxy has been set.");
+
+  public static final ConfigParamDescr CRAWL_INTERVAL =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(true)
+    .setKey("nc_interval")
+    .setDisplayName("Crawl Interval")
+    .setType(TYPE_TIME_INTERVAL)
+    .setSize(10)
+    .setDescription("The interval at which the AU should crawl "
+		    + "the publisher site.");
+
+  public static final ConfigParamDescr CRAWL_TEST_SUBSTANCE_THRESHOLD =
+    new ConfigParamDescr()
+    .setDefinitional(false)
+    .setDefaultOnly(false)
+    .setKey("crawl_test_substance_threshold")
+    .setDisplayName("Crawl Test Substance Threshold")
+    .setType(TYPE_STRING)
+    .setSize(20)
+    .setDescription("Minimum number of substance URL necessary for "
+		    + "successful abbreviated crawl test.");
+
+  public static final ConfigParamDescr[] DEFAULT_DESCR_ARRAY = {
+      BASE_URL, VOLUME_NUMBER, VOLUME_NAME, YEAR, JOURNAL_ID, JOURNAL_ISSN,
+      PUBLISHER_NAME, ISSUE_RANGE, NUM_ISSUE_RANGE, ISSUE_SET, OAI_REQUEST_URL,
+      OAI_SPEC, BASE_URL2, USER_CREDENTIALS, COLLECTION, CRAWL_INTERVAL,
+      CRAWL_TEST_SUBSTANCE_THRESHOLD,
+  };
+
+  private String key;			// param (prop) key
+  private String displayName;		// human readable name
+  private String description;		// explanatory test
+  private int type = TYPE_STRING;
+  private int size = -1;		// size of input field
+
+  // A parameter is definitional if its value is integral to the identity
+  // of the AU.  (I.e., if changing it results in a different AU.)
+  private boolean definitional = true;
+
+  // default-only parameters in a TitleConfig are not copied to the AU
+  // config; they are used only to provide a default value if the value is
+  // not explicitly set in the AU config
+  private boolean defaultOnly = false;
+
+  // Describes a derived value, such as xxx_host and xxx_path for TYPE_URL
+  // These are created on the fly when needed and should never appear in
+  // plugins.  No need to save the flag as it would always be false.
+  private transient boolean derived = false;
+
+
+  public ConfigParamDescr() {
+  }
+
+  public ConfigParamDescr(String key) {
+    setKey(key);
+  }
+
+  /**
+   * Return the parameter key
+   * @return the key String
+   */
+  public String getKey() {
+    return key;
+  }
+
+  /**
+   * Set the parameter key
+   * @param key the new key
+   * @return this
+   */
+  public ConfigParamDescr setKey(String key) {
+    this.key = key;
+    return this;
+  }
+
+  /**
+   * Return the display name, or the key if no display name set
+   * @return the display name String
+   */
+  public String getDisplayName() {
+    return displayName != null ? displayName : getKey();
+  }
+
+  /**
+   * Set the parameter display name
+   * @param displayName the new display name
+   * @return this
+   */
+  public ConfigParamDescr setDisplayName(String displayName) {
+    this.displayName = displayName;
+    return this;
+  }
+
+  /**
+   * Return the parameter description
+   * @return the description String
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * Set the parameter description
+   * @param description the new description
+   * @return this
+   */
+  public ConfigParamDescr setDescription(String description) {
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Return the specified value type
+   * @return the type int
+   */
+  public int getType() {
+    return type;
+  }
+
+  /**
+   * Set the expected value type.  If {@link #setSize(int)} has not been
+   * called, and the type is one for which there is a reasonable default
+   * size, this will also set the size to the reasonable default.
+   * @param type the new type
+   * @return this
+   */
+  public ConfigParamDescr setType(int type) {
+    this.type = type;
+    // if no size has been set, set a reasonable default for some types
+    if (size == -1) {
+      switch (type) {
+      case TYPE_YEAR: size = 4; break;
+      case TYPE_BOOLEAN: size = 4; break;
+      case TYPE_INT:
+      case TYPE_LONG:
+      case TYPE_POS_INT: size = 10; break;
+      case TYPE_TIME_INTERVAL: size = 10; break;
+      default:
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Return the suggested input field size, or 0 if no suggestion
+   * @return the size int
+   */
+  public int getSize() {
+    return (size != -1) ? size : 0;
+  }
+
+  /**
+   * Set the suggested input field size
+   * @param size the new size
+   * @return this
+   */
+  public ConfigParamDescr setSize(int size) {
+    this.size = size;
+    return this;
+  }
+
+  /**
+   * Set the "definitional" flag.
+   * @param isDefinitional the new value
+   * @return this
+   */
+  public ConfigParamDescr setDefinitional(boolean isDefinitional) {
+    definitional = isDefinitional;
+    return this;
+  }
+
+  /** A parameter is definitional if its value is integral to the identity
+   * of the AU.  (I.e., if changing it results in a different AU.)
+   * @return true if the parameter is definitional
+   */
+  public boolean isDefinitional() {
+    return definitional;
+  }
+
+  /**
+   * Set the "defaultOnly" flag.
+   * @param isDefaultOnly the new value
+   * @return this
+   */
+  public ConfigParamDescr setDefaultOnly(boolean isDefaultOnly) {
+    defaultOnly = isDefaultOnly;
+    return this;
+  }
+
+  /** Default-only parameters in a TitleConfig are not copied to the AU
+   * config; they are used only to provide a default value if the value is
+   * not explicitly set in the AU config.
+   * @return true if the parameter is defaultOnly
+   */
+  public boolean isDefaultOnly() {
+    return defaultOnly;
+  }
+
+  /**
+   * Set the "derived" flag.
+   * @param isDerived the new value
+   * @return this
+   */
+  public ConfigParamDescr setDerived(boolean isDerived) {
+    derived = isDerived;
+    return this;
+  }
+
+  /** Derived values are computed from explicitly set values, such as
+   * base_url_host and base_url_path.  They should never be set directly.
+   * @return true if the parameter is derived
+   */
+  public boolean isDerived() {
+    return derived;
+  }
+
+  public ConfigParamDescr getDerivedDescr(String derivedKey) {
+    ConfigParamDescr res = new ConfigParamDescr(derivedKey)
+      .setDerived(true)
+      .setDefinitional(false)
+      .setDefaultOnly(false)
+      .setDisplayName("Derived from " + getDisplayName())
+      .setType(getType());
+    return uniqueInstance(res);
+  }
+
+
+  public boolean isValidValueOfType(String val) {
+    try {
+      return getValueOfType(val) != null;
+    }
+    catch (InvalidFormatException ex) {
+      return false;
+    }
+  }
+
+  public Object getValueOfType(String val) throws InvalidFormatException {
+    Object ret_val = null;
+    switch (type) {
+      case TYPE_INT:
+        try {
+          ret_val = Integer.valueOf(val);
+        } catch (NumberFormatException nfe) {
+          throw new InvalidFormatException("Invalid Int: " + val);
+        }
+        break;
+      case TYPE_POS_INT:
+          try {
+            ret_val = Integer.valueOf(val);
+            if(((Integer)ret_val).intValue() < 0) {
+              throw new InvalidFormatException("Invalid Positive Int: " + val);
+            }
+          } catch (NumberFormatException nfe) {
+            throw new InvalidFormatException("Invalid Positive Int: " + val);
+          }
+          break;
+
+      case TYPE_LONG:
+        try {
+          ret_val = Long.valueOf(val);
+        } catch (NumberFormatException nfe) {
+          throw new InvalidFormatException("Invalid Long: " + val);
+        }
+        break;
+      case TYPE_TIME_INTERVAL:
+        try {
+          ret_val = StringUtil.parseTimeInterval(val);
+        } catch (NumberFormatException nfe) {
+          throw new InvalidFormatException("Invalid time interval: " + val);
+        }
+        break;
+      case TYPE_STRING:
+        if (!StringUtil.isNullString(val)) {
+          ret_val = val;
+        }
+        else {
+          throw new InvalidFormatException("Invalid String: " + val);
+        }
+        break;
+      case TYPE_URL:
+        try {
+          ret_val = new URL(val);
+        }
+        catch (MalformedURLException ex) {
+          throw new InvalidFormatException("Invalid URL: " + val, ex);
+        }
+        break;
+      case TYPE_YEAR:
+        if (val.length() == 4 || "0".equals(val)) {
+          try {
+            int i_val = Integer.parseInt(val);
+            if (i_val >= 0) {
+              ret_val = Integer.valueOf(val);
+            }
+          }
+          catch (NumberFormatException fe) {
+            // Defer to the throw statement below
+          }
+        }
+        if (ret_val == null) {
+          throw new InvalidFormatException("Invalid Year: " + val);
+        }
+        break;
+      case TYPE_BOOLEAN:
+        if(val.equalsIgnoreCase("true") ||
+           val.equalsIgnoreCase("yes") ||
+           val.equalsIgnoreCase("on") ||
+           val.equalsIgnoreCase("1")) {
+          ret_val = Boolean.TRUE;
+        }
+        else if(val.equalsIgnoreCase("false") ||
+           val.equalsIgnoreCase("no") ||
+           val.equalsIgnoreCase("off") ||
+           val.equalsIgnoreCase("0")) {
+          ret_val = Boolean.FALSE;
+        }
+        else
+          throw new InvalidFormatException("Invalid Boolean: " + val);
+        break;
+      case TYPE_USER_PASSWD:
+        if (!StringUtil.isNullString(val)) {
+	  List<String> lst = StringUtil.breakAt(val, ':', -1, true, false);
+	  if (lst.size() != 2) {
+	    throw new InvalidFormatException("User:Passwd must consist of two" +
+					     "strings separated by a colon: " +
+					     val);
+	  }
+	  ret_val = val;
+	}
+        else {
+          throw new InvalidFormatException("Invalid String: " + val);
+        }
+        break;
+      case TYPE_RANGE:
+      { // case block
+        ret_val = StringUtil.breakAt(val, '-', 2, true, true);
+        String s_min = (String)((Vector)ret_val).firstElement();
+        String s_max = (String)((Vector)ret_val).lastElement();
+        if ( !(s_min.compareTo(s_max) <= 0) ) {
+          throw new InvalidFormatException("Invalid Range: " + val);
+        }
+        break;
+      } // end case block
+      case TYPE_NUM_RANGE:
+      { // case block
+        ret_val = StringUtil.breakAt(val,'-',2,true, true);
+        String s_min = (String)((Vector)ret_val).firstElement();
+        String s_max = (String)((Vector)ret_val).lastElement();
+        try {
+          /*
+           * Caution: org.apache.commons.lang.math.NumberUtils.createLong(String)
+           * (which returns Long) throws NumberFormatException, whereas
+           * org.apache.commons.lang.math.NumberUtils.toLong(String)
+           * (which returns long) returns 0L when parsing fails.
+           */
+          Long l_min = NumberUtils.createLong(s_min);
+          Long l_max = NumberUtils.createLong(s_max);
+          if (l_min.compareTo(l_max) <= 0) {
+            ((Vector)ret_val).setElementAt(l_min, 0);
+            ((Vector)ret_val).setElementAt(l_max, 1);
+            break;
+          }
+        }
+        catch (NumberFormatException ex1) {
+          if (s_min.compareTo(s_max) <= 0) {
+            break;
+          }
+        }
+        throw new InvalidFormatException("Invalid Numeric Range: " + val);
+      } // end case block
+      case TYPE_SET:
+        ret_val = expandSetMacros(val);
+        break;
+      default:
+        throw new InvalidFormatException("Unknown type: " + type);
+    }
+
+    return ret_val;
+  }
+
+  // Pattern matches an integer range macro within a set
+  private static final String SET_MACRO_RANGE =
+    RegexpUtil.quotemeta(SET_RANGE_OPEN) +
+    "\\s*(\\d+)\\s*-\\s*(\\d+)\\s*" +
+    RegexpUtil.quotemeta(SET_RANGE_CLOSE);
+
+  private static Pattern SET_MACRO_RANGE_PAT =
+    Pattern.compile(SET_MACRO_RANGE);
+
+  List<String> expandSetMacros(String setSpec) {
+    List<String> raw = StringUtil.breakAt(setSpec,',', MAX_SET_SIZE,
+					  true, true);
+    // Avoid cost of pattern matches and list copy in the usual case of no
+    // range macros
+    for (String ele : raw) {
+      if (ele.startsWith(SET_RANGE_OPEN) && ele.endsWith(SET_RANGE_CLOSE)) {
+	return expandSetMacros0(raw);
+      }
+    }
+    return raw;
+  }
+
+  private List<String> expandSetMacros0(List<String> raw) {
+    int size = raw.size();
+    List<String> res = new ArrayList<String>(size + 50);
+    for (String ele : raw) {
+      Matcher m1 = SET_MACRO_RANGE_PAT.matcher(ele);
+      if (m1.matches()) {
+	try {
+	  int beg = Integer.valueOf(m1.group(1));
+	  int end = Integer.valueOf(m1.group(2));
+	  for (int ix = beg; ix <= end; ix++) {
+	    if (size++ > MAX_SET_SIZE) {
+	      log.warning("Set value has more than " + MAX_SET_SIZE +
+			  " elements; only the first " + MAX_SET_SIZE +
+			  " will be used: " + raw);
+	      return res;
+	    }
+	    res.add(Integer.toString(ix));
+	  }
+	} catch (RuntimeException e) {
+	  log.warning("Suspicious Set range macro: " + ele + " not expanded",
+		      e);
+	  res.add(ele);
+	}
+      } else {
+	res.add(ele);
+      }
+    }
+    return res;
+  }
+
+  /** Return a legal value for the parameter.  Useful for generic plugin
+   * tests */
+  public String getSampleValue() {
+    String res = SAMPLE_VALUES.get(type);
+    if (res == null) {
+      res = "SampleValue";
+    }
+    return res;
+  }
+
+  public int compareTo(Object o) {
+    ConfigParamDescr od = (ConfigParamDescr)o;
+    return getDisplayName().compareTo(od.getDisplayName());
+  }
+
+  /** Returns a short string suitable for error messages.  Includes the key
+   * and the display name if present */
+  public String shortString() {
+    StringBuilder sb = new StringBuilder(40);
+    sb.append(getDisplayName());
+    if (!key.equals(displayName)) {
+      sb.append("(");
+      sb.append(key);
+      sb.append(")");
+    }
+    return sb.toString();
+  }
+
+  public String toString() {
+    StringBuilder sb = new StringBuilder(40);
+    sb.append("[CPD: key: ");
+    sb.append(getKey());
+    sb.append("]");
+    return sb.toString();
+  }
+
+  public boolean equals(Object o) {
+    if (! (o instanceof ConfigParamDescr)) {
+      return false;
+    }
+    ConfigParamDescr opd = (ConfigParamDescr)o;
+    return key.equals(opd.getKey())
+      && type == opd.getType()
+      && getSize() == opd.getSize()
+      && derived == opd.isDerived()
+      && definitional == opd.isDefinitional();
+  }
+
+  public int hashCode() {
+    int hash = 0x46600555;
+    hash += type;
+    hash += getSize();
+    hash += key.hashCode();
+    return hash;
+  }
+
+  static String PREFIX_RESERVED =
+    org.lockss.plugin.PluginManager.AU_PARAM_RESERVED + ".";
+
+  /** Return true if the key is a reserved parameter name (<i>ie</i>,
+   * starts with <code>reserved.</code>) */
+  public static boolean isReservedParam(String key) {
+    return key.startsWith(PREFIX_RESERVED);
+  }
+
+  /**
+   * <p>A map of canonicalized instances (see caveat in
+   * {@link #postUnmarshalResolve}).</p>
+   * @see #postUnmarshalResolve
+   */
+  protected static Map<ConfigParamDescr,ConfigParamDescr> uniqueInstances;
+
+  /**
+   * <p>A post-deserialization resolution method for serializers that
+   * support it.</p>
+   * <p>This class ({@link ConfigParamDescr}) does not use the context
+   * argument.</p>
+   * <p><em>Caveat.</em> The various instances of this class are
+   * unique in principle, but the class itself allows for mutable
+   * instances. The instance cache implemented as part of this
+   * post-deserialization mechanism may hold on to instances for
+   * ever if their canonical representation (as evaluated by
+   * {@link #hashCode} and {@link #equals}) changes. The loss is
+   * acceptable for reasonable use cases of the pre-defined
+   * instances of this class.</p>
+   * @param context A context instance.
+   * @return A canonicalized object (see caveat above).
+   */
+  protected Object postUnmarshalResolve(LockssApp context) {
+    return uniqueInstance(this);
+  }
+
+  /**
+   * <p>Implements {@link #postUnmarshalResolve}.</p>
+   * @param descr A candidate descriptor.
+   * @return A canonicalized descriptor (see caveat in
+   * {@link #postUnmarshalResolve})
+   * @see #postUnmarshalResolve
+   */
+  protected static synchronized
+    ConfigParamDescr uniqueInstance(ConfigParamDescr descr) {
+
+    /* Access to the map is protected by the synchronization */
+    // Lazy instantiation
+    if (uniqueInstances == null) {
+      uniqueInstances = new HashMap();
+      for (int ix = 0 ; ix < DEFAULT_DESCR_ARRAY.length ; ++ix) {
+        uniqueInstances.put(DEFAULT_DESCR_ARRAY[ix], DEFAULT_DESCR_ARRAY[ix]);
+      }
+    }
+
+    ConfigParamDescr ret = uniqueInstances.get(descr);
+    if (ret == null) {
+      uniqueInstances.put(descr, descr);
+      return descr;
+    }
+    else {
+      return ret;
+    }
+  }
+
+  public static class InvalidFormatException extends Exception {
+    private Throwable nestedException;
+
+    public InvalidFormatException(String msg) {
+      super(msg);
+    }
+
+    public InvalidFormatException(String msg, Throwable e) {
+      super(msg + (e.getMessage() == null ? "" : (": " + e.getMessage())));
+      this.nestedException = e;
+    }
+
+    public Throwable getNestedException() {
+      return nestedException;
+    }
+  }
+
+  public String toDetailedString() {
+    StringBuilder buffer = new StringBuilder(100);
+    buffer.append("[");
+    buffer.append(getClass().getName());
+    buffer.append(";key=");
+    buffer.append(getKey());
+    buffer.append(";type=");
+    buffer.append(getType());
+    buffer.append(";size=");
+    buffer.append(getSize());
+    buffer.append(";isDefinitional=");
+    buffer.append(isDefinitional());
+    buffer.append(";displayName=");
+    buffer.append(getDisplayName());
+    buffer.append("]");
+    return buffer.toString();
+  }
+
+}

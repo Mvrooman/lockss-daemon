@@ -1,0 +1,30 @@
+ {
+
+  publisher <
+    name = Yale University Peabody Museum of Natural History
+  >
+
+  plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+  implicit < status ; year ; name ; param[volume_name] >
+  param[base_url] = http://www.bioone.org/
+
+  {
+    title <
+      name = Bulletin of the Peabody Museum of Natural History ;
+      issn = 0079-032X ;
+      issnl = 0079-032X
+    >
+    
+    param[journal_id] = pbmb
+  
+    au < ready ; 2006 ; Bulletin of the Peabody Museum of Natural History Volume 47 ; 47 >
+    au < ready ; 2007 ; Bulletin of the Peabody Museum of Natural History Volume 48 ; 48 >
+    au < ready ; 2008 ; Bulletin of the Peabody Museum of Natural History Volume 49 ; 49 >
+    au < ready ; 2009 ; Bulletin of the Peabody Museum of Natural History Volume 50 ; 50 >
+    au < ready ; 2010 ; Bulletin of the Peabody Museum of Natural History Volume 51 ; 51 >
+    au < ready ; 2011 ; Bulletin of the Peabody Museum of Natural History Volume 52 ; 52 >
+    au < manifest ; 2012 ; Bulletin of the Peabody Museum of Natural History Volume 53 ; 53 >
+
+  }
+  
+}

@@ -1,0 +1,159 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.copernicus.CopernicusPublicationsPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Copernicus Publications Plugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>3</string>
+  </entry>
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Metadata</string>
+        <string>1</string>
+      </entry>
+      <entry>
+        <string>Poll</string>
+        <string>3</string>
+      </entry>
+      <entry>
+        <string>Substance</string>
+        <string>1</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>"Copernicus Publications Plugin, Base URL %s, Home URL %s, Year %d, Volume %s", base_url, home_url, year, volume_name</string>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>"%s%s/index.html", base_url, volume_name</string>
+  </entry>
+  <entry>
+    <string>au_permission_url</string>
+      <list>
+        <string>"%s%s/index.html", base_url, volume_name</string>
+        <string>"%sindex.html",home_url</string> 
+      </list>
+  </entry>
+  <entry>
+    <string>au_feature_urls</string>
+    <map>
+      <entry>
+        <string>au_title</string>
+        <string>"%svolumes", base_url</string>
+      </entry>
+      <entry>
+        <string>au_volume</string>
+        <string>"%s%s/index.html", base_url, volume_name</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,"^https?://(%s|%s).*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$", base_url_host, home_url_host</string>
+      <string>1,"^%s%s/",base_url,volume_name</string>
+<!--  anything not explicitly collected is inherently excluded so you don't need a statement-->
+    </list>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume_name</key>
+        <displayName>Volume Name</displayName>
+        <type>1</type>
+        <size>20</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>home_url</key>
+        <displayName>Home URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>year</key>
+        <displayName>Year</displayName>
+        <description>Four digit year (e.g., 2004)</description>
+        <type>4</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>  
+      </list>
+  </entry>
+  <entry>
+    <string>au_substance_url_pattern</string>
+    <list>
+<!--  so far these are always <base_url>/<vol>/<startpage>/<year>/zz-vol-pg-year.pdf -->
+<!--  but it is better to be defensive and just ensure depth -->
+<!--  only pdf is full text. html is just abstract -->
+      	<string>"^%s%s/[^/]+/[^/]+/[^/]+\.pdf$", base_url, volume_name</string>
+    </list>
+  </entry>
+  <entry>
+     <string>text/html_filter_factory</string>
+    <string>org.lockss.plugin.copernicus.CopernicusHtmlFilterFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_article_iterator_factory</string>
+    <string>org.lockss.plugin.copernicus.CopernicusArticleIteratorFactory</string>
+  </entry> 
+  <entry>
+    <string>plugin_article_metadata_extractor_factory</string>
+    <string>org.lockss.plugin.copernicus.CopernicusArticleIteratorFactory</string>
+  </entry> 
+  <entry>
+  <string>application/x-research-info-systems_metadata_extractor_factory_map</string>
+  <map> 
+ <entry>
+    <string>*;RIS</string>
+    <string>org.lockss.plugin.copernicus.CopernicusRisMetadataExtractorFactory</string>
+   </entry>
+  </map>
+  </entry>
+<!--  the RIS files mime type, oddly, is text/plain -->   
+  <entry>
+  <string>text/plain_metadata_extractor_factory_map</string>
+  <map>
+    <entry>
+    <string>*;RIS</string>
+    <string>org.lockss.plugin.copernicus.CopernicusRisMetadataExtractorFactory</string>
+   </entry>
+  </map>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+</map>

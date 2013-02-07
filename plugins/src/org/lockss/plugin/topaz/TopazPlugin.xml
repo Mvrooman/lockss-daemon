@@ -1,0 +1,116 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.topaz.TopazPlugin</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>6</string>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;Topaz Plugin, Base URL %s, Journal ID %s, Year %d&quot;, base_url, journal_id, year</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Topaz Plugin</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,&quot;^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$&quot;, base_url_host</string>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;^%sarticle/info(:|%%3A)doi(/|%%2F)&quot;, base_url</string>
+      <string>1,&quot;^%sarticle/(citationList|fetch(First|Single)Representation|fetchObject(Attachment)?|get[a-zA-Z0-9]*Citation|showImageLarge|slideshow)\.action\?&quot;, base_url</string>
+      <string>1,&quot;^%sjournals/%s/article/fetchObject(Attachment)?\.action\?&quot;, base_url, journal_id</string>
+      <string>1,&quot;^%scontent/suppl/&quot;, base_url</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <list>
+      <string>&quot;%sarticle/browse.action?month=1&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=2&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=3&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=4&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=5&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=6&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=7&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=8&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=9&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=10&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=11&amp;year=%d&amp;field=date&quot;, base_url, year</string>
+      <string>&quot;%sarticle/browse.action?month=12&amp;year=%d&amp;field=date&quot;, base_url, year</string>  
+    </list>
+  </entry>
+  <entry>
+    <string>au_manifest</string>
+    <string>&quot;%slockss.txt&quot;, base_url</string>
+  </entry>
+  <entry>
+    <string>au_feature_urls</string>
+  	<map>
+	  <entry>
+      <string>au_title</string>
+      <string>&quot;%sarticle/browseVolume.action?field=volume&quot;, base_url</string>
+    </entry>
+    <entry>
+      <string>au_volume</string>
+      <string>&quot;%sarticle/browseVolume.action?field=volume&quot;, base_url</string>
+    </entry>
+    <entry>
+      <string>au_issue</string>
+      <string>&quot;%sarticle/browse.action?month=%s&amp;year=%d&amp;field=date&quot;, base_url, issue, year</string>
+    </entry>
+  	</map>
+  </entry>
+
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>year</key>
+        <displayName>Year</displayName>
+        <description>Four digit year (e.g., 2004)</description>
+        <type>4</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_id</key>
+        <displayName>Journal Identifier</displayName>
+        <description>Identifier for journal (often used as part of file names)</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>text/html_filter_factory</string>
+    <string>org.lockss.plugin.topaz.TopazHtmlFilterFactory</string>
+  </entry>
+</map>

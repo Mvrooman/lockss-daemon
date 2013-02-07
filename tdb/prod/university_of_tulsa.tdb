@@ -1,0 +1,48 @@
+{
+  publisher <
+    name = University of Tulsa
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = James Joyce Quarterly ;
+      issn = 0021-4183 ;
+      eissn = 1938-6036 ;
+      issnl = 0021-4183
+    >
+
+    param[journal_dir] = james_joyce_quarterly
+    attr[journal_id] = jjq
+
+    au < released ; 2006-2007 ; James Joyce Quarterly Volume 44 ; 44 >
+    au < released ; 2007-2008 ; James Joyce Quarterly Volume 45 ; 45 >
+    au < released ; 2008-2009 ; James Joyce Quarterly Volume 46 ; 46 >
+    au < released ; 2009-2010 ; James Joyce Quarterly Volume 47 ; 47 >
+    au < released ; 2010 ; James Joyce Quarterly Volume 48 ; 48 >
+
+  }
+
+  {
+    title <
+      name = Tulsa Studies in Women's Literature ;
+      issn = 0732-7730 ;
+      eissn = 1936-1645 ;
+      issnl = 0732-7730
+    >
+
+    param[journal_dir] = tulsa_studies_in_womens_literature
+    attr[journal_id] = tsw
+
+    au < released ; 2007 ; Tulsa Studies in Women's Literature Volume 26 ; 26 >
+    au < released ; 2008 ; Tulsa Studies in Women's Literature Volume 27 ; 27 >
+    au < released ; 2009 ; Tulsa Studies in Women's Literature Volume 28 ; 28 >
+    au < released ; 2010 ; Tulsa Studies in Women's Literature Volume 29 ; 29 >
+    au < released ; 2011 ; Tulsa Studies in Women's Literature Volume 30 ; 30 >
+
+  }
+
+}

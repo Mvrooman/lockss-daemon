@@ -1,0 +1,21 @@
+{
+
+  publisher <
+    name = University of Alabama at Birmingham
+  >
+  
+  param[base_url] = http://oh.mhsl.uab.edu/
+  plugin = edu.uab.adpn.oralhistory.UABOralHistoryPlugin
+  implicit < status ; name >
+
+  {
+
+    title <
+      name = University of Alabama at Birmingham Oral History Collection
+    >
+    
+    au < released ; University of Alabama at Birmingham Oral History Collection >
+
+  }
+
+}

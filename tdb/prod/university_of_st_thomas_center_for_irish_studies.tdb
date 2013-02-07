@@ -1,0 +1,37 @@
+{
+  publisher <
+    name = University of St. Thomas Center for Irish Studies
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = New Hibernia Review ;
+      issn = 1092-3977 ;
+      eissn = 1534-5815 ;
+      issnl = 1092-3977
+    >
+
+    param[journal_dir] = new_hibernia_review
+    attr[journal_id] = nhr
+
+    au < released ; 2001 ; New Hibernia Review Volume 5 ; 5 >
+    au < released ; 2002 ; New Hibernia Review Volume 6 ; 6 >
+    au < released ; 2003 ; New Hibernia Review Volume 7 ; 7 >
+    au < released ; 2004 ; New Hibernia Review Volume 8 ; 8 >
+    au < released ; 2005 ; New Hibernia Review Volume 9 ; 9 >
+    au < released ; 2006 ; New Hibernia Review Volume 10 ; 10 >
+    au < released ; 2007 ; New Hibernia Review Volume 11 ; 11 >
+    au < released ; 2008 ; New Hibernia Review Volume 12 ; 12 >
+    au < released ; 2009 ; New Hibernia Review Volume 13 ; 13 >
+    au < released ; 2010 ; New Hibernia Review Volume 14 ; 14 >
+    au < released ; 2011 ; New Hibernia Review Volume 15 ; 15 >
+    au < released ; 2012 ; New Hibernia Review Volume 16 ; 16 >
+
+  }
+
+}

@@ -1,0 +1,16 @@
+{
+
+  publisher <
+    name = Springer Science+Business Media ;
+    info[tester] = 4
+  >
+
+  plugin = org.lockss.plugin.springer.SpringerLinkPlugin
+  param[base_url] = http://www.springerlink.com/
+  implicit < status ; year ; name ; param[volume_name] >
+  comment[crawl_test_substance_threshold] = Please let Thib and Tom handle the following attr/Xattr
+  Xattr[crawl_test_substance_threshold] = 1
+ 
+  comment[empty] = This file is has been gutted temporarily, let Thib and Tom handle this
+
+}

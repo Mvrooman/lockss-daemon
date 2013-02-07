@@ -1,0 +1,25 @@
+{
+
+  publisher <
+    name = PeerJ ;
+    info[tester] = 0
+  >
+
+
+  {
+  
+    title < 
+      name = PeerJ
+    >
+    
+  }
+
+  {
+  
+    title < 
+      name = PeerJ PrePrints
+    >
+    
+  }
+
+}

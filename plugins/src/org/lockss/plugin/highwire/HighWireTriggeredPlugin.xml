@@ -1,0 +1,38 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.highwire.HighWireTriggeredPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>4</string>
+  </entry>
+  <entry>
+    <string>plugin_parent</string>
+    <string>org.lockss.plugin.highwire.ClockssHighWirePlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_parent_version</string>
+    <string>79</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>HighWire Press Plugin (H10c for CLOCKSS Triggered Content)</string>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>"HighWire Press Plugin (H10c for CLOCKSS Triggered Content), Base URL %s, Volume %s", base_url, volume_name</string>
+  </entry>
+  <entry>
+    <string>au_permission_url</string>
+    <string>"%slockss-permission.html",base_url</string>
+  </entry>
+  <entry>
+    <string>au_permission_checker_factory</string>
+    <org.lockss.util.Default />
+  </entry>
+</map>

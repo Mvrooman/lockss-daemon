@@ -1,0 +1,46 @@
+<!--  $Id: ClockssBMCPlugin.xml,v 1.19 2013/01/15 23:15:01 aishizaki Exp $ -->
+<map>
+  <!-- ClockssBMCPlugin.xml inherited from BMCPlugin.xml.
+       The main differences are names, version.
+  --> 
+  <entry>
+   <string>plugin_status</string>
+   <string>testing - Audrey/Collin/Michele</string>
+   <!-- updating the (Clockss)BMCplugin so journal_code is irrelevant
+        -->
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.bmc.ClockssBMCPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_parent</string>
+    <string>org.lockss.plugin.bmc.BMCPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_parent_version</string>
+    <string>26</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>26</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>BioMed Central Plugin (BMC Series, PhysMath Central for CLOCKSS)</string>
+  </entry>
+<!-- necessary? sometimes, for clockss  
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+-->
+  <entry>
+    <string>au_name</string>
+    <string>"BioMed Central Plugin (BMC Series, PhysMath Central for CLOCKSS), Base URL %s, ISSN %s, Volume %s", base_url, journal_issn, volume_name</string>
+  </entry>
+</map>

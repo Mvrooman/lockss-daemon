@@ -1,0 +1,94 @@
+{
+
+  publisher <
+    name = Wilson Ornithological Society
+  >
+
+  {
+  
+    title <
+      name = The Wilson Bulletin ;
+      issn = 0043-5643 ;
+      issnl = 0043-5643
+    >
+
+    comment[continued_by] = 1559-4491
+
+    {
+    
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0043-5643
+  
+      au < down ; 2000 ; The Wilson Bulletin Volume 112 ; 112 >
+      au < down ; 2001 ; The Wilson Bulletin Volume 113 ; 113 >
+      au < down ; 2002 ; The Wilson Bulletin Volume 114 ; 114 >
+      au < down ; 2003 ; The Wilson Bulletin Volume 115 ; 115 >
+      au < down ; 2004 ; The Wilson Bulletin Volume 116 ; 116 >
+      au < down ; 2005 ; The Wilson Bulletin Volume 117 ; 117 >
+
+    }
+
+    {
+
+      implicit < status ; year ; name ; param[volume_name] >
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = wils
+  
+      au < doNotProcess ; 2000 ; The Wilson Bulletin Volume 112 ; 112 >
+      au < doNotProcess ; 2001 ; The Wilson Bulletin Volume 113 ; 113 >
+      au < doNotProcess ; 2002 ; The Wilson Bulletin Volume 114 ; 114 >
+      au < doNotProcess ; 2003 ; The Wilson Bulletin Volume 115 ; 115 >
+      au < doNotProcess ; 2004 ; The Wilson Bulletin Volume 116 ; 116 >
+      au < doNotProcess ; 2005 ; The Wilson Bulletin Volume 117 ; 117 >
+      
+    }
+
+  }
+  
+  {
+
+    title <
+      name = The Wilson Journal of Ornithology ;
+      issn = 1559-4491 ;
+      eissn = 1938-5447 ;
+      issnl = 1559-4491
+    >
+
+    comment[continues] = 0043-5643
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1559-4491
+  
+      au < down ; 2006 ; The Wilson Journal of Ornithology Volume 118 ; 118 >
+      au < down ; 2007 ; The Wilson Journal of Ornithology Volume 119 ; 119 >
+
+    }
+
+    {
+    
+      implicit < status ; year ; name ; param[volume_name] >
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = wils
+
+      au < doNotProcess ; 2006 ; The Wilson Journal of Ornithology Volume 118 ; 118 >
+      au < doNotProcess ; 2007 ; The Wilson Journal of Ornithology Volume 119 ; 119 >      
+      au < ready ; 2008 ; The Wilson Journal of Ornithology Volume 120 ; 120 >
+      au < ready ; 2009 ; The Wilson Journal of Ornithology Volume 121 ; 121 >
+      au < ready ; 2010 ; The Wilson Journal of Ornithology Volume 122 ; 122 >
+      au < ready ; 2011 ; The Wilson Journal of Ornithology Volume 123 ; 123 >
+      au < manifest ; 2012 ; The Wilson Journal of Ornithology Volume 124 ; 124 >
+
+    }
+
+  }
+
+}
+

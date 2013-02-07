@@ -1,0 +1,80 @@
+{
+
+  publisher <
+    name = Conservation International
+  >
+
+  plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+  implicit < status ; year ; name ; param[volume_name] >
+  param[base_url] = http://www.bioone.org/
+
+  {
+    title <
+      name = Advances in Applied Biodiversity Science
+    >
+    
+    comment[aabs_issn] = There is no issn for this title which appears to be a serial book. Each AU has an associated isbn.
+    param[journal_id] = aabs
+  
+    au < exists ; 2003 ; Advances in Applied Biodiversity Science 2003 ; 2003 >
+    au < exists ; 2004 ; Advances in Applied Biodiversity Science 2004 ; 2004 >
+    au < exists ; 2007 ; Advances in Applied Biodiversity Science 2007 ; 2007 >
+
+  }
+
+  {
+    title <
+      name = Edentata ;
+      issn = 1413-4411 ;
+      issnl = 1413-4411
+    >
+    
+    param[journal_id] = eden
+    comment[notReady] = needs URL normalizer RoundUp 3990
+     
+    au < notReady ; 2004 ; Edentata Volume 6 ; 6 >
+    au < notReady ; 2006 ; Edentata Volume 7 ; 7 >
+    au < notReady ; 2009 ; Edentata Volume 8, 9, 10 ; 10 >
+    au < notReady ; 2010 ; Edentata Volume 11 ; 11 >
+
+  }
+  
+  {
+    title <
+      name = Neotropical Primates ;
+      issn = 1413-4705 ;
+      issnl = 1413-4705
+    >
+    
+    param[journal_id] = nepr
+  
+    au < ready ; 2004 ; Neotropical Primates Volume 12 ; 12 >
+    au < ready ; 2005 ; Neotropical Primates Volume 13 ; 13 >
+    au < ready ; 2007 ; Neotropical Primates Volume 14 ; 14 >
+    au < ready ; 2008 ; Neotropical Primates Volume 15 ; 15 >
+    au < ready ; 2009 ; Neotropical Primates Volume 16 ; 16 >
+    au < ready ; 2010 ; Neotropical Primates Volume 17 ; 17 >
+    au < manifest ; 2011 ; Neotropical Primates Volume 18 ; 18 >
+
+  }
+  
+  {
+    title <
+      name = Primate Conservation ;
+      issn = 0898-6207 ;
+      issnl = 0898-6207
+    >
+    
+    param[journal_id] = prco
+    comment[notReady] = needs URL normalizer RoundUp 3990
+  
+    au < notReady ; 2006 ; Primate Conservation Volume 20 ; 20 >
+    au < notReady ; 2006 ; Primate Conservation Volume 21 ; 21 >
+    au < ready ; 2007 ; Primate Conservation Volume 22 ; 22 >
+    au < ready ; 2008 ; Primate Conservation Volume 23 ; 23 >
+    au < ready ; 2009 ; Primate Conservation Volume 24 ; 24 >
+    au < ready ; 2010 ; Primate Conservation Volume 25 ; 25 >
+
+  }
+  
+}

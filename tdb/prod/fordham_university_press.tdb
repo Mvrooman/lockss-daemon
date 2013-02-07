@@ -1,0 +1,69 @@
+{
+  publisher <
+    name = Fordham University Press
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Joyce Studies Annual ;
+      issn = 1049-0809 ;
+      eissn = 1538-4241 ;
+      issnl = 1049-0809
+    >
+
+    param[journal_dir] = joyce_studies_annual
+    attr[journal_id] = joy
+
+    au < released ; 2001 ; Joyce Studies Annual Volume 12 ; 12 >
+    au < released ; 2002 ; Joyce Studies Annual Volume 13 ; 13 >
+    au < released ; 2003 ; Joyce Studies Annual Volume 14 ; 14 >
+    au < released ; 2007 ; Joyce Studies Annual Volume 2007 ; 2007 >
+    au < released ; 2008 ; Joyce Studies Annual Volume 2008 ; 2008 >
+    au < released ; 2009 ; Joyce Studies Annual Volume 2009 ; 2009 >
+    au < released ; 2010 ; Joyce Studies Annual Volume 2010 ; 2010 >
+    au < released ; 2011 ; Joyce Studies Annual Volume 2011 ; 2011 >
+
+  }
+
+  {
+    title <
+      name = Dante Studies ;
+      issn = 0070-2862 ;
+      issnl = 0070-2862
+    >
+
+    comment[ds] = coming 2012
+    param[journal_dir] = dante_studies
+    attr[journal_id] = 
+    
+    au < expected ; 2013 ; Dante Studies Volume 1 ; 1 >
+    
+  }
+
+  {
+    title <
+      name = Traditio ;
+      issn = 0362-1529 
+    >
+
+    param[journal_dir] = traditio
+    attr[journal_id] = trd
+    
+    au < manifest ; 2002 ; Traditio Volume 57 ; 57 >
+    au < manifest ; 2003 ; Traditio Volume 58 ; 58 >
+    au < manifest ; 2004 ; Traditio Volume 59 ; 59 >
+    au < manifest ; 2005 ; Traditio Volume 60 ; 60 >
+    au < manifest ; 2006 ; Traditio Volume 61 ; 61 >
+    au < manifest ; 2007 ; Traditio Volume 62 ; 62 >
+    au < manifest ; 2008 ; Traditio Volume 63 ; 63 >
+    au < manifest ; 2009 ; Traditio Volume 64 ; 64 >
+    au < manifest ; 2010 ; Traditio Volume 65 ; 65 >
+    au < released ; 2011 ; Traditio Volume 66 ; 66 >
+    
+  }
+
+}

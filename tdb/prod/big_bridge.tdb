@@ -1,0 +1,38 @@
+{
+  publisher <
+    name = Big Bridge
+  >
+  
+  {
+  
+    title <
+      name = Big Bridge ;
+      issn = 1529-7136 ;
+      issnl = 1529-7136
+    >  
+
+    rights = openaccess
+    
+    { 
+
+      plugin = edu.wisc.library.plugin.BigBridgeVol1Plugin
+      param[base_url] = http://www.bigbridge.org/  
+      implicit < status ; name ; volume >
+    
+      au < exists ; Big Bridge Volume 1 ; 1 >
+      
+    }
+    
+    {
+    
+      plugin = edu.wisc.library.plugin.BigBridgePlugin
+      param[base_url] = http://www.bigbridge.org/  
+      implicit < status ; name ; param[volume] ; param[num_issue_range] >
+
+      au < released ; Big Bridge Volume 2 ; 2 ; 5-8 >    
+    
+    }
+  
+  }
+  
+}

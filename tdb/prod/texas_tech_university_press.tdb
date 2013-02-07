@@ -1,0 +1,86 @@
+{
+
+  publisher <
+    name = Texas Tech University Press
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = Conradiana ;
+      issn = 0010-6356 ;
+      eissn = 1935-0252 ;
+      issnl = 0010-6356
+    >
+
+    param[journal_dir] = conradiana
+    attr[journal_id] = cnd
+
+    au < released ; 2007 ; Conradiana Volume 39 ; 39 >
+    au < released ; 2008 ; Conradiana Volume 40 ; 40 >
+    au < released ; 2009 ; Conradiana Volume 41 ; 41 >
+    au < released ; 2010 ; Conradiana Volume 42 ; 42 >
+
+  }
+
+  {
+  
+    title <
+      name = Helios ;
+      issn = 0160-0923 ;
+      eissn = 1935-0228 ;
+      issnl = 0160-0923
+    >
+
+    param[journal_dir] = helios
+    attr[journal_id] = hel
+
+    au < released ; 2007 ; Helios Volume 34 ; 34 >
+    au < released ; 2008 ; Helios Volume 35 ; 35 >
+    au < released ; 2009 ; Helios Volume 36 ; 36 >
+    au < released ; 2010 ; Helios Volume 37 ; 37 >
+    au < released ; 2011 ; Helios Volume 38 ; 38 >
+    
+  }
+
+  {
+  
+    title <
+      name = Intertexts ;
+      issn = 1092-0625 ;
+      eissn = 2156-5465 ;
+      issnl = 1092-0625
+    >
+
+    param[journal_dir] = intertexts
+    attr[journal_id] = itx
+
+    au < released ; 2009 ; Intertexts Volume 13 ; 13 >
+    au < released ; 2010 ; Intertexts Volume 14 ; 14 >
+    au < released ; 2011 ; Intertexts Volume 15 ; 15 >
+
+  }
+
+  {
+  
+    title <
+      name = William Carlos Williams Review ;
+      issn = 0196-6286 ;
+      eissn = 1935-0244 ;
+      issnl = 0196-6286
+    >
+
+    param[journal_dir] = william_carlos_williams_review
+    attr[journal_id] = wcw
+
+    au < released ; 2006 ; William Carlos Williams Review Volume 26 ; 26 >
+    au < released ; 2007 ; William Carlos Williams Review Volume 27 ; 27 >
+    au < released ; 2008 ; William Carlos Williams Review Volume 28 ; 28 >
+
+  }
+
+}

@@ -1,0 +1,65 @@
+{
+
+  publisher <
+    name = University of North Carolina at Chapel Hill Department of Romance Languages and Literatures
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+
+    title <
+      name = Hispanófila ;
+      issn = 0018-2206 ;
+      eissn = 2165-6185 ;
+      issnl = 0018-2206
+    >
+
+    param[journal_dir] = hispanofila
+    attr[journal_id] = hsf
+
+    au < released ; 2008 ; Hispanófila Volume 151 ; 151 >
+    au < released ; 2008 ; Hispanófila Volume 152 ; 152 >
+    au < released ; 2008 ; Hispanófila Volume 153 ; 153 >
+    au < released ; 2009 ; Hispanófila Volume 154 ; 154 >
+    au < released ; 2009 ; Hispanófila Volume 155 ; 155 >
+    au < released ; 2009 ; Hispanófila Volume 156 ; 156 >
+    au < released ; 2009 ; Hispanófila Volume 157 ; 157 >
+    au < released ; 2010 ; Hispanófila Volume 158 ; 158 >
+    au < released ; 2010 ; Hispanófila Volume 159 ; 159 >
+    au < released ; 2010 ; Hispanófila Volume 160 ; 160 >
+    au < released ; 2011 ; Hispanófila Volume 161 ; 161 >
+    au < released ; 2011 ; Hispanófila Volume 162 ; 162 >
+    au < released ; 2011 ; Hispanófila Volume 163 ; 163 >
+    au < released ; 2012 ; Hispanófila Volume 164 ; 164 >
+    au < released ; 2012 ; Hispanófila Volume 165 ; 165 >
+    au < expected ; 2013 ; Hispanófila Volume 166 ; 166 >
+    au < expected ; 2013 ; Hispanófila Volume 167 ; 167 >
+
+  }
+
+  {
+
+    title <
+      name = Romance Notes ;
+      issn = 0035-7995 ;
+      eissn = 2165-7599 ;
+      issnl = 0035-7995
+    >
+
+    param[journal_dir] = romance_notes
+    attr[journal_id] = rmc
+
+    au < released ; 2006 ; Romance Notes Volume 47 ; 47 >
+    au < released ; 2007 ; Romance Notes Volume 48 ; 48 >
+    au < released ; 2009 ; Romance Notes Volume 49 ; 49 >
+    au < released ; 2010 ; Romance Notes Volume 50 ; 50 >
+    au < released ; 2011 ; Romance Notes Volume 51 ; 51 >
+    au < released ; 2012 ; Romance Notes Volume 52 ; 52 >
+    au < expected ; 2013 ; Romance Notes Volume 53 ; 53 >
+
+  }
+
+}

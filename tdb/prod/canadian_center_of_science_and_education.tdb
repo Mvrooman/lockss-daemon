@@ -1,0 +1,435 @@
+{
+
+  publisher <
+    name = Canadian Center of Science and Education
+  >
+
+  plugin = org.lockss.plugin.ojs2.OJS2Plugin
+  param[base_url] = http://www.ccsenet.org/journal/
+  implicit < status ; year ; name ; volume ; param[year] >
+  
+  {
+  
+    title <
+      name = Applied Physics Research ;
+      issn = 1916-9639 ;
+      eissn = 1916-9647
+    >
+    
+    param[journal_id] = apr
+
+    au < released ; 2009 ; Applied Physics Research Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Applied Physics Research Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Applied Physics Research Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Applied Physics Research Volume 4 ; 4 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = Asian Culture and History ;
+      issn = 1916-9655 ;
+      eissn = 1916-9663
+    >
+    
+    param[journal_id] = ach
+
+    au < released ; 2009 ; Asian Culture and History Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Asian Culture and History Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Asian Culture and History Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Asian Culture and History Volume 4 ; 4 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = Asian Social Science ;
+      issn = 1911-2017 ;
+      eissn = 1911-2025
+    >
+    
+    param[journal_id] = ass
+
+    au < doesNotExist ; 2005 ; Asian Social Science Volume 1 ; 1 ; 2005 >
+    au < doesNotExist ; 2006 ; Asian Social Science Volume 2 ; 2 ; 2006 >
+    au < doesNotExist ; 2007 ; Asian Social Science Volume 3 ; 3 ; 2007 >
+    au < released ; 2008 ; Asian Social Science Volume 4 ; 4 ; 2008 >
+    au < released ; 2009 ; Asian Social Science Volume 5 ; 5 ; 2009 >
+    au < released ; 2010 ; Asian Social Science Volume 6 ; 6 ; 2010 >
+    au < released ; 2011 ; Asian Social Science Volume 7 ; 7 ; 2011 >
+    au < released ; 2012 ; Asian Social Science Volume 8 ; 8 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = Computer and Information Science ;
+      issn = 1913-8989 ;
+      eissn = 1913-8997
+    >
+    
+    param[journal_id] = cis
+
+    au < released ; 2008 ; Computer and Information Science Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; Computer and Information Science Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; Computer and Information Science Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; Computer and Information Science Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; Computer and Information Science Volume 5 ; 5 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = English Language and Literature Studies ;
+      issn = 1925-4768 ;
+      eissn = 1925-4776
+    >
+    
+    param[journal_id] = ells
+
+    au < released ; 2011 ; English Language and Literature Studies Volume 1 ; 1 ; 2011 >
+    au < released ; 2012 ; English Language and Literature Studies Volume 2 ; 2 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = English Language Teaching ;
+      issn = 1916-4742 ;
+      eissn = 1916-4750
+    >
+    
+    param[journal_id] = elt
+
+    au < released ; 2008 ; English Language Teaching Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; English Language Teaching Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; English Language Teaching Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; English Language Teaching Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; English Language Teaching Volume 5 ; 5 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = Global Journal of Health Science ;
+      issn = 1916-9736 ;
+      eissn = 1916-9744
+    >
+    
+    param[journal_id] = gjhs
+
+    au < released ; 2009 ; Global Journal of Health Science Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Global Journal of Health Science Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Global Journal of Health Science Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Global Journal of Health Science Volume 4 ; 4 ; 2012 >
+
+  }
+
+  {
+  
+    title <
+      name = Higher Education Studies ;
+      issn = 1925-4741 ;
+      eissn = 1925-475X
+    >
+    
+    param[journal_id] = hes
+
+    au < released ; 2011 ; Higher Education Studies Volume 1 ; 1 ; 2011 >
+    au < released ; 2012 ; Higher Education Studies Volume 2 ; 2 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = International Business Research ;
+      issn = 1913-9004 ;
+      eissn = 1913-9012
+    >
+    
+    param[journal_id] = ibr
+
+    au < released ; 2008 ; International Business Research Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; International Business Research Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; International Business Research Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; International Business Research Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; International Business Research Volume 5 ; 5 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = International Education Studies ;
+      issn = 1913-9020 ;
+      eissn = 1913-9039
+    >
+    
+    param[journal_id] = ies
+
+    au < released ; 2008 ; International Education Studies Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; International Education Studies Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; International Education Studies Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; International Education Studies Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; International Education Studies Volume 5 ; 5 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = International Journal of Biology ;
+      issn = 1916-9671 ;
+      eissn = 1916-968X
+    >
+    
+    param[journal_id] = ijb
+
+    au < released ; 2009 ; International Journal of Biology Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; International Journal of Biology Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; International Journal of Biology Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; International Journal of Biology Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = International Journal of Business and Management ;
+      issn = 1833-3850 ;
+      eissn = 1833-8119
+    >
+    
+    param[journal_id] = ijbm
+
+    au < doesNotExist ; 2006 ; International Journal of Business and Management Volume 1 ; 1 ; 2006 >
+    au < doesNotExist ; 2007 ; International Journal of Business and Management Volume 2 ; 2 ; 2007 >
+    au < released ; 2008 ; International Journal of Business and Management Volume 3 ; 3 ; 2008 >
+    au < released ; 2009 ; International Journal of Business and Management Volume 4 ; 4 ; 2009 >
+    au < released ; 2010 ; International Journal of Business and Management Volume 5 ; 5 ; 2010 >
+    au < released ; 2011 ; International Journal of Business and Management Volume 6 ; 6 ; 2011 >
+    au < released ; 2012 ; International Journal of Business and Management Volume 7 ; 7 ; 2012 >
+  }
+
+  {
+  
+    title <
+      name = International Journal of Chemistry ;
+      issn = 1916-9698 ;
+      eissn = 1916-9701
+    >
+    
+    param[journal_id] = ijc
+
+    au < released ; 2009 ; International Journal of Chemistry Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; International Journal of Chemistry Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; International Journal of Chemistry Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; International Journal of Chemistry Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = International Journal of Economics and Finance ;
+      issn = 1916-971X ;
+      eissn = 1916-9728
+    >
+    
+    param[journal_id] = ijef
+
+    au < released ; 2009 ; International Journal of Economics and Finance Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; International Journal of Economics and Finance Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; International Journal of Economics and Finance Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; International Journal of Economics and Finance Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = International Journal of English Linguistics ;
+      issn = 1923-869X ;
+      eissn = 1923-8703
+    >
+    
+    param[journal_id] = ijel
+
+    au < released ; 2011 ; International Journal of English Linguistics Volume 1 ; 1 ; 2011 >
+    au < released ; 2012 ; International Journal of English Linguistics Volume 2 ; 2 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = International Journal of Marketing Studies ;
+      issn = 1918-719X ;
+      eissn = 1918-7203
+    >
+    
+    param[journal_id] = ijms
+
+    au < released ; 2009 ; International Journal of Marketing Studies Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; International Journal of Marketing Studies Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; International Journal of Marketing Studies Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; International Journal of Marketing Studies Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = International Journal of Psychological Studies ;
+      issn = 1918-7211 ;
+      eissn = 1918-722X
+    >
+    
+    param[journal_id] = ijps
+
+    au < released ; 2009 ; International Journal of Psychological Studies Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; International Journal of Psychological Studies Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; International Journal of Psychological Studies Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; International Journal of Psychological Studies Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Journal of Agricultural Science ;
+      issn = 1916-9752 ;
+      eissn = 1916-9760
+    >
+    
+    param[journal_id] = jas
+
+    au < released ; 2009 ; Journal of Agricultural Science Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Journal of Agricultural Science Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Journal of Agricultural Science Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Journal of Agricultural Science Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Journal of Geography and Geology ;
+      issn = 1916-9779 ;
+      eissn = 1916-9787
+    >
+    
+    param[journal_id] = jgg
+
+    au < exists ; 2009 ; Journal of Geography and Geology Volume 1 ; 1 ; 2009 >
+    au < exists ; 2010 ; Journal of Geography and Geology Volume 2 ; 2 ; 2010 >
+    au < exists ; 2011 ; Journal of Geography and Geology Volume 3 ; 3 ; 2011 >
+    au < exists ; 2012 ; Journal of Geography and Geology Volume 4 ; 4 ; 2012 >
+    au < exists ; 2013 ; Journal of Geography and Geology Volume 5 ; 5 ; 2013 >
+
+  }
+  
+  {
+  
+    title <
+      name = Journal of Management and Sustainability ;
+      issn = 1925-4725 ;
+      eissn = 1925-4733
+    >
+    
+    param[journal_id] = jms
+
+    au < released ; 2012 ; Journal of Management and Sustainability Volume 2 ; 2; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Journal of Mathematics Research ;
+      issn = 1916-9795 ;
+      eissn = 1916-9809
+    >
+    
+    param[journal_id] = jmr
+
+    au < released ; 2009 ; Journal of Mathematics Research Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Journal of Mathematics Research Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Journal of Mathematics Research Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Journal of Mathematics Research Volume 4 ; 4 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Journal of Molecular Biology Researchy ;
+      issn = 1925-430X ;
+      eissn = 1925-4318
+    >
+    
+    param[journal_id] = jmbr
+    comment[jmbr] = no issues as of 20110615
+
+    au < released ; 2012 ; Journal of Molecular Biology Research Volume 1 ; 1 ; 2012 >
+
+  }
+  
+  {
+  
+    title <
+      name = Journal of Politics and Law ;
+      issn = 1913-9047 ;
+      eissn = 1913-9055
+    >
+    
+    param[journal_id] = jpl
+
+    au < released ; 2008 ; Journal of Politics and Law Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; Journal of Politics and Law Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; Journal of Politics and Law Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; Journal of Politics and Law Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; Journal of Politics and Law Volume 5 ; 5 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Journal of Sustainable Development ;
+      issn = 1913-9063 ;
+      eissn = 1913-9071
+    >
+    
+    param[journal_id] = jsd
+
+    au < released ; 2008 ; Journal of Sustainable Development Volume 1 ; 1 ; 2008 >
+    au < released ; 2009 ; Journal of Sustainable Development Volume 2 ; 2 ; 2009 >
+    au < released ; 2010 ; Journal of Sustainable Development Volume 3 ; 3 ; 2010 >
+    au < released ; 2011 ; Journal of Sustainable Development Volume 4 ; 4 ; 2011 >
+    au < released ; 2012 ; Journal of Sustainable Development Volume 5 ; 5 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Modern Applied Science ;
+      issn = 1913-1844 ;
+      eissn = 1913-1852
+    >
+    
+    param[journal_id] = mas
+
+    au < released ; 2007 ; Modern Applied Science Volume 1 ; 1 ; 2007 >
+    au < released ; 2008 ; Modern Applied Science Volume 2 ; 2 ; 2008 >
+    au < released ; 2009 ; Modern Applied Science Volume 3 ; 3 ; 2009 >
+    au < released ; 2010 ; Modern Applied Science Volume 4 ; 4 ; 2010 >
+    au < released ; 2011 ; Modern Applied Science Volume 5 ; 5 ; 2011 >
+    au < released ; 2012 ; Modern Applied Science Volume 6 ; 6 ; 2012 >
+  }
+  
+  {
+  
+    title <
+      name = Review of European Studies ;
+      issn = 1918-7173 ;
+      eissn = 1918-7181
+    >
+    
+    param[journal_id] = res
+
+    au < released ; 2009 ; Review of European Studies Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Review of European Studies Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Review of European Studies Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Review of European Studies Volume 4 ; 4 ; 2012 >
+  }
+  
+}

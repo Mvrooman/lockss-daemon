@@ -1,0 +1,34 @@
+{
+
+  publisher <
+    name = Japan Society of Mammalian Ova Research
+  >
+
+  {
+    title <
+      name = Journal of Mammalian Ova Research ;
+      issn = 1341-7738 ;
+      eissn = 1347-5878 ;
+      issnl = 1341-7738
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume_name] >
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = jmor
+      comment[notReady] = old ongoing permission problem RT3965
+  
+      au < notReady ; 2005 ; Journal of Mammalian Ova Research Volume 22 ; 22 >
+      au < notReady ; 2006 ; Journal of Mammalian Ova Research Volume 23 ; 23 >
+      au < notReady ; 2007 ; Journal of Mammalian Ova Research Volume 24 ; 24 >
+      au < notReady ; 2008 ; Journal of Mammalian Ova Research Volume 25 ; 25 >
+      au < ready ; 2009 ; Journal of Mammalian Ova Research Volume 26 ; 26 >
+      au < manifest ; 2010 ; Journal of Mammalian Ova Research Volume 27 ; 27 >
+      au < notReady ; 2011 ; Journal of Mammalian Ova Research Volume 28 ; 28 >
+    }
+
+  }
+
+}
+

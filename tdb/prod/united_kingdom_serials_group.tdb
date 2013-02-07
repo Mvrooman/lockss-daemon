@@ -1,0 +1,81 @@
+{
+
+  publisher <
+    name = United Kingdom Serials Group
+  >
+
+  plugin = org.lockss.plugin.metapress.MetaPressPlugin
+  param[base_url] = http://uksg.metapress.com/
+
+  {
+
+    title <
+      name = The E-Resources Management Handbook ;
+      type = book ;
+      isbn = 0-9552448-0-3 
+    >
+    
+    param[journal_issn] = 
+    implicit < status ; year ; isbn ; name ; param[chapter_name]>
+    
+    comment[0] = This is a book with multiple chapters. May need different plugin? 
+    
+  }
+  
+  {
+
+    title <
+      name = Insights: the UKSG journal ;
+      eissn = 2048-7754
+    >
+    
+    param[journal_issn] = 2048-7754
+    implicit < status ; year ; name ; param[volume_name]>
+    
+    au < manifest ; 2012 ; Insights: the UKSG journal Volume 25 ; 25 >
+    au < expected ; 2013 ; Insights: the UKSG journal Volume 26 ; 26 >
+    
+  }
+  
+  {
+
+    title <
+      name = Serials: The Journal for the Serials Community ;
+      issn = 0953-0460 ;
+      eissn = 1475-3308 ;
+      issnl = 0953-0460
+    >
+
+    param[journal_issn] = 0953-0460
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 1988 ; Serials: The Journal for the Serials Community Volume 1 ; 1 >
+    au < released ; 1989 ; Serials: The Journal for the Serials Community Volume 2 ; 2 >
+    au < released ; 1990 ; Serials: The Journal for the Serials Community Volume 3 ; 3 >
+    au < released ; 1991 ; Serials: The Journal for the Serials Community Volume 4 ; 4 >
+    au < released ; 1992 ; Serials: The Journal for the Serials Community Volume 5 ; 5 >
+    au < released ; 1993 ; Serials: The Journal for the Serials Community Volume 6 ; 6 >
+    au < released ; 1994 ; Serials: The Journal for the Serials Community Volume 7 ; 7 >
+    au < released ; 1995 ; Serials: The Journal for the Serials Community Volume 8 ; 8 >
+    au < released ; 1996 ; Serials: The Journal for the Serials Community Volume 9 ; 9 >
+    au < released ; 1997 ; Serials: The Journal for the Serials Community Volume 10 ; 10 >
+    au < released ; 1998 ; Serials: The Journal for the Serials Community Volume 11 ; 11 >
+    au < released ; 1999 ; Serials: The Journal for the Serials Community Volume 12 ; 12 >
+    au < released ; 2000 ; Serials: The Journal for the Serials Community Volume 13 ; 13 >
+    au < released ; 2001 ; Serials: The Journal for the Serials Community Volume 14 ; 14 >
+    au < released ; 2002 ; Serials: The Journal for the Serials Community Volume 15 ; 15 >
+    au < released ; 2003 ; Serials: The Journal for the Serials Community Volume 16 ; 16 >
+    au < released ; 2004 ; Serials: The Journal for the Serials Community Volume 17 ; 17 >
+    au < released ; 2005 ; Serials: The Journal for the Serials Community Volume 18 ; 18 >
+    au < released ; 2006 ; Serials: The Journal for the Serials Community Volume 19 ; 19 >
+    au < released ; 2007 ; Serials: The Journal for the Serials Community Volume 20 ; 20 >
+    au < notReady ; 2008 ; Serials: The Journal for the Serials Community Volume 21 ; 21 >
+    au < notReady ; 2009 ; Serials: The Journal for the Serials Community Volume 22 ; 22 >
+    au < released ; 2010 ; Serials: The Journal for the Serials Community Volume 23 ; 23 >
+    au < released ; 2011 ; Serials: The Journal for the Serials Community Volume 24 ; 24 >
+    au < expected ; 2012 ; Serials: The Journal for the Serials Community Volume 25 ; 25 >
+    au < expected ; 2013 ; Serials: The Journal for the Serials Community Volume 26 ; 26 >
+
+  }
+
+}

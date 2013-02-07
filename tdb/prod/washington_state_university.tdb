@@ -1,0 +1,30 @@
+{
+  publisher <
+    name = Washington State University
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = ESQ: A Journal of the American Renaissance ;
+      issn = 0093-8297 ;
+      eissn = 1935-021X ;
+      issnl = 0093-8297
+    >
+
+    param[journal_dir] = esq
+    attr[journal_id] = esq
+
+    au < released ; 2007 ; ESQ: A Journal of the American Renaissance Volume 53 ; 53 >
+    au < released ; 2008 ; ESQ: A Journal of the American Renaissance Volume 54 ; 54 >
+    au < released ; 2009 ; ESQ: A Journal of the American Renaissance Volume 55 ; 55 >
+    au < released ; 2010-2011 ; ESQ: A Journal of the American Renaissance Volume 56 ; 56 >
+    au < released ; 2011 ; ESQ: A Journal of the American Renaissance Volume 57 ; 57 >
+    au < released ; 2012 ; ESQ: A Journal of the American Renaissance Volume 58 ; 58 >
+    
+  }
+
+}

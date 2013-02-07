@@ -1,0 +1,36 @@
+{
+
+  publisher <
+    name = Southern California Academy of Science
+  >
+
+  {
+    title <
+      name = Bulletin, Southern California Academy of Sciences ;
+      issn = 0038-3872 ;
+      issnl = 0038-3872
+    >
+
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = soca
+
+      au < ready ; 2005 ; Bulletin, Southern California Academy of Sciences Volume 104 ; 104 >
+      au < ready ; 2006 ; Bulletin, Southern California Academy of Sciences Volume 105 ; 105 >
+      au < ready ; 2007 ; Bulletin, Southern California Academy of Sciences Volume 106 ; 106 >
+      au < ready ; 2008 ; Bulletin, Southern California Academy of Sciences Volume 107 ; 107 >
+      au < ready ; 2009 ; Bulletin, Southern California Academy of Sciences Volume 108 ; 108 >
+      au < ready ; 2010 ; Bulletin, Southern California Academy of Sciences Volume 109 ; 109 >
+      au < ready ; 2011 ; Bulletin, Southern California Academy of Sciences Volume 110 ; 110 >
+      au < manifest ; 2012 ; Bulletin, Southern California Academy of Sciences Volume 111 ; 111 >
+
+    }
+
+  }
+
+}
+

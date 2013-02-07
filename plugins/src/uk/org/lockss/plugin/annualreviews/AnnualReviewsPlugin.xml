@@ -1,0 +1,110 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>deprecated - new plugin in process</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>uk.org.lockss.plugin.annualreviews.AnnualReviewsPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Annual Reviews Plugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>9</string>
+  </entry>
+  <entry>
+    <string>plugin_publishing_platform</string>
+    <string>Atypon</string>
+  </entry>  
+  <entry>
+    <string>required_daemon_version</string>
+    <string>1.28.0</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;Annual Reviews Plugin, Base URL %s, Journal ID %s, Short Journal ID %s, Volume %d&quot;, base_url, journal_id, short_journal_id, volume</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,&quot;^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$&quot;, base_url_host</string>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;^%slockss/%s/%d/index.html&quot;, base_url, journal_id, volume</string>
+      <string>2,&quot;^%s(action|loi|search|feedback|edcom)&quot;, base_url</string>
+      <string>1,&quot;^%stoc/%s/%d/&quot;, base_url, journal_id, volume</string>
+      <string>2,&quot;^%sdoi/(pdf|abs|full|suppl)/[.0-9]+/annurev[.-](%s|%s)[.-].*\?prevSearch=\${resultBean\.text}&quot;, base_url, journal_id, short_journal_id, volume</string>
+      <string>1,&quot;^%sdoi/(pdf|abs|full|suppl)/[.0-9]+/annurev[.-](%s|%s)[.-]&quot;, base_url, journal_id, short_journal_id, volume</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%slockss/%s/%d/index.html&quot;, base_url, journal_id, volume</string>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume</key>
+        <displayName>Volume No.</displayName>
+        <type>6</type>
+        <size>8</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_id</key>
+        <displayName>Journal Identifier</displayName>
+        <description>Identifier for journal (often used as part of file names)</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>short_journal_id</key>
+        <displayName>Short Journal Identifier</displayName>
+        <description>Legacy short identifier for journal</description>
+        <type>1</type>
+        <size>2</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>application/pdf_filter_factory</string>
+    <string>uk.org.lockss.plugin.annualreviews.AnnualReviewsPdfFilterFactory</string>
+  </entry>
+  <entry>
+    <string>text/html_filter_factory</string>
+    <string>uk.org.lockss.plugin.annualreviews.AnnualReviewsHtmlFilterFactory</string>
+  </entry>
+  <entry>
+    <string>au_url_normalizer</string>
+    <string>uk.org.lockss.plugin.annualreviews.AnnualReviewsUrlNormalizer</string>
+  </entry>
+  <entry>
+    <string>plugin_au_config_user_msg</string>
+    <string>&quot;Warning: Two actions are required before configuring these AUs for preservation: 1. Please contact the LOCKSS team to register your LOCKSS box IP address with Atypon, the Annual Reviews publishing platform; 2. Ensure your LOCKSS box is configured for direct external access and NOT through  a common campus proxy. Failure to complete these steps will interrupt your campus access to this content.  Only U.K. libraries may preserve this content. If you are not in the U.K. contact lockss-support@lockss.org.&quot;</string>
+  </entry>
+</map>

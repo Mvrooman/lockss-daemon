@@ -1,0 +1,26 @@
+{
+  publisher <
+    name = American School of Classical Studies at Athens
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Hesperia ;
+      issn = 0018-098X ;
+      eissn = 1553-5622 ;
+      issnl = 0018-098X
+    >
+
+    param[journal_dir] = hesperia
+    attr[journal_id] = hes
+
+    au < released ; 2005 ; Hesperia Volume 74 ; 74 >
+
+  }
+
+}

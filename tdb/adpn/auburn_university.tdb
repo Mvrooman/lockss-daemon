@@ -1,0 +1,394 @@
+{
+
+  publisher <
+    name = Auburn University
+  >
+
+  {
+
+    title <
+      name = Auburn University Alabama Community Plans Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Alabama Community Plans Digital Collection ; AlabamaCommunityPlans >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Alabama Cooperative Extension Service Photographs, Archival Images
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Alabama Cooperative Extension Service Photographs, Archival Images ; ACES_images >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Alabama Postcards Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Alabama Postcards Digital Collection ; Alabama_Postcards >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Architecture Student Watercolors Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/ArchitectureWatercolors/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Architecture Student Watercolors Digital Collection: Photographs ; watercolors_photos >
+    au < released ; Auburn University Architecture Student Watercolors Digital Collection: Scans ; watercolors_scans >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Board of Trustees Minutes
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata4.lib.auburn.edu/BOTMinutes/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Board of Trustees Minutes: 1850s ; 1850s >
+    au < released ; Auburn University Board of Trustees Minutes: 1860s ; 1860s >
+    au < released ; Auburn University Board of Trustees Minutes: 1870s ; 1870s >
+    au < released ; Auburn University Board of Trustees Minutes: 1880s ; 1880s >
+    au < released ; Auburn University Board of Trustees Minutes: 1890s ; 1890s >
+    au < released ; Auburn University Board of Trustees Minutes: 1900s ; 1900s >
+    au < released ; Auburn University Board of Trustees Minutes: 1910s ; 1910s >
+    au < released ; Auburn University Board of Trustees Minutes: 1920s ; 1920s >
+    au < released ; Auburn University Board of Trustees Minutes: 1930s ; 1930s >
+    au < released ; Auburn University Board of Trustees Minutes: 1940s ; 1940s >
+    au < released ; Auburn University Board of Trustees Minutes: 1950s ; 1950s >
+    au < released ; Auburn University Board of Trustees Minutes: 1960s ; 1960s >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Civil War Documents Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    implicit < status ; name ; param[directory] >
+
+    {
+  
+      param[base_url] = http://digdata1.lib.auburn.edu/CivilWar_Documents/
+      attr[approvedForRemoval] = True
+    
+      au < superseded ; Auburn University Civil War Documents Digital Collection: Diaries [approved for removal] ; Diaries >
+
+    }
+  
+    {
+  
+      param[base_url] = http://digdata4.lib.auburn.edu/CivilWar_Documents/
+    
+      au < released ; Auburn University Civil War Documents Digital Collection: Diaries ; Diaries >
+
+    }
+  
+  }
+  
+  {
+
+    title <
+      name = Auburn University CONTENTdm Collections 
+    >
+
+    plugin = edu.auburn.contentdm.ContentDmPlugin
+    param[base_url] = http://content.lib.auburn.edu/   
+    implicit < status ; name ; param[volume_name] >
+  
+    au < released ; Auburn University Alabama Cooperative Extension Service Photographs ; autest >
+    au < released ; Auburn University Caroline Dean Wildflower Collection ; flora >
+    au < released ; Auburn University Football Program ; football >
+    au < released ; Auburn University Numbered Photographs Collection ; aunumphoto >
+  
+  }
+      
+  {
+  
+    title <
+      name = Auburn University Discover Auburn Lecture Series
+    >
+     
+    plugin = edu.auburn.adpn.discoverauburn.DiscoverAuburnPlugin
+    param[base_url] = http://fortissimo.lib.auburn.edu:82/da/
+    implicit < status ; year ; name ; param[year] >
+
+    au < released ; 2007 ; Auburn University Discover Auburn Lecture Series 2007 ; 2007 >
+    au < released ; 2008 ; Auburn University Discover Auburn Lecture Series 2008 ; 2008 >
+    au < released ; 2009 ; Auburn University Discover Auburn Lecture Series 2009 ; 2009 >
+    au < released ; 2010 ; Auburn University Discover Auburn Lecture Series 2010 ; 2010 >
+   
+  }
+  
+  {
+
+    title <
+      name = Auburn University Eddie V. Rickenbacker Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Eddie V. Rickenbacker Digital Collection ; RickenbackerCollection >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Everett Leavins Photographs Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Everett Leavins Photographs Digital Collection ; LeavinsPhotographs >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Eugene B. Sledge Papers 
+    >
+
+    plugin = edu.auburn.adpn.sledgepapers.SledgePapersPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/numphotos/    
+    implicit < status ; name >
+  
+    au < released ; Auburn University Eugene B. Sledge Papers >
+ 
+  }
+  
+  {
+
+    title <
+      name = Auburn University Glomeratas, 1897-1932, Archival Images 
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/glomeratas/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Glomeratas, 1897-1932, Archival Images: 1922 ; 1922_tifs_600dpi >
+    au < released ; Auburn University Glomeratas, 1897-1932, Archival Images: 1923 ; 1923_tifs_600dpi >
+    au < released ; Auburn University Glomeratas, 1897-1932, Archival Images: 1924 ; 1924_tifs_600dpi >
+ 
+  }
+  
+  {
+
+    title <
+      name = Auburn University Historical Maps 
+    >
+    
+    {    
+
+      plugin = edu.auburn.adpn.HistoricalMapsPlugin
+      param[base_url] = http://digdata4.lib.auburn.edu/alamaps/  
+      implicit < status ; name >
+     
+      au < down ; Auburn University Historical Maps Drawers 1-3 >
+      
+    }
+    
+    {
+    
+      plugin = edu.auburn.adpn.HistoricalMapsDrawerPlugin
+      param[base_url] = http://digdata4.lib.auburn.edu/alamaps/  
+      implicit < status ; name ; param[volume_name] >
+    
+      au < down ; Auburn University Historical Maps Drawers 6-10 ; 6-10 >
+  
+    }
+  
+  }
+
+  {
+
+    title <
+      name = Auburn University Historical Photographs, Archival Images
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Historical Photographs, Archival Images ; AUHistoricalPhotos >
+
+  }  
+ 
+  {
+
+    title <
+      name = Auburn University Historic Catalogs Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/HistoricCatalogs/
+    implicit < status ; name ; param[directory] >
+
+    au < released ; Auburn University Historic Catalogs Digital Collection: 19th. Century ; 19thCentury >
+    au < released ; Auburn University Historic Catalogs Digital Collection: 20th. Century ; 20thCenturyA >
+
+    {
+      attr[approvedForRemoval] = True
+      au < superseded ; Auburn University Historic Catalogs Digital Collection: 20th. Century [approved for removal] ; 20thCentury >
+    }
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Philip Henry Gosse Watercolors Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata4.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Philip Henry Gosse Watercolors Digital Collection ; Gosse_Images >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Piano Bench Sheet Music Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    implicit < status ; name ; param[directory] >
+  
+    {
+
+      param[base_url] = http://digdata1.lib.auburn.edu/PianoBenchCollection/
+      attr[approvedForRemoval] = True
+    
+      au < superseded ; Auburn University Piano Bench Sheet Music Digital Collection: 2006 Scans [approved for removal] ; PianoBench_2006 >
+      au < superseded ; Auburn University Piano Bench Sheet Music Digital Collection: 2010 Scans [approved for removal] ; PianoBench_2010 >
+
+    }
+  
+    {
+
+      param[base_url] = http://digdata4.lib.auburn.edu/PianoBenchCollection/
+    
+      au < released ; Auburn University Piano Bench Sheet Music Digital Collection: 2006 Scans ; PianoBench_2006 >
+      au < released ; Auburn University Piano Bench Sheet Music Digital Collection: 2010 Scans ; PianoBench_2010 >
+
+    }
+  
+  }
+  
+  {
+
+    title <
+      name = Auburn University Sesquicentennial Lecture Series 
+    >
+
+    plugin = edu.auburn.adpn.sesquicentennial.SesquicentennialLectureSeriesPlugin
+    param[base_url] = http://fortissimo.lib.auburn.edu:82/sesq/
+    implicit < status ; name ; param[volume_name] >
+  
+    au < released ; Auburn University Sesquicentennial Lecture Series: 1. Ralph Brown Draughon, Jr. ; 01draughon >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 2. J. Wayne Flynt ; 02flynt >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 3. Leah Rawls Atkins ; 03atkins >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 4. Joe Yeager and Gene Stevenson ; 04yeager-stevenson >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 5. Dwayne Cox ; 05cox >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 6. Anthony Donaldson ; 06donaldson >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 7. David Alsobrook ; 07alsobrook >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 8. Martin T. Olliff and Harold A. Franklin ; 08oliff-franklin >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 9. David Housel ; 09housel >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 10. Jack Simms ; 10simms >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 11. J. Wayne Flynt ; 11flynt >
+    au < released ; Auburn University Sesquicentennial Lecture Series: 12. Nell Ruth Campbell Richardson ; 12richardson >
+  
+  }
+  
+  {
+
+    title <
+      name = Auburn University Theatre Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/TheatreCollection/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Theatre Digital Collection: A. Lynn Lockrow Collection ; A_Lynn_Lockrow_Collection >
+    au < released ; Auburn University Theatre Digital Collection: Theatre Department Collection ; Theatre_Dept_Collection >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University Urban Studio Posters Digital Collection
+    >
+
+    plugin = edu.auburn.adpn.directory.AuburnDirectoryPlugin
+    param[base_url] = http://digdata1.lib.auburn.edu/
+    implicit < status ; name ; param[directory] >
+  
+    au < released ; Auburn University Urban Studio Posters Digital Collection ; UrbanStudioPosters >
+
+  }
+  
+  {
+
+    title <
+      name = Auburn University VetMed Slides 
+    >
+
+    plugin = edu.auburn.adpn.VetMedSlidesPlugin
+    param[base_url] = http://digdata4.lib.auburn.edu/VETMED/    
+    implicit < status ; name ; param[volume_name] >
+  
+    au < released ; Auburn University VetMed Slides Volumes 1-9 ; 1-9 >
+    au < exists ; Auburn University VetMed Slides Volumes 10-19 ; 10-19 >
+    au < released ; Auburn University VetMed Slides Volumes 20-29 ; 20-29 >
+    au < released ; Auburn University VetMed Slides Volumes 30-39 ; 30-39 >
+    au < released ; Auburn University VetMed Slides Volumes 40-49 ; 40-49 >
+    au < released ; Auburn University VetMed Slides Volumes 50-59 ; 50-59 >
+    au < released ; Auburn University VetMed Slides Volumes 60-69 ; 60-69 >
+    au < released ; Auburn University VetMed Slides Volumes 70-79 ; 70-79 >
+    au < released ; Auburn University VetMed Slides Volumes 80-89 ; 80-89 >
+    au < released ; Auburn University VetMed Slides Volumes 90-99 ; 90-99 >
+    au < released ; Auburn University VetMed Slides Volumes 100-109 ; 100-109 >
+    au < released ; Auburn University VetMed Slides Volumes 110-119 ; 110-119 >
+  
+  }
+  
+}

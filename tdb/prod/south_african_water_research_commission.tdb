@@ -1,0 +1,40 @@
+{
+
+  publisher <
+    name = South African Water Research Commission
+  >
+  
+  {
+  
+    title <
+      name = Water SA ;
+      issn = 0378-4738 ;
+      eissn = 1816-7950 ;
+      issnl = 0378-4738
+    >
+    
+    rights = openaccess
+    plugin = za.ac.nlsa.lockss.plugin.WaterSAPlugin
+    param[base_url] = za.ac.nlsa.lockss.plugin.WaterSAPlugin
+    implicit < status ; year ; name ; volume ; param[year] >    
+
+    au < down ; 1998 ; Water SA 1998 ; 24 ; 1998 >
+    au < down ; 1999 ; Water SA 1999 ; 25 ; 1999 >
+    au < down ; 2000 ; Water SA 2000 ; 26 ; 2000 >
+    au < down ; 2001 ; Water SA 2001 ; 27 ; 2001 >
+    au < down ; 2002 ; Water SA 2002 ; 28 ; 2002 >
+    au < down ; 2003 ; Water SA 2003 ; 29 ; 2003 >
+    au < down ; 2004 ; Water SA 2004 ; 30 ; 2004 >
+    au < down ; 2005 ; Water SA 2005 ; 31 ; 2005 >
+    au < down ; 2006 ; Water SA 2006 ; 32 ; 2006 >
+  
+  }
+
+  {
+   
+   comment[0] = new URL http://www.ajol.info/index.php/wsa
+   comment[coverage] = v.27 (2001) through v.37 (2011)
+
+  }
+  
+}

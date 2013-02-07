@@ -1,0 +1,49 @@
+{
+
+  publisher <
+    name = Waterbird Society
+  >
+
+  {
+
+    title <
+      name = Waterbirds ;
+      issn = 1524-4695 ;
+      eissn = 1938-5390 ;
+      issnl = 1524-4695
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1524-4695
+  
+      au < down ; 2004 ; Waterbirds Volume 27 ; 027 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = cowa
+
+      au < ready ; 2002 ; Waterbirds Volume 25 ; 25 >
+      au < ready ; 2003 ; Waterbirds Volume 26 ; 26 >
+      au < doNotProcess ; 2004 ; Waterbirds Volume 27 ; 27 >
+      au < ready ; 2005 ; Waterbirds Volume 28 ; 28 >
+      au < ready ; 2006 ; Waterbirds Volume 29 ; 29 >
+      au < ready ; 2007 ; Waterbirds Volume 30 ; 30 >
+      au < ready ; 2008 ; Waterbirds Volume 31 ; 31 >
+      au < ready ; 2009 ; Waterbirds Volume 32 ; 32 >
+      au < ready ; 2010 ; Waterbirds Volume 33 ; 33 >
+      au < ready ; 2011 ; Waterbirds Volume 34 ; 34 >
+      au < manifest ; 2012 ; Waterbirds Volume 35 ; 35 >
+
+    }
+
+  }
+
+}

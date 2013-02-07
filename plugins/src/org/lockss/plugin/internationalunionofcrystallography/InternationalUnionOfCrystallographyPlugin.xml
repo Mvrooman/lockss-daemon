@@ -1,0 +1,167 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>down - Michele to contact publisher, determine correct rate.</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>11</string>
+  </entry>
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Metadata</string>
+	<string>3</string>
+      </entry>
+      <entry>
+        <string>Poll</string>
+	<string>1</string>
+      </entry>
+      <entry>
+        <string>Substance</string>
+	<string>2</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>International Union of Crystallography Plugin</string>
+  </entry>
+  <entry>
+    <string>required_daemon_version</string>
+    <string>1.50.0</string>
+  </entry>
+  <entry>
+    <string>plugin_notes</string>
+    <string>Note that each AU under this plugin is an issue, not a volume or a year as is typical.</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>"International Union of Crystallography Plugin, Base URL %s, Scripts URL %s, Journal ID %s, Year %d, Issue %s", base_url, scripts_url, journal_id, year, issue</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>4,"^https?://(%s|%s)/", base_url_host, scripts_url_host</string>
+      <string>1,"^https?://(%s|%s)/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$", base_url_host, scripts_url_host</string>
+      <string>1,"^%s%s/issues/%d/lockss\.html$", base_url, journal_id, year</string>
+      <string>1,"^%slockss\.html$", scripts_url</string>
+      <string>1,"^%s%s/issues/%d/%s/", base_url, journal_id, year, issue</string>
+      <string>1,"^%scgi-bin/(sendcif|sendsup|sendsupfiles)\?", scripts_url</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>"%s%s/issues/%d/%s/00/issconts.html", base_url, journal_id, year, issue</string>
+  </entry>
+  <entry>
+    <string>au_feature_urls</string>
+    <map>
+    <entry>
+      <string>au_title</string>
+      <string>"%s%s/journalhomepage.html", base_url, journal_id</string>
+    </entry>
+    <entry>
+      <string>au_volume</string>
+      <string>"%s%s/issues/%d/csaindx.html", base_url, journal_id, year</string>
+    </entry>
+    <entry>
+      <string>au_issue</string>
+      <string>"%s%s/issues/%d/%s/00/issconts.html", base_url, journal_id, year, issue</string>
+    </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_manifest</string>
+    <list>
+      <string>"%s%s/issues/%d/lockss.html", base_url, journal_id, year</string>
+      <string>"%slockss.html", scripts_url</string>
+    </list>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>year</key>
+        <displayName>Year</displayName>
+        <description>Four digit year (e.g., 2004)</description>
+        <type>4</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>issue</key>
+        <displayName>Issue</displayName>
+        <description>Issue string (usually 2 characters, either month-like e.g. '01' or a supplemental issue e.g. 'a1')</description>
+        <type>1</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>scripts_url</key>
+        <displayName>Scripts URL</displayName>
+        <description>Secondary host, from which some content is delivered</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_id</key>
+        <displayName>Journal Identifier</displayName>
+        <description>Identifier for journal</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>plugin_article_iterator_factory</string>
+    <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>au_substance_url_pattern</string>
+    <list>
+      <string>"^%s%s/issues/%d/%s/00/[^/]+/index\.html$", base_url, journal_id, year, issue</string>
+    </list>
+  </entry>
+    <entry>
+    <string>plugin_article_metadata_extractor_factory</string>
+    <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>text/html_metadata_extractor_factory_map</string>
+    <map>
+      <entry>
+        <string>*;DublinCore</string>
+        <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory</string>
+      </entry>
+    </map>
+  </entry>
+</map>

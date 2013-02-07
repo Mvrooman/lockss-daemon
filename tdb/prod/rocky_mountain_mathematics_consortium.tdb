@@ -1,0 +1,123 @@
+{
+
+  publisher <
+    name = Rocky Mountain Mathematics Consortium
+  >
+  
+  plugin = org.lockss.plugin.rockymountainmathematicsconsortium.RockyMountainMathematicsConsortiumPlugin
+  param[base_url] = http://rmmc.asu.edu/
+  implicit < status ; year ; name ; param[volume_name] >
+  
+  {
+  
+    title <
+      name = Rocky Mountain Journal of Mathematics ;
+      issn = 0035-7596 ;
+      eissn = 1945-3795 ;
+      issnl = 0035-7596
+    >
+    
+    param[journal_id] = rmj
+    
+    au < exists ; 1971 ; Rocky Mountain Journal of Mathematics Volume 1 ; 1 >
+    au < exists ; 1972 ; Rocky Mountain Journal of Mathematics Volume 2 ; 2 >
+    au < exists ; 1973 ; Rocky Mountain Journal of Mathematics Volume 3 ; 3 >
+    au < exists ; 1974 ; Rocky Mountain Journal of Mathematics Volume 4 ; 4 >
+    au < exists ; 1975 ; Rocky Mountain Journal of Mathematics Volume 5 ; 5 >
+    au < exists ; 1976 ; Rocky Mountain Journal of Mathematics Volume 6 ; 6 >
+    au < exists ; 1977 ; Rocky Mountain Journal of Mathematics Volume 7 ; 7 >
+    au < exists ; 1978 ; Rocky Mountain Journal of Mathematics Volume 8 ; 8 >
+    au < exists ; 1979 ; Rocky Mountain Journal of Mathematics Volume 9 ; 9 >
+    au < exists ; 1980 ; Rocky Mountain Journal of Mathematics Volume 10 ; 10 >
+    au < exists ; 1981 ; Rocky Mountain Journal of Mathematics Volume 11 ; 11 >
+    au < exists ; 1982 ; Rocky Mountain Journal of Mathematics Volume 12 ; 12 >
+    au < exists ; 1983 ; Rocky Mountain Journal of Mathematics Volume 13 ; 13 >
+    au < exists ; 1984 ; Rocky Mountain Journal of Mathematics Volume 14 ; 14 >
+    au < exists ; 1985 ; Rocky Mountain Journal of Mathematics Volume 15 ; 15 >
+    au < exists ; 1986 ; Rocky Mountain Journal of Mathematics Volume 16 ; 16 >
+    au < exists ; 1987 ; Rocky Mountain Journal of Mathematics Volume 17 ; 17 >
+    au < exists ; 1988 ; Rocky Mountain Journal of Mathematics Volume 18 ; 18 >
+    au < exists ; 1989 ; Rocky Mountain Journal of Mathematics Volume 19 ; 19 >
+    au < exists ; 1990 ; Rocky Mountain Journal of Mathematics Volume 20 ; 20 >
+    au < exists ; 1991 ; Rocky Mountain Journal of Mathematics Volume 21 ; 21 >
+    au < exists ; 1992 ; Rocky Mountain Journal of Mathematics Volume 22 ; 22 >
+    au < exists ; 1993 ; Rocky Mountain Journal of Mathematics Volume 23 ; 23 >
+    au < exists ; 1994 ; Rocky Mountain Journal of Mathematics Volume 24 ; 24 >
+    au < exists ; 1995 ; Rocky Mountain Journal of Mathematics Volume 25 ; 25 >
+    au < exists ; 1996 ; Rocky Mountain Journal of Mathematics Volume 26 ; 26 >
+    au < exists ; 1997 ; Rocky Mountain Journal of Mathematics Volume 27 ; 27 >
+    au < exists ; 1998 ; Rocky Mountain Journal of Mathematics Volume 28 ; 28 >
+    au < exists ; 1999 ; Rocky Mountain Journal of Mathematics Volume 29 ; 29 >
+    au < exists ; 2000 ; Rocky Mountain Journal of Mathematics Volume 30 ; 30 >
+    au < exists ; 2001 ; Rocky Mountain Journal of Mathematics Volume 31 ; 31 >
+    au < exists ; 2002 ; Rocky Mountain Journal of Mathematics Volume 32 ; 32 >
+    au < exists ; 2003 ; Rocky Mountain Journal of Mathematics Volume 33 ; 33 >
+    au < exists ; 2004 ; Rocky Mountain Journal of Mathematics Volume 34 ; 34 >
+    au < exists ; 2005 ; Rocky Mountain Journal of Mathematics Volume 35 ; 35 >
+    au < exists ; 2006 ; Rocky Mountain Journal of Mathematics Volume 36 ; 36 >
+    au < exists ; 2007 ; Rocky Mountain Journal of Mathematics Volume 37 ; 37 >
+    au < exists ; 2008 ; Rocky Mountain Journal of Mathematics Volume 38 ; 38 >
+    au < exists ; 2009 ; Rocky Mountain Journal of Mathematics Volume 39 ; 39 >
+    au < exists ; 2010 ; Rocky Mountain Journal of Mathematics Volume 40 ; 40 >
+    au < exists ; 2011 ; Rocky Mountain Journal of Mathematics Volume 41 ; 41 >
+    au < exists ; 2012 ; Rocky Mountain Journal of Mathematics Volume 42 ; 42 >
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Integral Equations and Applications ;
+      issn = 0897-3962 ;
+      eissn = 1938-2626 ;
+      issnl = 0897-3962
+    >
+    
+    param[journal_id] = jie
+    
+    au < exists ; 1989 ; Journal of Integral Equations and Applications Volume 1 ; 1 >
+    au < exists ; 1990 ; Journal of Integral Equations and Applications Volume 2 ; 2 >
+    au < exists ; 1991 ; Journal of Integral Equations and Applications Volume 3 ; 3 >
+    au < exists ; 1992 ; Journal of Integral Equations and Applications Volume 4 ; 4 >
+    au < exists ; 1993 ; Journal of Integral Equations and Applications Volume 5 ; 5 >
+    au < exists ; 1994 ; Journal of Integral Equations and Applications Volume 6 ; 6 >
+    au < exists ; 1995 ; Journal of Integral Equations and Applications Volume 7 ; 7 >
+    au < exists ; 1996 ; Journal of Integral Equations and Applications Volume 8 ; 8 >
+    au < exists ; 1997 ; Journal of Integral Equations and Applications Volume 9 ; 9 >
+    au < exists ; 1998 ; Journal of Integral Equations and Applications Volume 10 ; 10 >
+    au < exists ; 1999 ; Journal of Integral Equations and Applications Volume 11 ; 11 >
+    au < exists ; 2000 ; Journal of Integral Equations and Applications Volume 12 ; 12 >
+    au < exists ; 2001 ; Journal of Integral Equations and Applications Volume 13 ; 13 >
+    au < exists ; 2002 ; Journal of Integral Equations and Applications Volume 14 ; 14 >
+    au < exists ; 2003 ; Journal of Integral Equations and Applications Volume 15 ; 15 >
+    au < exists ; 2004 ; Journal of Integral Equations and Applications Volume 16 ; 16 >
+    au < exists ; 2005 ; Journal of Integral Equations and Applications Volume 17 ; 17 >
+    au < exists ; 2006 ; Journal of Integral Equations and Applications Volume 18 ; 18 >
+    au < exists ; 2007 ; Journal of Integral Equations and Applications Volume 19 ; 19 >
+    au < exists ; 2008 ; Journal of Integral Equations and Applications Volume 20 ; 20 >
+    au < exists ; 2009 ; Journal of Integral Equations and Applications Volume 21 ; 21 >
+    au < exists ; 2010 ; Journal of Integral Equations and Applications Volume 22 ; 22 >
+    au < exists ; 2011 ; Journal of Integral Equations and Applications Volume 23 ; 23 >
+    au < exists ; 2012 ; Journal of Integral Equations and Applications Volume 24 ; 24 >
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Commutative Algebra ;
+      issn = 1939-0807 ;
+      eissn = 1939-2346 ;
+      issnl = 1939-2346
+    >
+    
+    param[journal_id] = jca
+    
+    au < exists ; 2009 ; Journal of Commutative Algebra Volume 1 ; 1 >
+    au < exists ; 2010 ; Journal of Commutative Algebra Volume 2 ; 2 >
+    au < exists ; 2011 ; Journal of Commutative Algebra Volume 3 ; 3 >
+    au < expected ; 2012 ; Journal of Commutative Algebra Volume 4 ; 4 >
+
+  }
+  
+}

@@ -1,0 +1,127 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.projmuse.ProjectMusePlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>21</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>3000</long>
+  </entry>
+  <entry>
+    <string>text/html_filter_factory</string>
+    <string>org.lockss.plugin.projmuse.ProjectMuseHtmlFilterFactory</string>
+  </entry>
+  <entry>
+    <string>application/pdf_filter_factory</string>
+    <string>org.lockss.plugin.projmuse.ProjectMusePdfFilterFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Poll</string>
+      <string>8</string>
+      </entry>
+      <entry>
+        <string>Substance</string>
+        <string>2</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>required_daemon_version</string>
+    <string>1.56.0</string>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;Project Muse Plugin, Base URL %s, Journal ID %s, Volume %d&quot;, base_url, journal_dir, volume</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Project Muse Plugin</string>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,&quot;^https?://%s/[^?]*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$&quot;, base_url_host</string>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>2,&quot;%sjournals/%s/v%03d/[^/]+/$&quot;, base_url, journal_dir, volume</string>
+      <string>1,&quot;%sjournals/%s/v%03d/&quot;, base_url, journal_dir, volume</string>
+      <string>1,&quot;%sjournals/%s/summary/v%03d/&quot;, base_url, journal_dir, volume</string>
+      <string>1,&quot;%sjournals/%s/toc/[^/]+\.?%d\.&quot;, base_url, journal_dir, volume</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%sjournals/%s/v%03d/&quot;, base_url, journal_dir, volume</string>
+  </entry>
+  <entry>
+    <string>au_feature_urls</string>
+    <map>
+    <entry>
+      <string>au_title</string>
+      <string>&quot;%sjournals/%s&quot;, base_url, journal_dir</string>
+    </entry>
+    <entry>
+      <string>au_volume</string>
+      <string>&quot;%sjournals/%s/v%03d/&quot;, base_url, journal_dir, volume</string>
+    </entry>
+    <entry>
+      <string>au_issue</string>
+      <list>
+          <string>&quot;%sjournals/%s/toc/%s%s.%s.html&quot;, base_url, journal_dir, journal_id, volume, issue</string>
+          <string>&quot;%sjournals/%s/toc/%s.%s.%s.html&quot;, base_url, journal_dir, journal_id, volume, issue</string>
+        </list>
+	  </entry>
+  	</map>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_dir</key>
+        <displayName>Journal Directory</displayName>
+        <description>Directory name for journal content (i.e. &apos;american_imago&apos;).</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume</key>
+        <displayName>Volume No.</displayName>
+        <type>6</type>
+        <size>8</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>au_substance_url_pattern</string>
+    <list>
+      <string>&quot;%sjournals/%s/v%03d/.*\.(html|pdf)$&quot;, base_url, journal_dir, volume</string>
+    </list>
+  </entry>
+</map>

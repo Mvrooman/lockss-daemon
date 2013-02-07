@@ -1,0 +1,32 @@
+{
+
+  publisher <
+    name = New Chaucer Society
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+
+    title <
+      name = Studies in the Age of Chaucer ;
+      issn = 1949-0755 ;
+      eissn = 0190-2407 ;
+      issnl = 0190-2407
+    >
+
+    param[journal_dir] = studies_in_the_age_of_chaucer
+    attr[journal_id] = sac
+
+    au < released ; 2008 ; Studies in the Age of Chaucer Volume 30 ; 30 >
+    au < released ; 2009 ; Studies in the Age of Chaucer Volume 31 ; 31 >
+    au < released ; 2010 ; Studies in the Age of Chaucer Volume 32 ; 32 >
+    au < released ; 2011 ; Studies in the Age of Chaucer Volume 33 ; 33 >
+    au < manifest ; 2012 ; Studies in the Age of Chaucer Volume 34 ; 34 >
+
+
+  }
+
+}

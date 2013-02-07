@@ -1,0 +1,34 @@
+{
+
+  publisher <
+    name = Words Without Borders
+  >
+  
+  
+  {
+
+    title <
+      name = Words Without Borders ;
+      issn = 1936-1459 ;
+      issnl = 1936-1459
+    >
+
+    rights = openaccess
+    plugin = org.nypl.plugin.WordsWithoutBordersPlugin
+    param[base_url] = http://www.wordswithoutborders.org/
+    implicit < status ; year ; name ; param[year] >
+
+    au < down ; 2003 ; Words Without Borders 2003 ; 2003 >
+    au < down ; 2004 ; Words Without Borders 2004 ; 2004 >
+    au < down ; 2005 ; Words Without Borders 2005 ; 2005 >
+    au < down ; 2006 ; Words Without Borders 2006 ; 2006 >
+    au < exists ; 2007 ; Words Without Borders 2007 ; 2007 >
+    au < exists ; 2008 ; Words Without Borders 2008 ; 2008 >
+    au < exists ; 2009 ; Words Without Borders 2009 ; 2009 >
+    au < exists ; 2010 ; Words Without Borders 2010 ; 2010 >
+    au < exists ; 2011 ; Words Without Borders 2011 ; 2011 >
+    au < exists ; 2012 ; Words Without Borders 2012 ; 2012 >
+    
+  }
+  
+}

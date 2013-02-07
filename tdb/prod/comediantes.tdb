@@ -1,0 +1,30 @@
+{
+
+  publisher <
+    name = Comediantes
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Bulletin of the Comediantes ;
+      issn = 0007-5108 ;
+      eissn = 1944-0928 ;
+      issnl = 0007-5108
+    >
+
+    param[journal_dir] = bulletin_of_the_comediantes
+    attr[journal_id] = boc
+
+    au < released ; 2009 ; Bulletin of the Comediantes Volume 61 ; 61 >
+    au < released ; 2010 ; Bulletin of the Comediantes Volume 62 ; 62 >
+    au < released ; 2011 ; Bulletin of the Comediantes Volume 63 ; 63 >
+    au < ready ; 2012 ; Bulletin of the Comediantes Volume 64 ; 64 >
+
+  }
+  
+}

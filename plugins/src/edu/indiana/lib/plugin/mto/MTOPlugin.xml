@@ -1,0 +1,73 @@
+<map>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>edu.indiana.lib.plugin.mto.MTOPlugin</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;Music Theory Online Plugin, Base URL %s, Year %d, Volume %d&quot;, base_url, year, volume</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Music Theory Online Plugin</string>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;%smto/lockss/index%d.html&quot;, base_url, year</string>
+      <string>1,&quot;%smto/issues/mto\.%02d\.%d\.[0-9]+/.*&quot;, base_url, au_short_year, volume</string>
+      <string>2,&quot;%smto/issues/mto\.[0-9]+\.[0-9]+\.[0-9]+/.*&quot;, base_url</string>
+      <string>2,&quot;%smto/issues/issues\.html&quot;, base_url</string>
+      <string>1,&quot;%smto/issues/.*&quot;, base_url</string>
+      <string>1,&quot;%smto/gifs/.*&quot;, base_url</string>
+      <string>2,&quot;%smto/index\.html&quot;, base_url</string>
+      <string>2,&quot;%smto/docs/.*&quot;, base_url</string>
+      <string>2,&quot;%ssmt-list/.*&quot;, base_url</string>
+      <string>2,&quot;%scgi-bin/.*&quot;, base_url</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%smto/lockss/index%d.html&quot;, base_url, year</string>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>year</key>
+        <displayName>Year</displayName>
+        <description>Four digit year (e.g., 2004)</description>
+        <type>4</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume</key>
+        <displayName>Volume No.</displayName>
+        <type>6</type>
+        <size>8</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+</map>

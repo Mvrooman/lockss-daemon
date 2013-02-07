@@ -1,0 +1,30 @@
+{
+
+  publisher <
+    name = Société Guilhem IX
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = Tenso ;
+      issn = 0890-3352 ;
+      eissn = 1944-0146 ;
+      issnl = 0890-3352
+    >
+
+    param[journal_dir] = tenso
+    attr[journal_id] = ten
+
+    au < released ; 2009 ; Tenso Volume 24 ; 24 >
+    au < released ; 2010 ; Tenso Volume 25 ; 25 >
+    au < released ; 2011 ; Tenso Volume 26 ; 26 >
+    au < ready ; 2012 ; Tenso Volume 27 ; 27 >
+
+  }
+
+}

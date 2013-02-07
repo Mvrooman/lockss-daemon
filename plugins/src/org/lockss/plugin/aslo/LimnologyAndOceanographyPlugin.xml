@@ -1,0 +1,117 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.aslo.LimnologyAndOceanographyPlugin</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>1200000</long>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>7</string>
+  </entry>
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Substance</string>
+        <string>2</string>
+      </entry>
+      <entry>
+        <string>Poll</string>
+        <string>1</string>
+      </entry>
+      <entry>
+        <string>Metadata</string>
+        <string>1</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;ASLO Plugin (Limnology and Oceanography), Base URL %s, Journal ID %s, Volume %s&quot;, base_url, journal_id, volume_name</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>ASLO Plugin (Limnology and Oceanography)</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,&quot;^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$&quot;, base_url_host</string>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;^%s%s/toc/vol_%s/&quot;, base_url, journal_id, volume_name</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%s%s/toc/vol_%s/lockss.html&quot;, base_url, journal_id, volume_name</string>
+  </entry>
+  <entry>
+    <string>au_substance_url_pattern</string>
+      <list>
+        <string>&quot;^%s%s/toc/vol_%s/[^/]+/[^/]+.pdf$&quot;, base_url, journal_id, volume_name</string>
+      </list>
+  </entry>
+  <entry>
+  	<string>au_feature_urls</string>
+  	<map>
+	  <entry>
+	    <string>au_title</string>
+	    <string>&quot;%s%s/toc/index.html&quot;, base_url, journal_id</string>
+	  </entry>
+	  <entry>
+	    <string>au_volume</string>
+      <string>1,&quot;^%s%s/toc/vol_%s/&quot;, base_url, journal_id, volume_name</string>
+	  </entry>
+	  <entry>
+	    <string>au_issue</string>
+	    <string>&quot;%s%s/toc/vol_%s/issue_%s&quot;, base_url, journal_id, volume_name, issue</string>
+	  </entry>
+  	</map>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_id</key>
+        <displayName>Journal Identifier</displayName>
+        <description>Identifier for journal (often used as part of file names)</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume_name</key>
+        <displayName>Volume Name</displayName>
+        <type>1</type>
+        <size>20</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>plugin_fetch_rate_limiter_source</string>
+    <string>key:ASLO</string>
+  </entry>
+</map>

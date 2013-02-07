@@ -1,0 +1,49 @@
+{
+
+  publisher <
+    name = Southern Appalachian Botanical Society
+  >
+
+  {
+    title <
+      name = Castanea ;
+      issn = 0008-7475 ;
+      eissn = 1938-4386 ;
+      issnl = 0008-7475
+    >
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0008-7475
+  
+      au < down ; 2004 ; Castanea Volume 69 ; 069 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = cast
+
+      au < ready ; 2002 ; Castanea Volume 68 ; 68 >
+      au < doNotProcess ; 2004 ; Castanea Volume 69 ; 69 >
+      au < ready ; 2005 ; Castanea Volume 70 ; 70 >
+      au < ready ; 2006 ; Castanea Volume 71 ; 71 >
+      au < ready ; 2007 ; Castanea Volume 72 ; 72 >
+      au < ready ; 2008 ; Castanea Volume 73 ; 73 >
+      au < ready ; 2009 ; Castanea Volume 74 ; 74 >
+      au < ready ; 2010 ; Castanea Volume 75 ; 75 >
+      au < ready ; 2011 ; Castanea Volume 76 ; 76 >
+      au < manifest ; 2012 ; Castanea Volume 77 ; 77 >
+
+    }
+
+  }
+
+}
+

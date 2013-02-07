@@ -1,0 +1,177 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>testing - Michele</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.nature.ClockssNaturePublishingGroupPlugin</string>
+  </entry>
+  <entry>
+    <string>required_daemon_version</string>
+    <string>1.48.0</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>36</string>
+  </entry>
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Poll</string>
+        <string>5</string>
+      </entry>
+      <entry>
+        <string>Metadata</string>
+        <string>4</string>
+      </entry>
+      <entry>
+        <string>Substance</string>
+        <string>2</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>text/html_filter_factory</string>
+    <string>org.lockss.plugin.nature.NaturePublishingGroupHtmlFilterFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_article_iterator_factory</string>
+    <string>org.lockss.plugin.nature.NaturePublishingGroupArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_article_metadata_extractor_factory</string>
+    <string>org.lockss.plugin.nature.NaturePublishingGroupArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>text/html_metadata_extractor_factory_map</string>
+    <map>
+      <entry>
+        <string>*;DublinCore</string>
+        <string>org.lockss.plugin.nature.NatureHtmlMetadataExtractorFactory</string>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;Nature Publishing Group Plugin (CLOCKSS), Base URL %s, Journal ID %s, Year %d, Volume %s&quot;, base_url, journal_id, year, volume_name</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Nature Publishing Group Plugin (CLOCKSS)</string>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>1,&quot;^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$&quot;, base_url_host</string>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;^%s%s/clockss/%s_clockss_%d.html$&quot;, base_url, journal_id, journal_id, year</string>
+      <string>2,&quot;^%s%s/journal/v%s/.*\?lang=[a-z]{2}$&quot;, base_url, journal_id, volume_name</string>
+      <string>2,&quot;^%s%s/journal/v%s/[^/]+/[^/]+/[^/]+_ja\.html$&quot;, base_url, journal_id, volume_name</string>
+      <string>2,&quot;^%s%s/journal/v%s/[^/]+/(products|pubmed)/&quot;, base_url, journal_id, volume_name</string>
+      <string>2,&quot;^%s.*url_ver=&quot;,base_url</string>
+      <string>1,&quot;^%s%s/journal/v%s/&quot;, base_url, journal_id, volume_name</string>
+      <string>1,&quot;^%s%s/index_ja\.html\?volume=%s&quot;, base_url, journal_id, volume_name</string>
+      <!-- for ncomms -->
+      <string>1,&quot;^%s%s/archive/date/%d/&quot;, base_url, journal_id, year</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_crawlrules_notes</string>
+    <string>The "url_ver=" rule exists because in Nature Reviews Molecular Cell Biology,
+            there were dozens of extremely long URLs that all started with url_ver=Z39.88-2004.</string>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%s%s/clockss/%s_clockss_%d.html&quot;, base_url, journal_id, journal_id, year</string>
+  </entry>
+  <entry>
+  	<string>au_feature_urls</string>
+  	<map>
+	  <entry>
+	    <string>au_title</string>
+	    <string>&quot;%s/%s&quot;, base_url, journal_id</string>
+	  </entry>
+	  <entry>
+	    <string>au_volume</string>
+	    <string>&quot;%s%s/clockss/%s_clockss_%d.html&quot;, base_url, journal_id, journal_id, year</string>
+	  </entry>
+	  <entry>
+	    <string>au_issue</string>
+	    <string>&quot;%s%s/(journal/v%s/n%s|archive/date/%d/[0-9]+)/index.html&quot;, base_url, journal_id, volume_name, issue, year</string>
+	  </entry>
+	  <entry>
+	    <string>au_article</string>
+	    <string>&quot;%s%s/journal/v%s/n%s/full/%s.%d.%s.html&quot;, base_url, journal_id, volume_name, issue, journal_id, year, article</string>
+	  </entry>
+  	</map>
+  </entry>
+  <entry>
+    <string>au_substance_url_pattern</string>
+    <list>
+      <string>&quot;^%s%s/journal/v%s/[^/]+/(full|pdf)/[^/]+\.(html|pdf)$&quot;, base_url, journal_id, volume_name</string>
+    </list>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_id</key>
+        <displayName>Journal Identifier</displayName>
+        <description>Identifier for journal (often used as part of file names)</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>year</key>
+        <displayName>Year</displayName>
+        <description>Four digit year (e.g., 2004)</description>
+        <type>4</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume_name</key>
+        <displayName>Volume Name</displayName>
+        <type>1</type>
+        <size>20</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>au_login_page_checker</string>
+    <string>org.lockss.plugin.nature.NaturePublishingGroupLoginPageChecker</string>
+  </entry>
+  <entry>
+    <string>clockss_override</string>
+    <map>
+      <entry>
+        <string>au_def_pause_time</string>
+        <long>100</long>
+      </entry>
+    </map>
+  </entry>
+</map>

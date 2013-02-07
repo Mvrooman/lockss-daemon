@@ -1,0 +1,25 @@
+{
+
+  publisher <
+    name = Drogo Research
+  >
+
+  {
+    title <
+      name = International Journal of Psychiatric Nursing Research ;
+      issn = 0968-0624 ;
+      issnl = 0968-0624
+    >
+
+    rights = openaccess
+    plugin = uk.org.lockss.plugin.drogoresearch.DrogoResearchPlugin
+    param[base_url] = http://www.drogoresearch.com/
+    comment[0] = Articles for 2006-2007 available at http://www.researchgate.net/journal/0968-0624_The_international_journal_of_psychiatric_nursing_research
+    comment[ceased] = This title has ceased and is no longer available online.
+    implicit < status ; name >
+
+    au < down ; International Journal of Psychiatric Nursing Research >
+
+  }
+
+}

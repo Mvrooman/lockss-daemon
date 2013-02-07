@@ -1,0 +1,28 @@
+{
+
+  publisher <
+    name = University of York Department of Mathematics
+  >
+
+  {
+  
+    title <
+      name = Journal of Logic and Analysis ;
+      issn = 1759-9008 ;
+      issnl = 1759-9008
+    >
+  
+    rights = openaccess
+    plugin = org.lockss.plugin.ojs2.OJS2Plugin
+    param[base_url] = http://www.logicandanalysis.org/
+    param[journal_id] = jla
+    implicit < status ; year ; name ; volume ; param[year] >
+
+    au < released ; 2009 ; Journal of Logic and Analysis Volume 1 ; 1 ; 2009 >
+    au < released ; 2010 ; Journal of Logic and Analysis Volume 2 ; 2 ; 2010 >
+    au < released ; 2011 ; Journal of Logic and Analysis Volume 3 ; 3 ; 2011 >
+    au < released ; 2012 ; Journal of Logic and Analysis Volume 4 ; 4 ; 2012 >
+    
+  }
+
+}

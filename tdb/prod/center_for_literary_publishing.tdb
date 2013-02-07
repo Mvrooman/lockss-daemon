@@ -1,0 +1,27 @@
+{
+
+  publisher <
+    name = Center for Literary Publishing
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = Colorado Review ;
+      issn = 1046-3348 
+    >
+
+    comment[0] = coming in 2013
+    param[journal_dir] = colorado_review
+    attr[journal_id] = 
+
+    au < expected ; 2013 ; Colorado Review Volume 40 ; 40 >
+
+  }
+
+
+}

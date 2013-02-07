@@ -1,0 +1,29 @@
+{
+  publisher <
+    name = Rocky Mountain Modern Language Association
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Rocky Mountain Review ;
+      issn = 1948-2825 ;
+      eissn =  1948-2833 ;
+      issnl = 1948-2825
+    >
+
+    param[journal_dir] = rocky_mountain_review
+    attr[journal_id] = rmr
+
+    au < released ; 2011 ; Rocky Mountain Review Volume 65 ; 65 >
+    au < released ; 2012 ; Rocky Mountain Review Volume 66 ; 66 >
+
+
+  }
+
+}
+    

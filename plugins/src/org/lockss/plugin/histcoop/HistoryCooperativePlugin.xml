@@ -1,0 +1,72 @@
+<map>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.histcoop.HistoryCooperativePlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>2</string>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;History Cooperative Plugin, Base URL %s, Journal Directory %s, Volume %d&quot;, base_url, journal_dir, volume</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>History Cooperative Plugin</string>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;%sjournals/%s/lockss-volume%d.html&quot;, base_url, journal_dir, volume</string>
+      <string>1,&quot;%sjournals/%s/%d\.[0-9]*/&quot;, base_url, journal_dir, volume</string>
+      <string>1,&quot;%sgifs/.*&quot;, base_url</string>
+      <string>1,&quot;%sjournals/images/.*&quot;, base_url</string>
+      <string>1,&quot;%sjournals/%s/images/.*&quot;, base_url, journal_dir</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%sjournals/%s/lockss-volume%d.html&quot;, base_url, journal_dir, volume</string>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>journal_dir</key>
+        <displayName>Journal Directory</displayName>
+        <description>Directory name for journal content (i.e. &apos;american_imago&apos;).</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume</key>
+        <displayName>Volume No.</displayName>
+        <type>6</type>
+        <size>8</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+</map>

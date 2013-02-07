@@ -1,0 +1,47 @@
+{
+
+  publisher <
+    name = Histochemical Society
+  >
+
+  {
+    title <
+      name = Journal of Histochemistry and Cytochemistry ;
+      issn = 0022-1554 ;
+      eissn = 1551-5044 ;
+      issnl = 0022-1554
+    >
+
+    pluginPrefix = org.lockss.plugin.highwire.
+
+    {
+
+      pluginSuffix = HighWirePlugin
+      param[base_url] = http://www.jhc.org/
+      implicit < status ; year ; name ; param[volume] >
+      
+      comment[h20] = Moved to Sage.  Url redirects to http://jhc.sagepub.com/
+
+      au < down ; 2004 ; Journal of Histochemistry and Cytochemistry Volume 52 ; 52 >
+      au < down ; 2006 ; Journal of Histochemistry and Cytochemistry Volume 54 ; 54 >
+
+    }
+
+    {
+
+      param[base_url] = http://www.jhc.org/
+      implicit < pluginSuffix ; status ; year ; name ; param[volume_name] >
+      
+      comment[h20] = Moved to Sage.  Url redirects to http://jhc.sagepub.com/
+
+      au < HighWireStrVolPlugin ; down ; 2005 ; Journal of Histochemistry and Cytochemistry Volume 53 ; 53 >
+      au < HighWireStrVolPlugin ; down ; 2007 ; Journal of Histochemistry and Cytochemistry Volume 55 ; 55 >
+      au < HighWirePressPlugin ; down ; 2008 ; Journal of Histochemistry and Cytochemistry Volume 56 ; 56 >
+      au < HighWirePressPlugin ; down ; 2009 ; Journal of Histochemistry and Cytochemistry Volume 57 ; 57 >
+      au < HighWirePressPlugin ; down ; 2010 ; Journal of Histochemistry and Cytochemistry Volume 58 ; 58 >
+
+    }
+
+  }
+
+}

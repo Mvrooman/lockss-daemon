@@ -1,0 +1,33 @@
+{
+
+  publisher <
+    name = Modern Language Association Division on Medieval Hispanic Languages, Literatures, and Cultures
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+
+    title <
+      name = La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures ;
+      issn = 0193-3892 ;
+      eissn = 1947-4261 ;
+      issnl = 0193-3892
+    >
+
+    param[journal_dir] = la_coronica
+    attr[journal_id] = cor
+
+    au < released ; 2008-2009 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 37 ; 37 >
+    au < released ; 2009-2010 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 38 ; 38 >
+    au < released ; 2010 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 39 ; 39 >
+    au < released ; 2011 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 40 ; 40 >
+    au < manifest ; 2012 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 41 ; 41 >
+    au < expected ; 2013 ; La corónica: A Journal of Medieval Hispanic Languages, Literatures, and Cultures Volume 42 ; 42 >
+    
+
+  }
+
+}

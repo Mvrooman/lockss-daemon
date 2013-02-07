@@ -1,0 +1,25 @@
+{
+
+  publisher <
+    name = PeerJ ;
+    info[contract] = 2012 ;
+    info[tester] = 7
+  >
+
+  {
+  
+    title < 
+      name = PeerJ
+    >
+    
+  }
+
+  {
+  
+    title < 
+      name = PeerJ PrePrints
+    >
+    
+  }
+
+}

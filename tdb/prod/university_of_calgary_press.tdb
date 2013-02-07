@@ -1,0 +1,33 @@
+{
+  publisher <
+    name = University of Calgary Press
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Canadian Journal of Philosophy ;
+      issn = 0045-5091 ;
+      eissn = 1911-0820 ;
+      issnl = 0045-5091
+    >
+
+    param[journal_dir] = canadian_journal_of_philosophy
+    attr[journal_id] = cjp
+
+    au < released ; 2006 ; Canadian Journal of Philosophy Volume 36 ; 36 >
+    au < released ; 2007 ; Canadian Journal of Philosophy Volume 37 ; 37 >
+    au < released ; 2008 ; Canadian Journal of Philosophy Volume 38 ; 38 >
+    au < released ; 2009 ; Canadian Journal of Philosophy Volume 39 ; 39 >
+    au < ready ; 2010 ; Canadian Journal of Philosophy Volume 40 ; 40 >
+    au < ready ; 2011 ; Canadian Journal of Philosophy Volume 41 ; 41 >
+    au < manifest ; 2012 ; Canadian Journal of Philosophy Volume 42 ; 42 >
+    au < expected ; 2013 ; Canadian Journal of Philosophy Volume 43 ; 43 >
+ 
+  }
+
+}

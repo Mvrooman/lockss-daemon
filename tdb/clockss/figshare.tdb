@@ -1,0 +1,20 @@
+{
+
+  publisher <
+    name = Figshare ;
+    info[contract] = 2012 ;
+    info[tester] = 0
+  >
+  plugin = needs.plugin
+  
+  {
+  
+    title < 
+      name = Placeholder
+    >
+
+    
+    
+  }
+
+}

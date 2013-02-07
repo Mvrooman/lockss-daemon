@@ -1,0 +1,50 @@
+{
+
+  publisher <
+    name = Association of Field Ornithologists
+  >
+
+  {
+    title <
+      name = Journal of Field Ornithology ;
+      issn = 0273-8570 ;
+      eissn = 1557-9263 ;
+      issnl = 0273-8570
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0273-8570
+  
+      au < down ; 2000 ; Journal of Field Ornithology Volume 71 ; 71 >
+      au < down ; 2001 ; Journal of Field Ornithology Volume 72 ; 72 >
+      au < down ; 2002 ; Journal of Field Ornithology Volume 73 ; 73 >
+      au < down ; 2003 ; Journal of Field Ornithology Volume 74 ; 74 >
+      au < down ; 2004 ; Journal of Field Ornithology Volume 75 ; 75 >
+      au < down ; 2005 ; Journal of Field Ornithology Volume 76 ; 076 >
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = forn
+      
+      au < doNotProcess ; 2000 ; Journal of Field Ornithology Volume 71 ; 71 >
+      au < doNotProcess ; 2001 ; Journal of Field Ornithology Volume 72 ; 72 >
+      au < doNotProcess ; 2002 ; Journal of Field Ornithology Volume 73 ; 73 >
+      au < doNotProcess ; 2003 ; Journal of Field Ornithology Volume 74 ; 74 >
+      au < doNotProcess ; 2004 ; Journal of Field Ornithology Volume 75 ; 75 >
+      au < doNotProcess ; 2005 ; Journal of Field Ornithology Volume 76 ; 76 >
+
+      
+
+    }
+
+  }
+
+}
+

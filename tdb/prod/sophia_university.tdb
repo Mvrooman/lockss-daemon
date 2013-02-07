@@ -1,0 +1,34 @@
+{
+
+  publisher <
+    name = Sophia University
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = Monumenta Nipponica ;
+      issn = 1880-1390 ;
+      eissn = 0027-0741 ;
+      issnl = 0027-0741
+    >
+
+    param[journal_dir] = monumenta_nipponica
+    attr[journal_id] = mni
+
+    au < released ; 2005 ; Monumenta Nipponica Volume 60 ; 60 >
+    au < released ; 2006 ; Monumenta Nipponica Volume 61 ; 61 >
+    au < released ; 2007 ; Monumenta Nipponica Volume 62 ; 62 >
+    au < released ; 2008 ; Monumenta Nipponica Volume 63 ; 63 >
+    au < released ; 2009 ; Monumenta Nipponica Volume 64 ; 64 >
+    au < released ; 2010 ; Monumenta Nipponica Volume 65 ; 65 >
+    au < released ; 2011 ; Monumenta Nipponica Volume 66 ; 66 >
+    au < released ; 2012 ; Monumenta Nipponica Volume 67 ; 67 >
+
+  }
+
+}

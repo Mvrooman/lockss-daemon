@@ -1,0 +1,221 @@
+{
+
+  publisher <
+    name = Geological Society of America
+  >
+
+  {
+
+    title <
+      name = Geological Society of America Bulletin ;
+      issn = 0016-7606 ;
+      eissn = 1943-2674 ;
+      issnl = 0016-7606
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://gsabulletin.gsapubs.org/
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 1918 ; Geological Society of America Bulletin Volume 29 [abstracts only] ; 29 >
+    au < released ; 1919 ; Geological Society of America Bulletin Volume 30 [abstracts only] ; 30 >
+    au < released ; 1920 ; Geological Society of America Bulletin Volume 31 [abstracts only] ; 31 >
+    au < released ; 1921 ; Geological Society of America Bulletin Volume 32 [abstracts only] ; 32 >
+    au < released ; 1922 ; Geological Society of America Bulletin Volume 33 [abstracts only] ; 33 >
+    au < released ; 1923 ; Geological Society of America Bulletin Volume 34 [abstracts only] ; 34 >
+    au < released ; 1924 ; Geological Society of America Bulletin Volume 35 [abstracts only] ; 35 >
+    au < released ; 1925 ; Geological Society of America Bulletin Volume 36 [abstracts only] ; 36 >
+    au < released ; 1926 ; Geological Society of America Bulletin Volume 37 [abstracts only] ; 37 >
+    au < released ; 1927 ; Geological Society of America Bulletin Volume 38 [abstracts only] ; 38 >
+    au < released ; 1928 ; Geological Society of America Bulletin Volume 39 [abstracts only] ; 39 >
+    au < released ; 1929 ; Geological Society of America Bulletin Volume 40 [abstracts only] ; 40 >
+    au < released ; 1930 ; Geological Society of America Bulletin Volume 41 [abstracts only] ; 41 >
+    au < released ; 1931 ; Geological Society of America Bulletin Volume 42 [abstracts only] ; 42 >
+    au < released ; 1932 ; Geological Society of America Bulletin Volume 43 [abstracts only] ; 43 >
+    au < released ; 1933 ; Geological Society of America Bulletin Volume 44 [abstracts only] ; 44 >
+    au < released ; 1934 ; Geological Society of America Bulletin Volume 45 [abstracts only] ; 45 >
+    au < released ; 1935 ; Geological Society of America Bulletin Volume 46 [abstracts only] ; 46 >
+    au < released ; 1936 ; Geological Society of America Bulletin Volume 47 [abstracts only] ; 47 >
+    au < released ; 1937 ; Geological Society of America Bulletin Volume 48 [abstracts only] ; 48 >
+    au < released ; 1938 ; Geological Society of America Bulletin Volume 49 [abstracts only] ; 49 >
+    au < released ; 1939 ; Geological Society of America Bulletin Volume 50 [abstracts only] ; 50 >
+    au < released ; 1940 ; Geological Society of America Bulletin Volume 51 [abstracts only] ; 51 >
+    au < released ; 1941 ; Geological Society of America Bulletin Volume 52 [abstracts only] ; 52 >
+    au < released ; 1942 ; Geological Society of America Bulletin Volume 53 [abstracts only] ; 53 >
+    au < released ; 1943 ; Geological Society of America Bulletin Volume 54 [abstracts only] ; 54 >
+    au < released ; 1944 ; Geological Society of America Bulletin Volume 55 [abstracts only] ; 55 >
+    au < released ; 1945 ; Geological Society of America Bulletin Volume 56 ; 56 >
+    au < released ; 1946 ; Geological Society of America Bulletin Volume 57 ; 57 >
+    au < released ; 1947 ; Geological Society of America Bulletin Volume 58 ; 58 >
+    au < released ; 1948 ; Geological Society of America Bulletin Volume 59 ; 59 >
+    au < released ; 1949 ; Geological Society of America Bulletin Volume 60 ; 60 >
+    au < released ; 1950 ; Geological Society of America Bulletin Volume 61 ; 61 >
+    au < released ; 1951 ; Geological Society of America Bulletin Volume 62 ; 62 >
+    au < released ; 1952 ; Geological Society of America Bulletin Volume 63 ; 63 >
+    au < released ; 1953 ; Geological Society of America Bulletin Volume 64 ; 64 >
+    au < released ; 1954 ; Geological Society of America Bulletin Volume 65 ; 65 >
+    au < released ; 1955 ; Geological Society of America Bulletin Volume 66 ; 66 >
+    au < released ; 1956 ; Geological Society of America Bulletin Volume 67 ; 67 >
+    au < released ; 1957 ; Geological Society of America Bulletin Volume 68 ; 68 >
+    au < released ; 1958 ; Geological Society of America Bulletin Volume 69 ; 69 >
+    au < released ; 1959 ; Geological Society of America Bulletin Volume 70 ; 70 >
+    au < released ; 1960 ; Geological Society of America Bulletin Volume 71 ; 71 >
+    au < released ; 1961 ; Geological Society of America Bulletin Volume 72 ; 72 >
+    au < released ; 1962 ; Geological Society of America Bulletin Volume 73 ; 73 >
+    au < released ; 1963 ; Geological Society of America Bulletin Volume 74 ; 74 >
+    au < released ; 1964 ; Geological Society of America Bulletin Volume 75 ; 75 >
+    au < released ; 1965 ; Geological Society of America Bulletin Volume 76 ; 76 >
+    au < released ; 1966 ; Geological Society of America Bulletin Volume 77 ; 77 >
+    au < released ; 1967 ; Geological Society of America Bulletin Volume 78 ; 78 >
+    au < released ; 1968 ; Geological Society of America Bulletin Volume 79 ; 79 >
+    au < released ; 1969 ; Geological Society of America Bulletin Volume 80 ; 80 >
+    au < released ; 1970 ; Geological Society of America Bulletin Volume 81 ; 81 >
+    au < released ; 1971 ; Geological Society of America Bulletin Volume 82 ; 82 >
+    au < released ; 1972 ; Geological Society of America Bulletin Volume 83 ; 83 >
+    au < released ; 1973 ; Geological Society of America Bulletin Volume 84 ; 84 >
+    au < released ; 1974 ; Geological Society of America Bulletin Volume 85 ; 85 >
+    au < released ; 1975 ; Geological Society of America Bulletin Volume 86 ; 86 >
+    au < released ; 1976 ; Geological Society of America Bulletin Volume 87 ; 87 >
+    au < released ; 1977 ; Geological Society of America Bulletin Volume 88 ; 88 >
+    au < released ; 1978 ; Geological Society of America Bulletin Volume 89 ; 89 >
+    au < released ; 1979 ; Geological Society of America Bulletin Volume 90 ; 90 >
+    au < released ; 1980 ; Geological Society of America Bulletin Volume 91 ; 91 >
+    au < released ; 1981 ; Geological Society of America Bulletin Volume 92 ; 92 >
+    au < released ; 1982 ; Geological Society of America Bulletin Volume 93 ; 93 >
+    au < released ; 1983 ; Geological Society of America Bulletin Volume 94 ; 94 >
+    au < released ; 1984 ; Geological Society of America Bulletin Volume 95 ; 95 >
+    au < released ; 1985 ; Geological Society of America Bulletin Volume 96 ; 96 >
+    au < released ; 1986 ; Geological Society of America Bulletin Volume 97 ; 97 >
+    au < released ; 1987 ; Geological Society of America Bulletin Volume 98 ; 98 >
+    au < released ; 1987 ; Geological Society of America Bulletin Volume 99 ; 99 >
+    au < ready ; 1988 ; Geological Society of America Bulletin Volume 100 ; 100 >
+    au < ready ; 1989 ; Geological Society of America Bulletin Volume 101 ; 101 >
+    au < ready ; 1990 ; Geological Society of America Bulletin Volume 102 ; 102 >
+    au < ready ; 1991 ; Geological Society of America Bulletin Volume 103 ; 103 >
+    au < ready ; 1992 ; Geological Society of America Bulletin Volume 104 ; 104 >
+    au < ready ; 1993 ; Geological Society of America Bulletin Volume 105 ; 105 >
+    au < ready ; 1994 ; Geological Society of America Bulletin Volume 106 ; 106 >
+    au < ready ; 1995 ; Geological Society of America Bulletin Volume 107 ; 107 >
+    au < ready ; 1996 ; Geological Society of America Bulletin Volume 108 ; 108 >
+    au < released ; 1997 ; Geological Society of America Bulletin Volume 109 ; 109 >
+    au < released ; 1998 ; Geological Society of America Bulletin Volume 110 ; 110 >
+    au < released ; 1999 ; Geological Society of America Bulletin Volume 111 ; 111 >
+    au < released ; 2000 ; Geological Society of America Bulletin Volume 112 ; 112 >
+    au < released ; 2001 ; Geological Society of America Bulletin Volume 113 ; 113 >
+    au < released ; 2002 ; Geological Society of America Bulletin Volume 114 ; 114 >
+    au < released ; 2003 ; Geological Society of America Bulletin Volume 115 ; 115 >
+    au < released ; 2004 ; Geological Society of America Bulletin Volume 116 ; 116 >
+    au < released ; 2005 ; Geological Society of America Bulletin Volume 117 ; 117 >
+    au < released ; 2006 ; Geological Society of America Bulletin Volume 118 ; 118 >
+    au < released ; 2007 ; Geological Society of America Bulletin Volume 119 ; 119 >
+    au < released ; 2008 ; Geological Society of America Bulletin Volume 120 ; 120 >
+    au < released ; 2009 ; Geological Society of America Bulletin Volume 121 ; 121 >
+    au < released ; 2010 ; Geological Society of America Bulletin Volume 122 ; 122 >
+    au < released ; 2011 ; Geological Society of America Bulletin Volume 123 ; 123 >
+    au < released ; 2012 ; Geological Society of America Bulletin Volume 124 ; 124 >
+    au < manifest ; 2013 ; Geological Society of America Bulletin Volume 125 ; 125 >
+
+  }
+
+  {
+
+    title <
+      name = Geology ;
+      issn = 0091-7613 ;
+      eissn = 1943-2682 ;
+      issnl = 0091-7613
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://geology.gsapubs.org/
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 1973 ; Geology Volume 1 ; 1 >
+    au < released ; 1974 ; Geology Volume 2 ; 2 >
+    au < released ; 1975 ; Geology Volume 3 ; 3 >
+    au < released ; 1976 ; Geology Volume 4 ; 4 >
+    au < released ; 1977 ; Geology Volume 5 ; 5 >
+    au < released ; 1978 ; Geology Volume 6 ; 6 >
+    au < released ; 1979 ; Geology Volume 7 ; 7 >
+    au < released ; 1980 ; Geology Volume 8 ; 8 >
+    au < released ; 1981 ; Geology Volume 9 ; 9 >
+    au < released ; 1982 ; Geology Volume 10 ; 10 >
+    au < released ; 1983 ; Geology Volume 11 ; 11 >
+    au < released ; 1984 ; Geology Volume 12 ; 12 >
+    au < released ; 1985 ; Geology Volume 13 ; 13 >
+    au < released ; 1986 ; Geology Volume 14 ; 14 >
+    au < released ; 1987 ; Geology Volume 15 ; 15 >
+    au < released ; 1988 ; Geology Volume 16 ; 16 >
+    au < released ; 1989 ; Geology Volume 17 ; 17 >
+    au < released ; 1990 ; Geology Volume 18 ; 18 >
+    au < released ; 1991 ; Geology Volume 19 ; 19 >
+    au < released ; 1992 ; Geology Volume 20 ; 20 >
+    au < released ; 1993 ; Geology Volume 21 ; 21 >
+    au < released ; 1994 ; Geology Volume 22 ; 22 >
+    au < released ; 1995 ; Geology Volume 23 ; 23 >
+    au < released ; 1996 ; Geology Volume 24 ; 24 >
+    au < released ; 1997 ; Geology Volume 25 ; 25 >
+    au < released ; 1998 ; Geology Volume 26 ; 26 >
+    au < released ; 1999 ; Geology Volume 27 ; 27 >
+    au < released ; 2000 ; Geology Volume 28 ; 28 >
+    au < released ; 2001 ; Geology Volume 29 ; 29 >
+    au < released ; 2002 ; Geology Volume 30 ; 30 >
+    au < released ; 2003 ; Geology Volume 31 ; 31 >
+    au < released ; 2004 ; Geology Volume 32 ; 32 >
+    au < released ; 2005 ; Geology Volume 33 ; 33 >
+    au < released ; 2006 ; Geology Volume 34 ; 34 >
+    au < released ; 2007 ; Geology Volume 35 ; 35 >
+    au < released ; 2008 ; Geology Volume 36 ; 36 >
+    au < released ; 2009 ; Geology Volume 37 ; 37 >
+    au < released ; 2010 ; Geology Volume 38 ; 38 >
+    au < released ; 2011 ; Geology Volume 39 ; 39 >
+    au < released ; 2012 ; Geology Volume 40 ; 40 >
+    au < manifest ; 2013 ; Geology Volume 41 ; 41 >
+
+  }
+
+  {
+
+    title <
+      name = Geosphere ;
+      eissn = 1553-040X
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://geosphere.gsapubs.org/
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 2005 ; Geosphere Volume 1 ; 1 >
+    au < released ; 2006 ; Geosphere Volume 2 ; 2 >
+    au < released ; 2007 ; Geosphere Volume 3 ; 3 >
+    au < released ; 2008 ; Geosphere Volume 4 ; 4 >
+    au < released ; 2009 ; Geosphere Volume 5 ; 5 >
+    au < released ; 2010 ; Geosphere Volume 6 ; 6 >
+    au < released ; 2011 ; Geosphere Volume 7 ; 7 >
+    au < released ; 2012 ; Geosphere Volume 8 ; 8 >
+    au < manifest ; 2013 ; Geosphere Volume 9 ; 9 >
+
+  }
+
+  {
+
+    title <
+      name = Lithosphere ;
+      issn = 1941-8264 ;
+      eissn = 1947-4253 ;
+      issnl = 1947-4253
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://lithosphere.gsapubs.org/
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 2009 ; Lithosphere Volume 1 ; 1 >
+    au < released ; 2010 ; Lithosphere Volume 2 ; 2 >
+    au < released ; 2011 ; Lithosphere Volume 3 ; 3 >
+    au < released ; 2012 ; Lithosphere Volume 4 ; 4 >
+    au < manifest ; 2013 ; Lithosphere Volume 5 ; 5 >
+
+  }
+
+}

@@ -1,0 +1,57 @@
+{
+
+  publisher <
+    name = AlphaMed Press
+  >
+
+  {
+
+    title <
+      name = The Oncologist ;
+      issn = 1083-7159 ;
+      eissn = 1549-490X ;
+      issnl = 1083-7159
+    >
+    
+    {
+      
+      pluginPrefix = org.lockss.plugin.highwire.
+      param[base_url] = http://theoncologist.alphamedpress.org/
+      implicit < pluginSuffix ; status ; year ; name ; param[volume_name] >
+  
+      au < HighWirePressPlugin ; down ; 2005 ; The Oncologist Volume 10 ; 10 >
+      au < HighWirePressPlugin ; down ; 2006 ; The Oncologist Volume 11 ; 11 >
+      au < HighWirePressPlugin ; down ; 2007 ; The Oncologist Volume 12 ; 12 >
+      au < HighWirePressPlugin ; down ; 2008 ; The Oncologist Volume 13 ; 13 >
+      au < HighWirePressPlugin ; down ; 2009 ; The Oncologist Volume 14 ; 14 >
+      au < HighWirePressH20Plugin ; released ; 2010 ; The Oncologist Volume 15 ; 15 >
+      au < HighWirePressH20Plugin ; released ; 2011 ; The Oncologist Volume 16 ; 16 >
+      au < HighWirePressH20Plugin ; released ; 2012 ; The Oncologist Volume 17 ; 17 >
+      au < HighWirePressH20Plugin ; manifest ; 2013 ; The Oncologist Volume 18 ; 18 >
+      
+    }
+
+  }
+  
+  {
+    comment[stem_cells] = The journal *Stem Cells* is published by Wiley and we do not currently carry that platform. 20120125
+  }
+  
+  {
+    title <
+      name = Stem Cells: Translational Medicine ;
+      issn = 2157-6564 ;
+      eissn = 2157-6580 ;
+      issnl = 2157-6564
+    >
+    
+    param[base_url] = http://www.stemcellstm.com/
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < exists ; 2012 ; Stem Cells: Translational Medicine Volume 1 ; 1 >
+    au < expected ; 2013 ; Stem Cells: Translational Medicine Volume 2 ; 2 >
+
+  }
+  
+}

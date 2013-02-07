@@ -1,0 +1,29 @@
+{
+  publisher <
+    name = Feminist Press at the City University of New York
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = WSQ: Women's Studies Quarterly ;
+      issn = 0732-1562 ;
+      eissn = 1934-1520 ;
+      issnl = 0732-1562
+    >
+
+    param[journal_dir] = wsq
+    attr[journal_id] = wsq
+
+    au < released ; 2008 ; WSQ: Women's Studies Quarterly Volume 36 ; 36 >
+    au < released ; 2009 ; WSQ: Women's Studies Quarterly Volume 37 ; 37 >
+    au < released ; 2010 ; WSQ: Women's Studies Quarterly Volume 38 ; 38 >
+    au < released ; 2011 ; WSQ: Women's Studies Quarterly Volume 39 ; 39 >
+    au < released ; 2012 ; WSQ: Women's Studies Quarterly Volume 40 ; 40 >
+
+  }
+
+}

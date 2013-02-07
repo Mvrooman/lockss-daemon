@@ -1,0 +1,66 @@
+{
+  publisher <
+    name = University of Arizona
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Arizona Journal of Hispanic Cultural Studies ;
+      issn = 1096-2492 ;
+      eissn = 1934-9009 ;
+      issnl = 1096-2492
+    >
+
+    param[journal_dir] = arizona_journal_of_hispanic_cultural_studies
+    attr[journal_id] = hcs
+
+    au < released ; 2006 ; Arizona Journal of Hispanic Cultural Studies Volume 10 ; 10 >
+    au < released ; 2007 ; Arizona Journal of Hispanic Cultural Studies Volume 11 ; 11 >
+    au < released ; 2008 ; Arizona Journal of Hispanic Cultural Studies Volume 12 ; 12 >
+    au < released ; 2009 ; Arizona Journal of Hispanic Cultural Studies Volume 13 ; 13 >
+    au < released ; 2010 ; Arizona Journal of Hispanic Cultural Studies Volume 14 ; 14 >
+
+  }
+
+  {
+    title <
+      name = Arizona Quarterly: A Journal of American Literature, Culture, and Theory ;
+      issn = 0004-1610 ;
+      eissn = 1558-9595 ;
+      issnl = 0004-1610
+    >
+
+    param[journal_dir] = arizona_quarterly_a_journal_of_american_literature_culture_and_theory
+    attr[journal_id] = arq
+
+    au < released ; 2006 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 62 ; 62 >
+    au < released ; 2007 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 63 ; 63 >
+    au < released ; 2008 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 64 ; 64 >
+    au < released ; 2009 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 65 ; 65 >
+    au < released ; 2010 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 66 ; 66 >
+    au < released ; 2011 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 67 ; 67 >
+    au < released ; 2012 ; Arizona Quarterly: A Journal of American Literature, Culture, and Theory Volume 68 ; 68 >
+
+  }
+
+  {
+    title <
+      name = Journal of the Southwest ;
+      issn = 0894-8410 ;
+      eissn = 2158-1371 ;
+      issnl = 0894-8410
+    >
+
+    param[journal_dir] = journal_of_the_southwest
+    attr[journal_id] = jsw
+
+    au < released ; 2011 ; Journal of the Southwest Volume 53 ; 53 >
+    au < released ; 2012 ; Journal of the Southwest Volume 54 ; 54 >
+
+  }
+
+}

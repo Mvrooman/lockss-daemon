@@ -1,0 +1,37 @@
+{
+  publisher <
+    name = National Bureau of Asian Research
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Asia Policy ;
+      issn = 1559-0968 ;
+      eissn = 1559-2960
+    >
+
+    param[journal_dir] = asia_policy
+    attr[journal_id] = asp
+
+    au < released ; 2006 ; Asia Policy Number 1 ; 1 >
+    au < released ; 2006 ; Asia Policy Number 2 ; 2 >
+    au < released ; 2007 ; Asia Policy Number 3 ; 3 >
+    au < released ; 2007 ; Asia Policy Number 4 ; 4 >
+    au < released ; 2008 ; Asia Policy Number 5 ; 5 >
+    au < released ; 2008 ; Asia Policy Number 6 ; 6 >
+    au < released ; 2009 ; Asia Policy Number 7 ; 7 >
+    au < released ; 2009 ; Asia Policy Number 8 ; 8 >
+    au < released ; 2010 ; Asia Policy Number 9 ; 9 >
+    au < released ; 2010 ; Asia Policy Number 10 ; 10 >
+    au < released ; 2011 ; Asia Policy Number 11 ; 11 >
+    au < released ; 2011 ; Asia Policy Number 12 ; 12 >
+    au < released ; 2012 ; Asia Policy Number 13 ; 13 >
+    au < ready ; 2012 ; Asia Policy Number 14 ; 14 >
+
+  }
+
+}

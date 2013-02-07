@@ -1,0 +1,174 @@
+{
+
+  publisher <
+    name = University of Minnesota Press
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Buildings & Landscapes: Journal of the Vernacular Architecture Forum ;
+      issn = 1936-0886 ;
+      eissn = 1934-6832 ;
+      issnl = 1934-6832
+    >
+
+    param[journal_dir] = buildings_and_landscapes
+    attr[journal_id] = bdl
+
+    au < released ; 2007 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 14 ; 14 >
+    au < released ; 2008 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 15 ; 15 >
+    au < released ; 2009 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 16 ; 16 >
+    au < released ; 2010 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 17 ; 17 >
+    au < released ; 2011 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 18 ; 18 >
+    au < released ; 2012 ; Buildings & Landscapes: Journal of the Vernacular Architecture Forum Volume 19 ; 19 >
+
+  }
+
+  {
+    title <
+      name = Cultural Critique ;
+      issn = 0882-4371 ;
+      eissn = 1534-5203 ;
+      issnl = 0882-4371
+    >
+
+    param[journal_dir] = cultural_critique
+    attr[journal_id] = cul
+    comment[notReady] = manifest page exists, but the url is broken
+
+    au < released ; 2001 ; Cultural Critique 47 ; 47 >
+    au < released ; 2001 ; Cultural Critique 48 ; 48 >
+    au < released ; 2001 ; Cultural Critique 49 ; 49 >
+    au < released ; 2002 ; Cultural Critique 50 ; 50 >
+    au < released ; 2002 ; Cultural Critique 51 ; 51 >
+    au < released ; 2002 ; Cultural Critique 52 ; 52 >
+    au < released ; 2003 ; Cultural Critique 53 ; 53 >
+    au < released ; 2003 ; Cultural Critique 54 ; 54 >
+    au < released ; 2003 ; Cultural Critique 55 ; 55 >
+    au < released ; 2004 ; Cultural Critique 56 ; 56 >
+    au < released ; 2004 ; Cultural Critique 57 ; 57 >
+    au < released ; 2004 ; Cultural Critique 58 ; 58 >
+    au < released ; 2005 ; Cultural Critique 59 ; 59 >
+    au < released ; 2005 ; Cultural Critique 60 ; 60 >
+    au < released ; 2005 ; Cultural Critique 61 ; 61 >
+    au < released ; 2006 ; Cultural Critique 62 ; 62 >
+    au < released ; 2006 ; Cultural Critique 63 ; 63 >
+    au < released ; 2006 ; Cultural Critique 64 ; 64 >
+    au < released ; 2007 ; Cultural Critique 65 ; 65 >
+    au < released ; 2007 ; Cultural Critique 66 ; 66 >
+    au < released ; 2007 ; Cultural Critique 67 ; 67 >
+    au < released ; 2008 ; Cultural Critique 68 ; 68 >
+    au < released ; 2008 ; Cultural Critique 69 ; 69 >
+    au < released ; 2008 ; Cultural Critique 70 ; 70 >
+    au < released ; 2009 ; Cultural Critique 71 ; 71 >
+    au < released ; 2009 ; Cultural Critique 72 ; 72 >
+    au < released ; 2009 ; Cultural Critique Number 73 ; 73 >
+    au < released ; 2010 ; Cultural Critique Number 74 ; 74 >
+    au < released ; 2010 ; Cultural Critique Number 75 ; 75 >
+    au < released ; 2010 ; Cultural Critique Number 76 ; 76 >
+    au < released ; 2011 ; Cultural Critique Number 77 ; 77 >
+    au < released ; 2011 ; Cultural Critique Number 78 ; 78 >
+    au < released ; 2011 ; Cultural Critique Number 79 ; 79 >
+    au < released ; 2012 ; Cultural Critique Number 80 ; 80 >
+    au < released ; 2012 ; Cultural Critique Number 81 ; 81 >
+    au < notReady ; 2012 ; Cultural Critique Number 82 ; 82 >
+
+  }
+
+  {
+    title <
+      name = Future Anterior ;
+      issn = 1549-9715 ;
+      eissn = 1934-6026 ;
+      issnl = 1549-9715
+    >
+
+    param[journal_dir] = future_anterior
+    attr[journal_id] = fta
+
+    au < released ; 2008 ; Future Anterior Volume 5 ; 5 >
+    au < released ; 2009 ; Future Anterior Volume 6 ; 6 >
+    au < released ; 2010 ; Future Anterior Volume 7 ; 7 >
+    au < released ; 2011 ; Future Anterior Volume 8 ; 8 >
+    au < manifest ; 2012 ; Future Anterior Volume 9 ; 9 >
+    au < expected ; 2013 ; Future Anterior Volume 10 ; 10 >
+
+  }
+
+  {
+    title <
+      name = Mechademia ;
+      issn = 2152-6648 ;
+      eissn = 1934-2489 ;
+      issnl = 1934-2489
+    >
+
+    param[journal_dir] = mechademia
+    attr[journal_id] = mec
+
+    au < released ; 2006 ; Mechademia Volume 1 ; 1 >
+    au < released ; 2007 ; Mechademia Volume 2 ; 2 >
+    au < released ; 2008 ; Mechademia Volume 3 ; 3 >
+    au < released ; 2009 ; Mechademia Volume 4 ; 4 >
+    au < released ; 2010 ; Mechademia Volume 5 ; 5 >
+    au < released ; 2011 ; Mechademia Volume 6 ; 6 >
+    au < released ; 2012 ; Mechademia Volume 7 ; 7 >
+    
+  }
+
+  {
+    title <
+      name = The Moving Image ;
+      issn = 1532-3978 ;
+      eissn = 1542-4235 ;
+      issnl = 1532-3978
+    >
+
+    param[journal_dir] = the_moving_image
+    attr[journal_id] = mov
+
+    au < released ; 2003 ; The Moving Image Volume 3 ; 3 >
+    au < released ; 2004 ; The Moving Image Volume 4 ; 4 >
+    au < released ; 2005 ; The Moving Image Volume 5 ; 5 >
+    au < released ; 2006 ; The Moving Image Volume 6 ; 6 >
+    au < released ; 2007 ; The Moving Image Volume 7 ; 7 >
+    au < released ; 2008 ; The Moving Image Volume 8 ; 8 >
+    au < released ; 2009 ; The Moving Image Volume 9 ; 9 >
+    au < released ; 2010 ; The Moving Image Volume 10 ; 10 >
+    au < released ; 2011 ; The Moving Image Volume 11 ; 11 >
+    au < released ; 2012 ; The Moving Image Volume 12 ; 12 >
+
+  }
+
+  {
+    title <
+      name = Wicazo Sa Review ;
+      issn = 0749-6427 ;
+      eissn = 1533-7901 ;
+      issnl = 0749-6427
+    >
+
+    param[journal_dir] = wicazo_sa_review
+    attr[journal_id] = wic
+
+    au < released ; 2000 ; Wicazo Sa Review Volume 15 ; 15 >
+    au < released ; 2001 ; Wicazo Sa Review Volume 16 ; 16 >
+    au < released ; 2002 ; Wicazo Sa Review Volume 17 ; 17 >
+    au < released ; 2003 ; Wicazo Sa Review Volume 18 ; 18 >
+    au < released ; 2004 ; Wicazo Sa Review Volume 19 ; 19 >
+    au < released ; 2005 ; Wicazo Sa Review Volume 20 ; 20 >
+    au < released ; 2006 ; Wicazo Sa Review Volume 21 ; 21 >
+    au < released ; 2007 ; Wicazo Sa Review Volume 22 ; 22 >
+    au < released ; 2008 ; Wicazo Sa Review Volume 23 ; 23 >
+    au < released ; 2009 ; Wicazo Sa Review Volume 24 ; 24 >
+    au < released ; 2010 ; Wicazo Sa Review Volume 25 ; 25 >
+    au < released ; 2011 ; Wicazo Sa Review Volume 26 ; 26 >
+    au < released ; 2012 ; Wicazo Sa Review Volume 27 ; 27 >
+
+  }
+
+}

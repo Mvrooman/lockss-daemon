@@ -1,0 +1,95 @@
+{
+
+  publisher <
+    name = University of Saskatchewan
+  >
+
+  {
+  
+    title <
+      name = University of Saskatchewan Government Documents Collection
+    >
+    
+    plugin = ca.usask.plugin.directory.UniversityOfSaskatchewanDirectoryPlugin
+    param[base_url] = http://library2.usask.ca/gp/
+    implicit < status ; name ; param[subdirectory] >
+    comment[case] = Web server is case-sensitive
+    
+    au < released ; University of Saskatchewan Government Documents Collection: Agencies & Corporations ; ca6 >
+    au < released ; University of Saskatchewan Government Documents Collection: Air India Inquiry ; ps >
+    au < released ; University of Saskatchewan Government Documents Collection: Alberta ; ab >
+    au < released ; University of Saskatchewan Government Documents Collection: British Columbia ; bc >
+    au < released ; University of Saskatchewan Government Documents Collection: Canada ; ca >
+    au < released ; University of Saskatchewan Government Documents Collection: Canadian Centre for Policy Alternatives ; ccpa >
+    au < released ; University of Saskatchewan Government Documents Collection: Canadian Food Inspection Agency ; cfi >
+    au < released ; University of Saskatchewan Government Documents Collection: Canadian Institute for Health Information ; cihi >
+    au < released ; University of Saskatchewan Government Documents Collection: Canadian Index of Wellbeing ; ciw >
+    au < released ; University of Saskatchewan Government Documents Collection: City of Saskatoon ; ca4 >
+    au < released ; University of Saskatchewan Government Documents Collection: Commission for Public Complaints Against the RCMP ; cpcrcmp >
+    au < released ; University of Saskatchewan Government Documents Collection: European Union ; eu >
+    au < released ; University of Saskatchewan Government Documents Collection: Federal Reports ; ca7 >
+    au < released ; University of Saskatchewan Government Documents Collection: Federation of Canadian Municipalities ; fcm >
+    au < released ; University of Saskatchewan Government Documents Collection: Indian Claims Commission ; ICC >
+    au < released ; University of Saskatchewan Government Documents Collection: Library of Parliament ; libraryparl >
+    au < released ; University of Saskatchewan Government Documents Collection: Nunavat ; nu >
+    au < released ; University of Saskatchewan Government Documents Collection: Office of the Correctional Investigator ; oci >
+    au < released ; University of Saskatchewan Government Documents Collection: Ontario ; on >
+    au < released ; University of Saskatchewan Government Documents Collection: Pembina Institute ; pembina >
+    au < released ; University of Saskatchewan Government Documents Collection: Pension Reform ; pension >
+    au < released ; University of Saskatchewan Government Documents Collection: Quebec ; quebec >
+    au < released ; University of Saskatchewan Government Documents Collection: RCMP ; rcmp >
+    au < testing ; University of Saskatchewan Government Documents Collection: Saskatchewan ; sk >
+    au < released ; University of Saskatchewan Government Documents Collection: United Kingdom ; uk >
+    au < released ; University of Saskatchewan Government Documents Collection: United Nations ; un >
+    au < released ; University of Saskatchewan Government Documents Collection: United States ; us1 >
+    au < released ; University of Saskatchewan Government Documents Collection: Youth Homelessness ; rr >
+    au < released ; University of Saskatchewan Government Documents Collection: Yukon ; yu >
+  
+  }
+
+  {
+  
+    title <
+      name = University of Saskatchewan Electronic Theses & Dissertations
+    >
+
+    plugin = ca.usask.plugin.etd.UniversityOfSaskatchewanETDPlugin
+    implicit < status ; year ; name ; param[year] > 
+
+    {
+    
+      param[base_url] = http://library2.usask.ca/
+      
+      au < superseded ; 2003 ; University of Saskatchewan Electronic Theses & Dissertations 2003 [superseded] ; 2003 >
+      au < superseded ; 2004 ; University of Saskatchewan Electronic Theses & Dissertations 2004 [superseded] ; 2004 >
+      au < superseded ; 2005 ; University of Saskatchewan Electronic Theses & Dissertations 2005 [superseded] ; 2005 >
+      au < superseded ; 2006 ; University of Saskatchewan Electronic Theses & Dissertations 2006 [superseded] ; 2006 >
+      au < superseded ; 2007 ; University of Saskatchewan Electronic Theses & Dissertations 2007 [superseded] ; 2007 >
+      au < superseded ; 2008 ; University of Saskatchewan Electronic Theses & Dissertations 2008 [superseded] ; 2008 >
+      au < superseded ; 2009 ; University of Saskatchewan Electronic Theses & Dissertations 2009 [superseded] ; 2009 >
+      au < superseded ; 2010 ; University of Saskatchewan Electronic Theses & Dissertations 2010 [superseded] ; 2010 >
+      au < superseded ; 2011 ; University of Saskatchewan Electronic Theses & Dissertations 2011 [superseded] ; 2011 >
+      au < superseded ; 2012 ; University of Saskatchewan Electronic Theses & Dissertations 2012 [superseded] ; 2012 >
+
+    }
+    
+    {
+    
+      param[base_url] = http://library.usask.ca/
+      
+      au < ready ; 2003 ; University of Saskatchewan Electronic Theses & Dissertations 2003 ; 2003 >
+      au < ready ; 2004 ; University of Saskatchewan Electronic Theses & Dissertations 2004 ; 2004 >
+      au < ready ; 2005 ; University of Saskatchewan Electronic Theses & Dissertations 2005 ; 2005 >
+      au < ready ; 2006 ; University of Saskatchewan Electronic Theses & Dissertations 2006 ; 2006 >
+      au < ready ; 2007 ; University of Saskatchewan Electronic Theses & Dissertations 2007 ; 2007 >
+      au < ready ; 2008 ; University of Saskatchewan Electronic Theses & Dissertations 2008 ; 2008 >
+      au < ready ; 2009 ; University of Saskatchewan Electronic Theses & Dissertations 2009 ; 2009 >
+      au < ready ; 2010 ; University of Saskatchewan Electronic Theses & Dissertations 2010 ; 2010 >
+      au < ready ; 2011 ; University of Saskatchewan Electronic Theses & Dissertations 2011 ; 2011 >
+      au < ready ; 2012 ; University of Saskatchewan Electronic Theses & Dissertations 2012 ; 2012 >
+
+    }
+    
+  }
+  
+}

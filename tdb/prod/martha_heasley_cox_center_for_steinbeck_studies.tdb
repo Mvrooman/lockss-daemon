@@ -1,0 +1,43 @@
+{
+  publisher <
+    name = Martha Heasley Cox Center for Steinbeck Studies
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Steinbeck Studies ;
+      issn = 1551-6903 ;
+      eissn = 0898-7734 ;
+      issnl = 1551-6903
+    >
+
+    param[journal_dir] = steinbeck_studies
+    attr[journal_id] = stn
+
+    au < released ; 2004 ; Steinbeck Studies Volume 15 ; 15 >
+    au < released ; 2005 ; Steinbeck Studies Volume 16 ; 16 >
+ 
+  }
+
+  {
+    title <
+      name = Steinbeck Review ;
+      issn = 1546-007X ;
+      eissn = 1938-6214 ;
+      issnl = 1546-007X
+    >
+
+    param[journal_dir] = steinbeck_review
+    attr[journal_id] = str
+
+    au < ready ; 2006 ; Steinbeck Review Volume 3 ; 3 >
+    au < ready ; 2007 ; Steinbeck Review Volume 4 ; 4 >
+
+  }
+
+}

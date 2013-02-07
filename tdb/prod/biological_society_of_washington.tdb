@@ -1,0 +1,70 @@
+{
+
+  publisher <
+    name = Biological Society of Washington
+  >
+
+  {
+    title <
+      name = Bulletin of the Biological Society of Washington ;
+      issn = 0097-0298 ;
+      eissn = 1943-6335 ;
+      issnl = 0097-0298
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0097-0298
+  
+      au < superseded ; 2005 ; Bulletin of the Biological Society of Washington Volume 13 ; 13 >
+      au < superseded ; 2006 ; Bulletin of the Biological Society of Washington Volume 14 ; 14 >
+    }
+
+  }
+  
+  {
+
+    title <
+      name = Proceedings of the Biological Society of Washington ;
+      issn = 0006-324X ;
+      eissn = 1943-6327 ;
+      issnl = 0006-324X
+    >
+
+    {
+    
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0006-324X
+  
+      au < doNotProcess ; 2005 ; Proceedings of the Biological Society of Washington Volume 118 ; 118 >
+      au < doNotProcess ; 2006 ; Proceedings of the Biological Society of Washington Volume 119 ; 119 >
+      au < doNotProcess ; 2007 ; Proceedings of the Biological Society of Washington Volume 120 ; 120 >
+    
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = pbsw
+      
+  
+      au < doNotProcess ; 2005 ; Proceedings of the Biological Society of Washington Volume 118 ; 118 >
+      au < doNotProcess ; 2006 ; Proceedings of the Biological Society of Washington Volume 119 ; 119 >
+      au < doNotProcess ; 2007 ; Proceedings of the Biological Society of Washington Volume 120 ; 120 >
+      au < manifest ; 2008 ; Proceedings of the Biological Society of Washington Volume 121 ; 121 >
+      au < manifest ; 2009 ; Proceedings of the Biological Society of Washington Volume 122 ; 122 >
+      au < manifest ; 2010 ; Proceedings of the Biological Society of Washington Volume 123 ; 123 >
+      au < manifest ; 2011 ; Proceedings of the Biological Society of Washington Volume 124 ; 124 >
+      au < manifest ; 2012 ; Proceedings of the Biological Society of Washington Volume 125 ; 125 >
+        
+    }
+
+  }
+
+}

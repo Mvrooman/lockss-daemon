@@ -1,0 +1,28 @@
+{
+  publisher <
+    name = Harvard-Yenching Institute
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Harvard Journal of Asiatic Studies ;
+      issn = 1944-6454 ;
+      eissn = 0073-0548 ;
+      issnl = 0073-0548
+    >
+
+    param[journal_dir] = harvard_journal_of_asiatic_studies
+    attr[journal_id] = jas
+
+    au < released ; 2009 ; Harvard Journal of Asiatic Studies Volume 69 ; 69 >
+    au < released ; 2010 ; Harvard Journal of Asiatic Studies Volume 70 ; 70 >
+    au < released ; 2011 ; Harvard Journal of Asiatic Studies Volume 71 ; 71 >
+    au < ready ; 2012 ; Harvard Journal of Asiatic Studies Volume 72 ; 72 >
+
+  }
+
+}

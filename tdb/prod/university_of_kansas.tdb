@@ -1,0 +1,51 @@
+{
+
+  publisher <
+    name = University of Kansas
+  >
+
+  {
+  
+    title <
+      name = Journal of Dramatic Theory and Criticism ;
+      issn = 0888-3203 
+    >
+    
+    {
+
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = journal_of_dramatic_theory_and_criticism
+      attr[journal_id] = dtc
+      implicit < status ; year ; name ; param[volume] >
+
+      au < released ; 2011-2012 ; Journal of Dramatic Theory and Criticism Volume 26 ; 26 >
+      au < manifest ; 2012-2013 ; Journal of Dramatic Theory and Criticism Volume 27 ; 27 >
+
+    }
+
+  }
+
+  {
+  
+    title <
+      name = Latin American Theatre Review ;
+      issn = 0023-8813 
+    >
+
+    {
+
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = latin_american_theatre_review  
+      attr[journal_id] = ltr    
+      implicit < status ; year ; name ; param[volume] >
+
+      au < released ; 2010-2011 ; Latin American Theatre Review Volume 44 ; 44 >
+      au < released ; 2011-2012 ; Latin American Theatre Review Volume 45 ; 45 >
+
+    }
+
+  }
+    
+}

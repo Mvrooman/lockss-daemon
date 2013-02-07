@@ -1,0 +1,55 @@
+{
+
+  publisher <
+    name = Academy of Natural Sciences of Philadelphia
+  >
+
+  {
+    title <
+      name = Proceedings of the Academy of Natural Sciences of Philadelphia ;
+      issn = 0097-3157 ;
+      eissn = 1938-5293 ;
+      issnl = 0097-3157
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0097-3157
+  
+      au < down ; 2002 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 151 ; 151 >
+      au < down ; 2003 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 152 ; 152 >
+      au < down ; 2004 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 153 ; 153 >
+      au < down ; 2005 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 154 ; 154 >
+      au < down ; 2006 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 155 ; 155 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = ansp
+
+      au < doNotProcess ; 2002 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 151 ; 151 >
+      au < doNotProcess ; 2003 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 152 ; 152 >
+      au < doNotProcess ; 2004 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 153 ; 153 >
+      au < doNotProcess ; 2005 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 154 ; 154 >
+      au < doNotProcess ; 2006 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 155 ; 155 >
+      au < ready ; 2007 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 156 ; 156 >
+      au < ready ; 2008 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 157 ; 157 >
+      au < ready ; 2009 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 158 ; 158 >
+      au < ready ; 2010 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 159 ; 159 >
+      au < ready ; 2010 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 160 ; 160 >
+      au < ready ; 2011 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 161 ; 161 >
+      au < expected ; 2012 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 162 ; 162 >
+      au < expected ; 2013 ; Proceedings of the Academy of Natural Sciences of Philadelphia Volume 163 ; 163 >
+
+    }
+
+  }
+
+}
+

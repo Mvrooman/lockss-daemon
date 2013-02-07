@@ -1,0 +1,136 @@
+{
+
+  publisher <
+    name = Weed Science Society of America
+  >
+
+  {
+  
+    title <
+      name = Invasive Plant Science and Management ;
+      issn = 1939-7291 ;
+      eissn = 1939-747X ;
+      issnl = 1939-7291
+    >
+    
+    plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+    implicit < status ; year ; name ; param[volume_name] >
+    param[base_url] = http://www.bioone.org/
+    param[journal_id] = ipsm
+
+    au < ready ; 2008 ; Invasive Plant Science and Management Volume 1 ; 1 >
+    au < ready ; 2009 ; Invasive Plant Science and Management Volume 2 ; 2 >
+    au < ready ; 2010 ; Invasive Plant Science and Management Volume 3 ; 3 >
+    au < ready ; 2011 ; Invasive Plant Science and Management Volume 4 ; 4 >
+    au < manifest ; 2012 ; Invasive Plant Science and Management Volume 5 ; 5 >
+
+  }
+
+  {
+
+    title <
+      name = Weed Science ;
+      issn = 0043-1745 ;
+      eissn = 1550-2759 ;
+      issnl = 0043-1745
+    >
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0043-1745
+  
+      au < down ; 2000 ; Weed Science Volume 48 ; 48 >
+      au < down ; 2001 ; Weed Science Volume 49 ; 49 >
+      au < down ; 2002 ; Weed Science Volume 50 ; 50 >
+      au < down ; 2003 ; Weed Science Volume 51 ; 51 >
+      au < down ; 2004 ; Weed Science Volume 52 ; 52 >
+      au < doNotProcess ; 2005 ; Weed Science Volume 53 ; 53 >
+      au < down ; 2005 ; Weed Science Volume 53 ; 053 >
+      au < down ; 2006 ; Weed Science Volume 54 ; 54 >
+      au < down ; 2007 ; Weed Science Volume 55 ; 55 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = wees
+
+      au < doNotProcess ; 2000 ; Weed Science Volume 48 ; 48 >
+      au < doNotProcess ; 2001 ; Weed Science Volume 49 ; 49 >
+      au < doNotProcess ; 2002 ; Weed Science Volume 50 ; 50 >
+      au < doNotProcess ; 2003 ; Weed Science Volume 51 ; 51 >
+      au < doNotProcess ; 2004 ; Weed Science Volume 52 ; 52 >
+      au < doNotProcess ; 2005 ; Weed Science Volume 53 ; 53 >
+      au < doNotProcess ; 2006 ; Weed Science Volume 54 ; 54 >
+      au < doNotProcess ; 2007 ; Weed Science Volume 55 ; 55 >
+      au < ready ; 2008 ; Weed Science Volume 56 ; 56 >
+      au < ready ; 2009 ; Weed Science Volume 57 ; 57 >
+      au < ready ; 2010 ; Weed Science Volume 58 ; 58 >
+      au < ready ; 2011 ; Weed Science Volume 59 ; 59 >
+      au < manifest ; 2012 ; Weed Science Volume 60 ; 60 >
+
+    }
+
+  }
+  
+  {
+
+    title <
+      name = Weed Technology ;
+      issn = 0890-037X ;
+      eissn = 1550-2740 ;
+      issnl = 0890-037X
+    >
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0890-037X
+  
+      au < down ; 2000 ; Weed Technology Volume 14 ; 14 >
+      au < down ; 2001 ; Weed Technology Volume 15 ; 15 >
+      au < down ; 2002 ; Weed Technology Volume 16 ; 16 >
+      au < down ; 2003 ; Weed Technology Volume 17 ; 17 >
+      au < doNotProcess ; 2004 ; Weed Technology Volume 18 ; 18 >
+      au < down ; 2004 ; Weed Technology Volume 18 ; 018 >
+      au < down ; 2005 ; Weed Technology Volume 19 ; 19 >
+      au < down ; 2006 ; Weed Technology Volume 20 ; 20 >
+      au < down ; 2007 ; Weed Technology Volume 21 ; 21 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = wete
+
+      au < doNotProcess ; 2000 ; Weed Technology Volume 14 ; 14 >
+      au < doNotProcess ; 2001 ; Weed Technology Volume 15 ; 15 >
+      au < doNotProcess ; 2002 ; Weed Technology Volume 16 ; 16 >
+      au < doNotProcess ; 2003 ; Weed Technology Volume 17 ; 17 >
+      au < doNotProcess ; 2004 ; Weed Technology Volume 18 ; 18 >
+      au < doNotProcess ; 2005 ; Weed Technology Volume 19 ; 19 >
+      au < doNotProcess ; 2006 ; Weed Technology Volume 20 ; 20 >
+      au < doNotProcess ; 2007 ; Weed Technology Volume 21 ; 21 >
+      au < ready ; 2008 ; Weed Technology Volume 22 ; 22 >
+      au < ready ; 2009 ; Weed Technology Volume 23 ; 23 >
+      au < ready ; 2010 ; Weed Technology Volume 24 ; 24 >
+      au < ready ; 2011 ; Weed Technology Volume 25 ; 25 >
+      au < manifest ; 2012 ; Weed Technology Volume 26 ; 26 >
+
+    }
+
+  }
+
+}
+

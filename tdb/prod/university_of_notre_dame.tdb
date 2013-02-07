@@ -1,0 +1,87 @@
+{
+
+  publisher <
+    name = University of Notre Dame
+  >
+
+  {
+
+    title <
+      name = The American Midland Naturalist ;
+      issn = 0003-0031 ;
+      eissn = 1938-4238 ;
+      issnl = 1938-4238
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0003-0031
+  
+      au < down ; 1998 ; The American Midland Naturalist Volume 139 ; 139 >
+      au < down ; 1998 ; The American Midland Naturalist Volume 140 ; 140 >
+      au < down ; 1999 ; The American Midland Naturalist Volume 141 ; 141 >
+      au < down ; 1999 ; The American Midland Naturalist Volume 142 ; 142 >
+      au < down ; 2000 ; The American Midland Naturalist Volume 143 ; 143 >
+      au < down ; 2000 ; The American Midland Naturalist Volume 144 ; 144 >
+      au < down ; 2001 ; The American Midland Naturalist Volume 145 ; 145 >
+      au < down ; 2001 ; The American Midland Naturalist Volume 146 ; 146 >
+      au < down ; 2002 ; The American Midland Naturalist Volume 147 ; 147 >
+      au < down ; 2002 ; The American Midland Naturalist Volume 148 ; 148 >
+      au < down ; 2003 ; The American Midland Naturalist Volume 149 ; 149 >
+      au < down ; 2003 ; The American Midland Naturalist Volume 150 ; 150 >
+      au < down ; 2004 ; The American Midland Naturalist Volume 151 ; 151 >
+      au < down ; 2004 ; The American Midland Naturalist Volume 152 ; 152 >
+      au < down ; 2005 ; The American Midland Naturalist Volume 153 ; 153 >
+      au < down ; 2005 ; The American Midland Naturalist Volume 154 ; 154 >
+      au < down ; 2006 ; The American Midland Naturalist Volume 155 ; 155 >
+      au < down ; 2006 ; The American Midland Naturalist Volume 156 ; 156 >
+      au < down ; 2007 ; The American Midland Naturalist Volume 157 ; 157 >
+      au < down ; 2007 ; The American Midland Naturalist Volume 158 ; 158 >
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = amid
+
+      au < doNotProcess ; 1998 ; The American Midland Naturalist Volume 139 ; 139 >
+      au < doNotProcess ; 1998 ; The American Midland Naturalist Volume 140 ; 140 >
+      au < doNotProcess ; 1999 ; The American Midland Naturalist Volume 141 ; 141 >
+      au < doNotProcess ; 1999 ; The American Midland Naturalist Volume 142 ; 142 >
+      au < doNotProcess ; 2000 ; The American Midland Naturalist Volume 143 ; 143 >
+      au < doNotProcess ; 2000 ; The American Midland Naturalist Volume 144 ; 144 >
+      au < doNotProcess ; 2001 ; The American Midland Naturalist Volume 145 ; 145 >
+      au < doNotProcess ; 2001 ; The American Midland Naturalist Volume 146 ; 146 >
+      au < doNotProcess ; 2002 ; The American Midland Naturalist Volume 147 ; 147 >
+      au < doNotProcess ; 2002 ; The American Midland Naturalist Volume 148 ; 148 >
+      au < doNotProcess ; 2003 ; The American Midland Naturalist Volume 149 ; 149 >
+      au < doNotProcess ; 2003 ; The American Midland Naturalist Volume 150 ; 150 >
+      au < doNotProcess ; 2004 ; The American Midland Naturalist Volume 151 ; 151 >
+      au < doNotProcess ; 2004 ; The American Midland Naturalist Volume 152 ; 152 >
+      au < doNotProcess ; 2005 ; The American Midland Naturalist Volume 153 ; 153 >
+      au < doNotProcess ; 2005 ; The American Midland Naturalist Volume 154 ; 154 >
+      au < doNotProcess ; 2006 ; The American Midland Naturalist Volume 155 ; 155 >
+      au < doNotProcess ; 2006 ; The American Midland Naturalist Volume 156 ; 156 >
+      au < doNotProcess ; 2007 ; The American Midland Naturalist Volume 157 ; 157 >
+      au < doNotProcess ; 2007 ; The American Midland Naturalist Volume 158 ; 158 >
+      au < ready ; 2008 ; The American Midland Naturalist Volume 159 ; 159 >
+      au < ready ; 2008 ; The American Midland Naturalist Volume 160 ; 160 >
+      au < ready ; 2009 ; The American Midland Naturalist Volume 161 ; 161 >
+      au < ready ; 2009 ; The American Midland Naturalist Volume 162 ; 162 >
+      au < ready ; 2010 ; The American Midland Naturalist Volume 163 ; 163 >
+      au < ready ; 2010 ; The American Midland Naturalist Volume 164 ; 164 >
+      au < ready ; 2011 ; The American Midland Naturalist Volume 165 ; 165 >
+      au < ready ; 2011 ; The American Midland Naturalist Volume 166 ; 166 >
+      au < manifest ; 2012 ; The American Midland Naturalist Volume 167 ; 167 >
+      au < manifest ; 2012 ; The American Midland Naturalist Volume 168 ; 168 >
+
+    }
+
+  }
+
+}
+

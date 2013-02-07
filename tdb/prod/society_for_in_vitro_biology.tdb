@@ -1,0 +1,86 @@
+{
+
+  publisher <
+    name = Society for In Vitro Biology
+  >
+
+  {
+    title <
+      name = In Vitro Cellular & Developmental Biology - Animal ;
+      issn = 1071-2690 ;
+      eissn = 1543-706X ;
+      issnl = 1071-2690
+    >
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1543-706X
+  
+      au < down ; 2004 ; In Vitro Cellular & Developmental Biology - Animal Volume 40 ; 040 >
+ 
+    }
+
+    {
+    
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = inva
+
+      au < ready ; 2000 ; In Vitro Cellular & Developmental Biology - Animal Volume 36 ; 36 >
+      au < ready ; 2001 ; In Vitro Cellular & Developmental Biology - Animal Volume 37 ; 37 >
+      au < ready ; 2002 ; In Vitro Cellular & Developmental Biology - Animal Volume 38 ; 38 >
+      au < ready ; 2003 ; In Vitro Cellular & Developmental Biology - Animal Volume 39 ; 39 >
+      au < doNotProcess ; 2004 ; In Vitro Cellular & Developmental Biology - Animal Volume 40 ; 40 >
+      au < ready ; 2005 ; In Vitro Cellular & Developmental Biology - Animal Volume 41 ; 41 >
+      au < ready ; 2006 ; In Vitro Cellular & Developmental Biology - Animal Volume 42 ; 42 >
+      au < ready ; 2007 ; In Vitro Cellular & Developmental Biology - Animal Volume 43 ; 43 >
+      au < ready ; 2008 ; In Vitro Cellular & Developmental Biology - Animal Volume 44 ; 44 >
+
+    }
+
+  }
+  
+  {
+
+    title <
+      name = In Vitro Cellular & Developmental Biology - Plant ;
+      issn = 1054-5476 ;
+      eissn = 1475-2689 ;
+      issnl = 1054-5476
+    >
+
+    {
+
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1054-5476
+
+      au < down ; 2004 ; In Vitro Cellular & Developmental Biology - Plant Volume 40 ; 040 >
+ 
+     }
+
+    {
+    
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = invp
+
+      au < ready ; 2003 ; In Vitro Cellular & Developmental Biology - Plant Volume 39 ; 39 >
+      au < doNotProcess ; 2004 ; In Vitro Cellular & Developmental Biology - Plant Volume 40 ; 40 >
+      au < manifest ; 2005 ; In Vitro Cellular & Developmental Biology - Plant Volume 41 ; 41 >
+      au < ready ; 2006 ; In Vitro Cellular & Developmental Biology - Plant Volume 42 ; 42 >
+      au < ready ; 2007 ; In Vitro Cellular & Developmental Biology - Plant Volume 43 ; 43 >
+      au < ready ; 2008 ; In Vitro Cellular & Developmental Biology - Plant Volume 44 ; 44 >
+
+    }
+
+  }
+
+}
+

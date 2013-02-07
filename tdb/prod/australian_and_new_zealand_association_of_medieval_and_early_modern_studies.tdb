@@ -1,0 +1,33 @@
+{
+  publisher <
+    name = Australian and New Zealand Association of Medieval and Early Modern Studies
+  >
+
+  implicit < status ; year ; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Parergon ;
+      issn = 0313-6221 ;
+      eissn = 1832-8334 ;
+      issnl = 0313-6221
+    >
+
+    param[journal_dir] = parergon
+    attr[journal_id] = pgn
+
+    au < released ; 2005 ; Parergon Volume 22 ; 22 >
+    au < released ; 2006 ; Parergon Volume 23 ; 23 >
+    au < released ; 2007 ; Parergon Volume 24 ; 24 >
+    au < released ; 2008 ; Parergon Volume 25 ; 25 >
+    au < released ; 2009 ; Parergon Volume 26 ; 26 >
+    au < released ; 2010 ; Parergon Volume 27 ; 27 >
+    au < released ; 2011 ; Parergon Volume 28 ; 28 >
+    au < ready ; 2012 ; Parergon Volume 29 ; 29 >
+
+  }
+
+}

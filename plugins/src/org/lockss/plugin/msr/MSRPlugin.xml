@@ -1,0 +1,67 @@
+<map>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.msr.MSRPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>2</string>
+  </entry>
+  <entry>
+    <string>plugin_notes</string>
+    <string>The name/identifier of this plugin is misspelled (MRS = Materials Research Society)</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>6000</long>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;MRS Internet Journal of Nitride Semiconductor Research Plugin, Base URL %s, Volume %s&quot;, base_url, volume_str</string>
+  </entry>
+  <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>MRS Internet Journal of Nitride Semiconductor Research Plugin</string>
+  </entry>
+  <entry>
+    <string>au_crawlrules</string>
+    <list>
+      <string>4,&quot;^%s&quot;, base_url</string>
+      <string>1,&quot;%s%s/.*&quot;, base_url, volume_str</string>
+      <string>1,&quot;%sGIFS/&quot;, base_url</string>
+      <string>1,&quot;%sgifs/&quot;, base_url</string>
+      <string>1,&quot;%sstyles/&quot;, base_url</string>
+    </list>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%s%s/&quot;, base_url, volume_str</string>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>volume_str</key>
+        <displayName>Volume String</displayName>
+        <description>String definition of a volume.</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+</map>

@@ -1,0 +1,49 @@
+{
+
+  publisher <
+    name = Society for the Study of Amphibians and Reptiles
+  >
+
+  {
+    title <
+      name = Journal of Herpetology ;
+      issn = 0022-1511 ;
+      eissn = 1937-2418 ;
+      issnl = 0022-1511
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 0022-1511
+  
+      au < down ; 2004 ; Journal of Herpetology Volume 38 ; 038 >
+
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = hpet
+
+      au < ready ; 2002 ; Journal of Herpetology Volume 36 ; 36 >
+      au < ready ; 2003 ; Journal of Herpetology Volume 37 ; 37 >
+      au < doNotProcess ; 2004 ; Journal of Herpetology Volume 38 ; 38 >
+      au < ready ; 2005 ; Journal of Herpetology Volume 39 ; 39 >
+      au < ready ; 2006 ; Journal of Herpetology Volume 40 ; 40 >
+      au < ready ; 2007 ; Journal of Herpetology Volume 41 ; 41 >
+      au < ready ; 2008 ; Journal of Herpetology Volume 42 ; 42 >
+      au < ready ; 2009 ; Journal of Herpetology Volume 43 ; 43 >
+      au < ready ; 2010 ; Journal of Herpetology Volume 44 ; 44 >
+      au < ready ; 2011 ; Journal of Herpetology Volume 45 ; 45 >
+      au < manifest ; 2012 ; Journal of Herpetology Volume 46 ; 46 >
+
+    }
+
+  }
+
+}
+

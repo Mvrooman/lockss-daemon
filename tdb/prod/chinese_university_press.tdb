@@ -1,0 +1,26 @@
+{
+
+  publisher <
+    name = Chinese University Press
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = China Review ;
+      issn = 1680-2012 
+    >
+
+    param[journal_dir] = china_review
+    attr[journal_id] = 
+
+    au < expected ; 2013 ; China Review Volume 13 ; 13 >
+
+  }
+
+
+}

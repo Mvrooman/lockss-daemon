@@ -1,0 +1,31 @@
+{
+
+  publisher <
+    name = Bonefolder
+  >
+  
+  {
+  
+    title <
+      name = The Bonefolder ;
+      issn = 1555-6565 ;
+      issnl = 1555-6565
+    >  
+    
+    rights = openaccess
+    plugin = edu.nyu.plugin.bonefolder.BonefolderPlugin
+    implicit < status ; year ; name ; param[volume] >
+    param[base_url] = http://www.philobiblon.com/bonefolder/
+    
+    au < released ; 2004-2005 ; The Bonefolder Volume 1 ; 1 >
+    au < released ; 2005-2006 ; The Bonefolder Volume 2 ; 2 >
+    au < released ; 2006-2007 ; The Bonefolder Volume 3 ; 3 >
+    au < released ; 2007-2008 ; The Bonefolder Volume 4 ; 4 >
+    au < released ; 2008-2009 ; The Bonefolder Volume 5 ; 5 >
+    au < released ; 2009-2010 ; The Bonefolder Volume 6 ; 6 >
+    au < released ; 2011 ; The Bonefolder Volume 7 ; 7 >
+    au < released ; 2012 ; The Bonefolder Volume 8 ; 8 >
+ 
+  }
+  
+}

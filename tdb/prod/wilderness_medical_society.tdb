@@ -1,0 +1,46 @@
+{
+
+  publisher <
+    name = Wilderness Medical Society
+  >
+
+  {
+  
+    title <
+      name = Wilderness & Environmental Medicine ;
+      issn = 1080-6032 ;
+      eissn = 1545-1534 ;
+      issnl = 1080-6032
+    >
+
+    {
+    
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.bioone.BioOnePlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = 1080-6032
+  
+      au < down ; 2005 ; Wilderness & Environmental Medicine Volume 16 ; 16 >
+      au < down ; 2006 ; Wilderness & Environmental Medicine Volume 17 ; 17 >
+      au < down ; 2007 ; Wilderness & Environmental Medicine Volume 18 ; 18 >
+    }
+
+    {
+
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = weme
+      
+      au < doNotProcess ; 2005 ; Wilderness & Environmental Medicine Volume 16 ; 16 >
+      au < doNotProcess ; 2006 ; Wilderness & Environmental Medicine Volume 17 ; 17 >
+      au < doNotProcess ; 2007 ; Wilderness & Environmental Medicine Volume 18 ; 18 >      
+      au < ready ; 2008 ; Wilderness & Environmental Medicine Volume 19 ; 19 > 
+      au < ready ; 2009 ; Wilderness & Environmental Medicine Volume 20 ; 20 >       
+
+    }
+
+  }
+
+}
+

@@ -1,0 +1,33 @@
+{
+
+  publisher <
+    name = Journal of Rheumatology
+  >
+  
+  {
+      
+    title <
+      name = Journal of Rheumatology ;
+      issn = 0315-162X ;
+      eissn = 1499-2752 ;
+      issnl = 1499-2752
+    >  
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    implicit < status ; year ; name ; param[volume_name] >
+
+    {
+    
+      comment[processing] = only available to lockss from 2012 forward.
+        
+      param[base_url] = http://jrheum.org/
+        
+      au < doNotProcess ; 2011 ; Journal of Rheumatology Volume 38 ; 38 >
+      au < released ; 2012 ; Journal of Rheumatology Volume 39 ; 39 >
+      au < manifest ; 2013 ; Journal of Rheumatology Volume 40 ; 40 >
+
+     }
+   
+  }
+  
+} 

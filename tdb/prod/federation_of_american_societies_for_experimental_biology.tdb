@@ -1,0 +1,50 @@
+{
+
+  publisher <
+    name = Federation of American Societies for Experimental Biology
+  >
+
+  {
+
+    title <
+      name = The FASEB Journal ;
+      issn = 0892-6638 ;
+      eissn = 1530-6860 ;
+      issnl = 0892-6638
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://www.fasebj.org/
+    implicit < status ; year ; name ; param[volume_name] >
+    
+    au < released ; 1987 ; The FASEB Journal Volume 1 ; 1 >
+    au < released ; 1988 ; The FASEB Journal Volume 2 ; 2 >
+    au < released ; 1989 ; The FASEB Journal Volume 3 ; 3 >
+    au < released ; 1990 ; The FASEB Journal Volume 4 ; 4 >
+    au < released ; 1991 ; The FASEB Journal Volume 5 ; 5 >
+    au < released ; 1992 ; The FASEB Journal Volume 6 ; 6 >
+    au < released ; 1993 ; The FASEB Journal Volume 7 ; 7 >
+    au < released ; 1994 ; The FASEB Journal Volume 8 ; 8 >
+    au < released ; 1995 ; The FASEB Journal Volume 9 ; 9 >
+    au < released ; 1996 ; The FASEB Journal Volume 10 ; 10 >
+    au < released ; 1997 ; The FASEB Journal Volume 11 ; 11 >
+    au < released ; 1998 ; The FASEB Journal Volume 12 ; 12 >
+    au < released ; 1999 ; The FASEB Journal Volume 13 ; 13 >
+    au < released ; 2000 ; The FASEB Journal Volume 14 ; 14 >
+    au < released ; 2001 ; The FASEB Journal Volume 15 ; 15 >
+    au < released ; 2002 ; The FASEB Journal Volume 16 ; 16 >
+    au < released ; 2003 ; The FASEB Journal Volume 17 ; 17 >
+    au < released ; 2004 ; The FASEB Journal Volume 18 ; 18 >
+    au < released ; 2005 ; The FASEB Journal Volume 19 ; 19 >
+    au < released ; 2006 ; The FASEB Journal Volume 20 ; 20 >
+    au < released ; 2007 ; The FASEB Journal Volume 21 ; 21 >
+    au < released ; 2008 ; The FASEB Journal Volume 22 ; 22 >
+    au < released ; 2009 ; The FASEB Journal Volume 23 ; 23 >
+    au < released ; 2010 ; The FASEB Journal Volume 24 ; 24 >
+    au < released ; 2011 ; The FASEB Journal Volume 25 ; 25 >
+    au < released ; 2012 ; The FASEB Journal Volume 26 ; 26 >
+    au < manifest ; 2013 ; The FASEB Journal Volume 27 ; 27 >
+
+  }
+
+}

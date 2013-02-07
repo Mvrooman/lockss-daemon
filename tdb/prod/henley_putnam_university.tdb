@@ -1,0 +1,36 @@
+{
+
+  publisher <
+    name = Henley-Putnam University
+  >
+  
+  {
+  
+   comment[0] = RT3894 GLN only for now (manifest pages have both LOCKSS and CLOCKSS permission statements)
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Strategic Security (JSS) ;
+      issn = 1944-0464 ;
+      eissn = 1944-0472 ;
+      issnl = 1944-0464
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin 
+    param[base_url] = http://scholarcommons.usf.edu/
+    param[journal_abbr] = jss
+    implicit < status ; year ; name ; param[volume] >
+    
+    au < released ; 2008 ; Journal of Strategic Security (JSS) Volume 1 ; 1 >
+    au < released ; 2009 ; Journal of Strategic Security (JSS) Volume 2 ; 2 >
+    au < released ; 2010 ; Journal of Strategic Security (JSS) Volume 3 ; 3 >
+    au < released ; 2011 ; Journal of Strategic Security (JSS) Volume 4 ; 4 >
+    au < ready ; 2012 ; Journal of Strategic Security (JSS) Volume 5 ; 5 >
+    au < expected ; 2013 ; Journal of Strategic Security (JSS) Volume 6 ; 6 >
+
+  }
+
+}

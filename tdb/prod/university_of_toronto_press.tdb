@@ -1,0 +1,573 @@
+{
+
+  publisher <
+    name = University of Toronto Press
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+  implicit < status ; year ; name ; param[volume] >
+
+  {
+  
+    title <
+      name = The Canadian Historical Review ;
+      issn = 0008-3755 ;
+      eissn = 1710-1093 ;
+      issnl = 0008-3755
+    >
+
+    param[journal_dir] = canadian_historical_review
+    attr[journal_id] = can
+
+    au < released ; 2004 ; The Canadian Historical Review Volume 85 ; 85 >
+    au < released ; 2005 ; The Canadian Historical Review Volume 86 ; 86 >
+    au < released ; 2006 ; The Canadian Historical Review Volume 87 ; 87 >
+    au < released ; 2007 ; The Canadian Historical Review Volume 88 ; 88 >
+    au < released ; 2008 ; The Canadian Historical Review Volume 89 ; 89 >
+    au < released ; 2009 ; The Canadian Historical Review Volume 90 ; 90 >
+    au < released ; 2010 ; The Canadian Historical Review Volume 91 ; 91 >
+    au < released ; 2011 ; The Canadian Historical Review Volume 92 ; 92 >
+    au < released ; 2012 ; The Canadian Historical Review Volume 93 ; 93 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Journal of Criminology and Criminal Justice ;
+      issn = 1707-7753 ;
+      eissn = 1911-0219 ;
+      issnl = 1707-7753
+    >
+
+    param[journal_dir] = canadian_journal_of_criminology_and_criminal_justice
+    attr[journal_id] = ccj
+
+    au < released ; 2006 ; Canadian Journal of Criminology and Criminal Justice Volume 48 ; 48 >
+    au < released ; 2007 ; Canadian Journal of Criminology and Criminal Justice Volume 49 ; 49 >
+    au < released ; 2008 ; Canadian Journal of Criminology and Criminal Justice Volume 50 ; 50 >
+    au < released ; 2009 ; Canadian Journal of Criminology and Criminal Justice Volume 51 ; 51 >
+    au < released ; 2010 ; Canadian Journal of Criminology and Criminal Justice Volume 52 ; 52 >
+    au < released ; 2011 ; Canadian Journal of Criminology and Criminal Justice Volume 53 ; 53 >
+    au < released ; 2012 ; Canadian Journal of Criminology and Criminal Justice Volume 54 ; 54 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Journal of Information and Library Science ;
+      issn = 1195-096X ;
+      eissn = 1920-7239 ;
+      issnl = 1195-096X
+    >
+
+    param[journal_dir] = canadian_journal_of_information_and_library_science
+    attr[journal_id] = ils
+
+    au < released ; 2010 ; Canadian Journal of Information and Library Science Volume 34 ; 34 >
+    au < released ; 2011 ; Canadian Journal of Information and Library Science Volume 35 ; 35 >
+    au < released ; 2012 ; Canadian Journal of Information and Library Science Volume 36 ; 36 >
+
+  }
+  
+  {
+  
+    title <
+      name = Canadian Journal of Law and Society ;
+      issn = 0829-3201 ;
+      eissn = 1911-0227 ;
+      issnl = 0829-3201
+    >
+
+    param[journal_dir] = canadian_journal_of_law_and_society
+    attr[journal_id] = jls
+
+    au < released ; 2005 ; Canadian Journal of Law and Society Volume 20 ; 20 >
+    au < released ; 2006 ; Canadian Journal of Law and Society Volume 21 ; 21 >
+    au < released ; 2007 ; Canadian Journal of Law and Society Volume 22 ; 22 >
+    au < released ; 2008 ; Canadian Journal of Law and Society Volume 23 ; 23 >
+    au < released ; 2009 ; Canadian Journal of Law and Society Volume 24 ; 24 >
+    au < released ; 2010 ; Canadian Journal of Law and Society Volume 25 ; 25 >
+    au < released ; 2011 ; Canadian Journal of Law and Society Volume 26 ; 26 >
+    au < released ; 2012 ; Canadian Journal of Law and Society Volume 27 ; 27 >
+
+  }
+
+  {
+  
+    title <
+      name = The Canadian Journal of Linguistics / La revue canadienne de linguistique ;
+      issn = 0008-4131 ;
+      eissn = 1710-1115 ;
+      issnl = 0008-4131
+    >
+
+    param[journal_dir] = canadian_journal_of_linguistics
+    attr[journal_id] = cjl
+
+    au < released ; 2003 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 48 ; 48 >
+    au < released ; 2004 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 49 ; 49 >
+    au < released ; 2005 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 50 ; 50 >
+    au < released ; 2006 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 51 ; 51 >
+    au < released ; 2007 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 52 ; 52 >
+    au < released ; 2008 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 53 ; 53 >
+    au < released ; 2009 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 54 ; 54 >
+    au < released ; 2010 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 55 ; 55 >
+    au < released ; 2011 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 56 ; 56 >
+    au < released ; 2012 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 57 ; 57 >
+
+
+  }
+
+  {
+  
+    title <
+      name = The Canadian Journal of Sociology ;
+      issn = 0318-6431 ;
+      eissn = 1710-1123 ;
+      issnl = 0318-6431
+    >
+
+    param[journal_dir] = canadian_journal_of_sociology
+    attr[journal_id] = cjs
+
+    au < released ; 2004 ; The Canadian Journal of Sociology Volume 29 ; 29 >
+    au < released ; 2005 ; The Canadian Journal of Sociology Volume 30 ; 30 >
+    au < released ; 2006 ; The Canadian Journal of Sociology Volume 31 ; 31 >
+    au < released ; 2007 ; The Canadian Journal of Sociology Volume 32 ; 32 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Journal of Women and the Law ;
+      issn = 0832-8781 ;
+      eissn = 1911-0235 ;
+      issnl = 0832-8781
+    >
+
+    param[journal_dir] = canadian_journal_of_women_and_the_law
+    attr[journal_id] = jwl
+
+    au < released ; 2005 ; Canadian Journal of Women and the Law Volume 17 ; 17 >
+    au < released ; 2006 ; Canadian Journal of Women and the Law Volume 18 ; 18 >
+    au < released ; 2007 ; Canadian Journal of Women and the Law Volume 19 ; 19 >
+    au < released ; 2008 ; Canadian Journal of Women and the Law Volume 20 ; 20 >
+    au < released ; 2009 ; Canadian Journal of Women and the Law Volume 21 ; 21 >
+    au < released ; 2010 ; Canadian Journal of Women and the Law Volume 22 ; 22 >
+    au < released ; 2011 ; Canadian Journal of Women and the Law Volume 23 ; 23 >
+    au < released ; 2012 ; Canadian Journal of Women and the Law Volume 24 ; 24 >
+
+  }
+
+  {
+  
+    title <
+      name = The Canadian Modern Language Review / La revue canadienne des langues vivantes ;
+      issn = 0008-4506 ;
+      eissn = 1710-1131 ;
+      issnl = 0008-4506
+    >
+
+    param[journal_dir] = canadian_modern_language_review
+    attr[journal_id] = cml
+
+    au < released ; 2004-2005 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 61 ; 61 >
+    au < released ; 2005-2006 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 62 ; 62 >
+    au < released ; 2006-2007 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 63 ; 63 >
+    au < released ; 2007-2008 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 64 ; 64 >
+    au < released ; 2008-2009 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 65 ; 65 >
+    au < released ; 2009-2010 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 66 ; 66 >
+    au < released ; 2011 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 67 ; 67 >
+    au < released ; 2012 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 68 ; 68 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Public Policy ;
+      issn = 1911-9917 ;
+      eissn = 0317-0861 ;
+      issnl = 0317-0861
+    >
+
+    param[journal_dir] = canadian_public_policy
+    attr[journal_id] = cpp
+
+    au < released ; 2009 ; Canadian Public Policy Volume 35 ; 35 >
+    au < released ; 2010 ; Canadian Public Policy Volume 36 ; 36 >
+    au < released ; 2011 ; Canadian Public Policy Volume 37 ; 37 >
+    au < released ; 2012 ; Canadian Public Policy Volume 38 ; 38 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Review of American Studies ;
+      issn = 0007-7720 ;
+      eissn = 1710-114X ;
+      issnl = 0007-7720
+    >
+
+    param[journal_dir] = canadian_review_of_american_studies
+    attr[journal_id] = crv
+
+    au < released ; 2004 ; Canadian Review of American Studies Volume 34 ; 34 >
+    au < released ; 2005 ; Canadian Review of American Studies Volume 35 ; 35 >
+    au < released ; 2006 ; Canadian Review of American Studies Volume 36 ; 36 >
+    au < released ; 2007 ; Canadian Review of American Studies Volume 37 ; 37 >
+    au < released ; 2008 ; Canadian Review of American Studies Volume 38 ; 38 >
+    au < released ; 2009 ; Canadian Review of American Studies Volume 39 ; 39 >
+    au < released ; 2010 ; Canadian Review of American Studies Volume 40 ; 40 >
+    au < released ; 2011 ; Canadian Review of American Studies Volume 41 ; 41 >
+    au < released ; 2012 ; Canadian Review of American Studies Volume 42 ; 42 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Theatre Review ;
+      issn = 1920-941X ;
+      eissn = 0315-0836 ;
+      issnl = 0315-0836
+    >
+
+    param[journal_dir] = canadian_theatre_review
+    attr[journal_id] = ctr
+
+    au < released ; 2010 ; Canadian Theatre Review Issue 141 ; 141 >
+    au < released ; 2010 ; Canadian Theatre Review Issue 142 ; 142 >
+    au < released ; 2010 ; Canadian Theatre Review Issue 143 ; 143 >
+    au < released ; 2010 ; Canadian Theatre Review Issue 144 ; 144 >
+    au < released ; 2011 ; Canadian Theatre Review Issue 145 ; 145 >
+    au < released ; 2011 ; Canadian Theatre Review Issue 146 ; 146 >
+    au < released ; 2011 ; Canadian Theatre Review Issue 147 ; 147 >
+    au < released ; 2011 ; Canadian Theatre Review Issue 148 ; 148 >
+    au < released ; 2012 ; Canadian Theatre Review Issue 149 ; 149 >
+
+  }
+
+  {
+  
+    title <
+      name = Cartographica: The International Journal for Geographic Information and Geovisualization ;
+      issn = 0317-7173 ;
+      eissn = 1911-9925 
+    >
+
+    param[journal_dir] = cartographica
+    attr[journal_id] = 
+
+    au < expected ; 2013 ; Cartographica: The International Journal for Geographic Information and Geovisualization Volume 1 ; 1 >
+
+  }
+
+  {
+  
+    title <
+      name = Diaspora: A Journal of Transnational Studies ;
+      issn = 1044-2057 ;
+      eissn = 1911-1568 ;
+      issnl = 1044-2057
+    >
+
+    param[journal_dir] = diaspora_a_journal_of_transnational_studies
+    attr[journal_id] = dsp
+
+    au < released ; 2004 ; Diaspora: A Journal of Transnational Studies Volume 13 ; 13 >
+    au < released ; 2005 ; Diaspora: A Journal of Transnational Studies Volume 14 ; 14 >
+    au < released ; 2006 ; Diaspora: A Journal of Transnational Studies Volume 15 ; 15 >
+
+  }
+
+  {
+  
+    title <
+      name = Eighteenth-Century Fiction ;
+      issn = 0840-6286 ;
+      eissn = 1911-0243 ;
+      issnl = 0840-6286
+    >
+
+    param[journal_dir] = eighteenth_century_fiction
+    attr[journal_id] = ecf
+
+    au < released ; 2005-2006 ; Eighteenth-Century Fiction Volume 18 ; 18 >
+    au < released ; 2006-2007 ; Eighteenth-Century Fiction Volume 19 ; 19 >
+    au < released ; 2007-2008 ; Eighteenth-Century Fiction Volume 20 ; 20 >
+    au < released ; 2008-2009 ; Eighteenth-Century Fiction Volume 21 ; 21 >
+    au < released ; 2009-2010 ; Eighteenth-Century Fiction Volume 22 ; 22 >
+    au < released ; 2010-2011 ; Eighteenth-Century Fiction Volume 23 ; 23 >
+    au < released ; 2011-2012 ; Eighteenth-Century Fiction Volume 24 ; 24 >
+
+  }
+
+  {
+  
+    title <
+      name = Francophonies d'Amérique ;
+      issn = 1183-2487 ;
+      eissn = 1710-1158 ;
+      issnl = 1183-2487
+    >
+
+    param[journal_dir] = francophonies_damerique
+    attr[journal_id] = fda
+
+    au < released ; 2004 ; Francophonies d'Amérique Number 17 ; 17 >
+    au < released ; 2004 ; Francophonies d'Amérique Number 18 ; 18 >
+
+  }
+
+  {
+  
+    title <
+      name = Genocide Studies and Prevention ;
+      issn = 1911-0359 ;
+      eissn = 1911-9933 ;
+      issnl = 1911-0359
+    >
+
+    param[journal_dir] = genocide_studies_and_prevention
+    attr[journal_id] = gsp
+
+    au < released ; 2009 ; Genocide Studies and Prevention Volume 4 ; 4 >
+    au < released ; 2010 ; Genocide Studies and Prevention Volume 5 ; 5 >
+    au < released ; 2011 ; Genocide Studies and Prevention Volume 6 ; 6 >
+    au < released ; 2012 ; Genocide Studies and Prevention Volume 7 ; 7 >
+
+  }
+
+  {
+  
+    title <
+      name = Histoire sociale / Social History ;
+      issn = 0018-2257 ;
+      issnl = 0018-2257
+    >
+
+    param[journal_dir] = histoire_sociale_social_history
+    attr[journal_id] = his
+
+    au < released ; 2008 ; Histoire sociale / Social History Volume 41 ; 41 >
+    au < released ; 2009 ; Histoire sociale / Social History Volume 42 ; 42 >
+    au < released ; 2010 ; Histoire sociale / Social History Volume 43 ; 43 >
+    au < released ; 2011 ; Histoire sociale / Social History Volume 44 ; 44 >
+    au < released ; 2012 ; Histoire sociale / Social History Volume 45 ; 45 >
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Canadian Studies / Revue d'études canadiennes ;
+      issn = 0021-9495 ;
+      eissn = 1911-0251 ;
+      issnl = 0021-9495
+    >
+
+    param[journal_dir] = journal_of_canadian_studies
+    attr[journal_id] = jcs
+
+    au < released ; 2005 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 39 ; 39 >
+    au < released ; 2006 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 40 ; 40 >
+    au < released ; 2007 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 41 ; 41 >
+    au < released ; 2008 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 42 ; 42 >
+    au < released ; 2009 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 43 ; 43 >
+    au < released ; 2010 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 44 ; 44 >
+    au < released ; 2011 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 45 ; 45 >
+    au < released ; 2012 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 46 ; 46 >
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Religion and Popular Culture ;
+      issn = 1703-289X
+    >
+
+    param[journal_dir] = journal_of_religion_and_popular_culture
+    attr[journal_id] = rpc
+
+    au < released ; 2012 ; Journal of Religion and Popular Culture Volume 24 ; 24>
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Scholarly Publishing ;
+      issn = 1198-9742 ;
+      eissn = 1710-1166 ;
+      issnl = 1198-9742
+    >
+
+    param[journal_dir] = journal_of_scholarly_publishing
+    attr[journal_id] = scp
+
+    au < released ; 2003-2004 ; Journal of Scholarly Publishing Volume 35 ; 35 >
+    au < released ; 2004-2005 ; Journal of Scholarly Publishing Volume 36 ; 36 >
+    au < released ; 2005-2006 ; Journal of Scholarly Publishing Volume 37 ; 37 >
+    au < released ; 2006-2007 ; Journal of Scholarly Publishing Volume 38 ; 38 >
+    au < released ; 2007-2008 ; Journal of Scholarly Publishing Volume 39 ; 39 >
+    au < released ; 2008-2009 ; Journal of Scholarly Publishing Volume 40 ; 40 >
+    au < released ; 2009-2010 ; Journal of Scholarly Publishing Volume 41 ; 41 >
+    au < released ; 2010-2011 ; Journal of Scholarly Publishing Volume 42 ; 42 >
+    au < released ; 2011-2012 ; Journal of Scholarly Publishing Volume 43 ; 43 >
+
+  }
+
+  {
+  
+    title <
+      name = Modern Drama ;
+      issn = 0026-7694 ;
+      eissn = 1712-5286 ;
+      issnl = 0026-7694
+    >
+
+    param[journal_dir] = modern_drama
+    attr[journal_id] = mdr
+
+    au < released ; 2005 ; Modern Drama Volume 48 ; 48 >
+    au < released ; 2006 ; Modern Drama Volume 49 ; 49 >
+    au < released ; 2007 ; Modern Drama Volume 50 ; 50 >
+    au < released ; 2008 ; Modern Drama Volume 51 ; 51 >
+    au < released ; 2009 ; Modern Drama Volume 52 ; 52 >
+    au < released ; 2010 ; Modern Drama Volume 53 ; 53 >
+    au < released ; 2011 ; Modern Drama Volume 54 ; 54 >
+    au < released ; 2012 ; Modern Drama Volume 55 ; 55 >
+
+  }
+
+  {
+  
+    title <
+      name = Seminar: A Journal of Germanic Studies ;
+      issn = 0037-1939 ;
+      eissn = 1911-026X ;
+      issnl = 0037-1939
+    >
+
+    param[journal_dir] = seminar_a_journal_of_germanic_studies
+    attr[journal_id] = smr
+
+    au < released ; 2006 ; Seminar: A Journal of Germanic Studies Volume 42 ; 42 >
+    au < released ; 2007 ; Seminar: A Journal of Germanic Studies Volume 43 ; 43 >
+    au < released ; 2008 ; Seminar: A Journal of Germanic Studies Volume 44 ; 44 >
+    au < released ; 2009 ; Seminar: A Journal of Germanic Studies Volume 45 ; 45 >
+    au < released ; 2010 ; Seminar: A Journal of Germanic Studies Volume 46 ; 46 >
+    au < released ; 2011 ; Seminar: A Journal of Germanic Studies Volume 47 ; 47 >
+    au < released ; 2012 ; Seminar: A Journal of Germanic Studies Volume 48 ; 48 >
+
+  }
+
+  {
+  
+    title <
+      name = The Tocqueville Review/La revue Tocqueville ;
+      issn = 0730-479X ;
+      eissn = 1918-6649 ;
+      issnl = 0730-479X
+    >
+
+    param[journal_dir] = tocqueville_reviewla_revue_tocqueville
+    attr[journal_id] = toc
+
+    au < released ; 2009 ; The Tocqueville Review/La revue Tocqueville Volume 30 ; 30 >
+    au < released ; 2010 ; The Tocqueville Review/La revue Tocqueville Volume 31 ; 31 >
+    au < released ; 2011 ; The Tocqueville Review/La revue Tocqueville Volume 32 ; 32 >
+    au < released ; 2012 ; The Tocqueville Review/La revue Tocqueville Volume 33 ; 33 >
+
+  }
+
+  {
+  
+    title <
+      name = Toronto Journal of Theology ;
+      issn = 0826-9831 ;
+      eissn = 1918-6371 ;
+      issnl = 0826-9831 
+    >
+
+    param[journal_dir] = toronto_journal_of_theology
+    attr[journal_id] = tjt
+
+    au < released ; 2011 ; Toronto Journal of Theology Volume 27 ; 27 >
+    au < released ; 2012 ; Toronto Journal of Theology Volume 28 ; 28 >
+
+  }
+
+  {
+  
+    title <
+      name = University of Toronto Law Journal ;
+      issn = 0042-0220 ;
+      eissn = 1710-1174 ;
+      issnl = 0042-0220
+    >
+
+    param[journal_dir] = university_of_toronto_law_journal
+    attr[journal_id] = tlj
+
+    au < released ; 2004 ; University of Toronto Law Journal Volume 54 ; 54 >
+    au < released ; 2005 ; University of Toronto Law Journal Volume 55 ; 55 >
+    au < released ; 2006 ; University of Toronto Law Journal Volume 56 ; 56 >
+    au < released ; 2007 ; University of Toronto Law Journal Volume 57 ; 57 >
+    au < released ; 2008 ; University of Toronto Law Journal Volume 58 ; 58 >
+    au < released ; 2009 ; University of Toronto Law Journal Volume 59 ; 59 >
+    au < released ; 2010 ; University of Toronto Law Journal Volume 60 ; 60 >
+    au < released ; 2011 ; University of Toronto Law Journal Volume 61 ; 61 >
+    au < released ; 2012 ; University of Toronto Law Journal Volume 62 ; 62 >
+
+  }
+
+  {
+  
+    title <
+      name = University of Toronto Quarterly ;
+      issn = 0042-0247 ;
+      eissn = 1712-5278 ;
+      issnl = 0042-0247
+    >
+
+    param[journal_dir] = university_of_toronto_quarterly
+    attr[journal_id] = utq
+    comment[au_81]= hash compare failure, to be fixed. (as of 06/13/2012)
+
+    au < released ; 2005 ; University of Toronto Quarterly Volume 74 ; 74 >
+    au < released ; 2006 ; University of Toronto Quarterly Volume 75 ; 75 >
+    au < released ; 2007 ; University of Toronto Quarterly Volume 76 ; 76 >
+    au < released ; 2008 ; University of Toronto Quarterly Volume 77 ; 77 >
+    au < released ; 2009 ; University of Toronto Quarterly Volume 78 ; 78 >
+    au < released ; 2010 ; University of Toronto Quarterly Volume 79 ; 79 >
+    au < released ; 2011 ; University of Toronto Quarterly Volume 80 ; 80 >
+    au < released ; 2012 ; University of Toronto Quarterly Volume 81 ; 81 >
+
+  }
+
+  {
+  
+    title <
+      name = The Yearbook of Comparative Literature ;
+      issn = 0084-3695 ;
+      eissn = 1947-2978 ;
+      issnl = 0084-3695
+    >
+
+    param[journal_dir] = yearbook_of_comparative_and_general_literature
+    attr[journal_id] = cgl
+
+    au < released ; 2008 ; The Yearbook of Comparative Literature Volume 54 ; 54 >
+    au < released ; 2009 ; The Yearbook of Comparative Literature Volume 55 ; 55 >
+
+  }
+
+}

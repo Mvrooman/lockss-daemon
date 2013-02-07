@@ -1,0 +1,26 @@
+
+{
+  publisher <
+    name = Anales Galdosianos
+  >
+
+  implicit < status ; year; name ; param[volume] >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Anales Galdosianos ;
+      issn = 0569-9924 ;
+      issnl = 0569-9924
+    >
+
+    param[journal_dir] = anales_galdosianos
+    attr[journal_id] = ang
+
+    au < released ; 2011 ; Anales Galdosianos Volume 46 ; 46 >
+
+  }
+
+}

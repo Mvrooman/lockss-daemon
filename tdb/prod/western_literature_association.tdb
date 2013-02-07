@@ -1,0 +1,28 @@
+{
+  publisher <
+    name = Western Literature Association
+  >
+
+  plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+  implicit < status ; year ; name ; param[volume] >
+  param[base_url] = http://muse.jhu.edu/
+
+  {
+    title <
+      name = Western American Literature ;
+      issn = 1948-7142 ;
+      eissn = 0043-3462 ;
+      issnl = 0043-3462
+    >
+
+    param[journal_dir] = western_american_literature
+    attr[journal_id] = wal
+
+    au < released ; 2009-2010 ; Western American Literature Volume 44 ; 44 >
+    au < released ; 2010-2011 ; Western American Literature Volume 45 ; 45 >
+    au < released ; 2011 ; Western American Literature Volume 46 ; 46 >
+    au < released ; 2012 ; Western American Literature Volume 47 ; 47 >
+
+  }
+
+}

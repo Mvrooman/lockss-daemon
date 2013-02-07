@@ -1,0 +1,286 @@
+{
+
+  publisher <
+    name = University of Illinois Press
+  >
+
+  {
+
+    plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+    implicit < status ; year ; name ; param[volume] >
+    param[base_url] = http://muse.jhu.edu/
+
+    {
+      title <
+        name = American Journal of Theology & Philosophy ;
+        issn = 0194-3448 ;
+        eissn = 2156-4795 ;
+        issnl = 0194-3448 
+      >
+
+      param[journal_dir] = american_journal_of_theology_and_philosophy
+      attr[journal_id] = ajt
+
+      au < released ; 2010 ; American Journal of Theology & Philosophy Volume 31 ; 31 >
+      au < released ; 2011 ; American Journal of Theology & Philosophy Volume 32 ; 32 >
+      au < released ; 2012 ; American Journal of Theology & Philosophy Volume 33 ; 33 >
+
+    }
+
+    {
+      title <
+        name = American Literary Realism ;
+        issn = 0002-9823 ;
+        eissn = 1940-5103 ;
+        issnl = 0002-9823 
+      >
+
+      param[journal_dir] = american_literary_realism
+      attr[journal_id] = alr
+
+      au < released ; 2007-2008 ; American Literary Realism Volume 40 ; 40 >
+      au < released ; 2008-2009 ; American Literary Realism Volume 41 ; 41 >
+      au < released ; 2009-2010 ; American Literary Realism Volume 42 ; 42 >
+      au < released ; 2010-2011 ; American Literary Realism Volume 43 ; 43 >
+      au < released ; 2011-2012 ; American Literary Realism Volume 44 ; 44 >
+      au < released ; 2012-2013 ; American Literary Realism Volume 45 ; 45 >
+
+    }
+
+    {
+      title <
+        name = American Music ;
+        issn = 1945-2349 ;
+        eissn = 0734-4392 ;
+        issnl = 0734-4392
+      >
+
+      param[journal_dir] = american_music
+      attr[journal_id] = amm
+
+      au < released ; 2009 ; American Music Volume 27 ; 27 >
+      au < released ; 2010 ; American Music Volume 28 ; 28 >
+      au < released ; 2011 ; American Music Volume 29 ; 29 >
+      au < released ; 2012 ; American Music Volume 30 ; 30 >
+
+    }
+
+    {
+      title <
+        name = Black Music Research Journal ;
+        issn = 0276-3605 ;
+        eissn = 1946-1615 ;
+        issnl = 0276-3605
+      >
+
+      param[journal_dir] = black_music_research_journal
+      attr[journal_id] = bmr
+
+      au < released ; 2010 ; Black Music Research Journal Volume 30 ; 30 >
+      au < released ; 2011 ; Black Music Research Journal Volume 31 ; 31 >
+      au < released ; 2012 ; Black Music Research Journal Volume 32 ; 32 >
+
+    }
+
+    {
+      title <
+        name = Black Women, Gender & Families ;
+        issn = 1944-6462 ;
+        eissn = 1935-2743 ;
+        issnl = 1935-2743
+      >
+
+      param[journal_dir] = black_women_gender_and_families
+      attr[journal_id] = bwg
+
+      au < released ; 2009 ; Black Women, Gender & Families Volume 3 ; 3 >
+      au < released ; 2010 ; Black Women, Gender & Families Volume 4 ; 4 >
+      au < released ; 2011 ; Black Women, Gender & Families Volume 5 ; 5 >
+      au < released ; 2012 ; Black Women, Gender & Families Volume 6 ; 6 >
+
+    }
+
+    {
+      title <
+        name = Dance Research Journal ;
+        issn = 0149-7677 ;
+        eissn = 1940-509X ;
+        issnl = 0149-7677
+      >
+
+      param[journal_dir] = dance_research_journal
+      attr[journal_id] = drj
+
+      au < released ; 2008 ; Dance Research Journal Volume 40 ; 40 >
+      au < released ; 2009 ; Dance Research Journal Volume 41 ; 41 >
+      au < released ; 2010 ; Dance Research Journal Volume 42 ; 42 >
+      au < released ; 2011 ; Dance Research Journal Volume 43 ; 43 >
+      au < released ; 2012 ; Dance Research Journal Volume 44 ; 44 >
+
+    }
+
+    {
+      title <
+        name = Feminist Teacher ;
+        issn = 0882-4843 ;
+        eissn = 1934-6034 ;
+        issnl = 0882-4843
+      >
+
+      param[journal_dir] = feminist_teacher
+      attr[journal_id] = ftr
+
+      au < released ; 2007-2008 ; Feminist Teacher Volume 18 ; 18 >
+      au < released ; 2008-2009 ; Feminist Teacher Volume 19 ; 19 >
+      au < released ; 2009-2010 ; Feminist Teacher Volume 20 ; 20 >
+      au < released ; 2010-2011 ; Feminist Teacher Volume 21 ; 21 >
+      au < expected ; 2011-2012 ; Feminist Teacher Volume 22 ; 22 >
+ 
+    }
+
+    {
+      title <
+        name = JEGP, Journal of English and Germanic Philology ;
+        issn = 0363-6941 ;
+        eissn = 1945-662X ;
+        issnl = 0363-6941
+      >
+
+      param[journal_dir] = journal_of_english_and_germanic_philology
+      attr[journal_id] = egp
+
+      au < released ; 2009 ; JEGP, Journal of English and Germanic Philology Volume 108 ; 108 >
+      au < released ; 2010 ; JEGP, Journal of English and Germanic Philology Volume 109 ; 109 >
+      au < released ; 2011 ; JEGP, Journal of English and Germanic Philology Volume 110 ; 110 >
+      au < ready ; 2012 ; JEGP, Journal of English and Germanic Philology Volume 111 ; 111 >
+
+    }
+
+    {
+      title <
+        name = The Journal of Aesthetic Education ;
+        issn = 0021-8510 ;
+        eissn = 1543-7809 ;
+        issnl = 0021-8510
+      >
+
+      param[journal_dir] = the_journal_of_aesthetic_education
+      attr[journal_id] = jae
+
+      au < released ; 2003 ; The Journal of Aesthetic Education Volume 37 ; 37 >
+      au < released ; 2004 ; The Journal of Aesthetic Education Volume 38 ; 38 >
+      au < released ; 2005 ; The Journal of Aesthetic Education Volume 39 ; 39 >
+      au < released ; 2006 ; The Journal of Aesthetic Education Volume 40 ; 40 >
+      au < released ; 2007 ; The Journal of Aesthetic Education Volume 41 ; 41 >
+      au < released ; 2008 ; The Journal of Aesthetic Education Volume 42 ; 42 >
+      au < released ; 2009 ; The Journal of Aesthetic Education Volume 43 ; 43 >
+      au < released ; 2010 ; The Journal of Aesthetic Education Volume 44 ; 44 >
+      au < released ; 2011 ; The Journal of Aesthetic Education Volume 45 ; 45 >
+      au < released ; 2012 ; The Journal of Aesthetic Education Volume 46 ; 46 >
+
+    }
+
+    {
+      title <
+        name = Journal of Education Finance ;
+        issn = 0098-9495 ;
+        eissn = 1944-6470 ;
+        issnl = 0098-9495
+      >
+
+      param[journal_dir] = journal_of_education_finance
+      attr[journal_id] = jef
+
+      au < released ; 2009 ; Journal of Education Finance Volume 35 ; 35 >
+      au < released ; 2010 ; Journal of Education Finance Volume 36 ; 36 >
+      au < released ; 2011 ; Journal of Education Finance Volume 37 ; 37 >
+      au < released ; 2012 ; Journal of Education Finance Volume 38 ; 38 >
+
+    }
+
+    {
+      title <
+        name = Journal of Film and Video ;
+        issn = 0742-4671 ;
+        eissn = 1934-6018 ;
+        issnl = 0742-4671
+      >
+
+      param[journal_dir] = journal_of_film_and_video
+      attr[journal_id] = jfv
+
+      au < released ; 2008 ; Journal of Film and Video Volume 60 ; 60 >
+      au < released ; 2009 ; Journal of Film and Video Volume 61 ; 61 >
+      au < released ; 2010 ; Journal of Film and Video Volume 62 ; 62 >
+      au < released ; 2011 ; Journal of Film and Video Volume 63 ; 63 >
+      au < released ; 2012 ; Journal of Film and Video Volume 64 ; 64 >
+
+    }
+
+    {
+      title <
+        name = The Pluralist ;
+        issn = 1930-7365 ;
+        eissn = 1944-6489 ;
+        issnl = 1930-7365
+      >
+
+      param[journal_dir] = the_pluralist
+      attr[journal_id] = plu
+
+      au < released ; 2009 ; The Pluralist Volume 4 ; 4 >
+      au < released ; 2010 ; The Pluralist Volume 5 ; 5 >
+      au < released ; 2011 ; The Pluralist Volume 6 ; 6 >
+      au < released ; 2012 ; The Pluralist Volume 7 ; 7 >
+
+    }
+    
+    {
+      title <
+        name = Radical Teacher ;
+        issn = 0191-4847 ;
+        eissn = 1941-0832 ;
+        issnl = 0191-4847
+      >
+
+      param[journal_dir] = radical_teacher
+      attr[journal_id] = rdt
+
+      au < released ; 2008 ; Radical Teacher Number 81 ; 81 >
+      au < released ; 2008 ; Radical Teacher Number 82 ; 82 >
+      au < released ; 2008 ; Radical Teacher Number 83 ; 83 >
+      au < released ; 2009 ; Radical Teacher Number 84 ; 84 >
+      au < released ; 2009 ; Radical Teacher Number 85 ; 85 >
+      au < released ; 2009 ; Radical Teacher Number 86 ; 86 >
+      au < released ; 2010 ; Radical Teacher Number 87 ; 87 >
+      au < released ; 2010 ; Radical Teacher Number 88 ; 88 >
+      au < released ; 2010 ; Radical Teacher Number 89 ; 89 >
+      au < released ; 2011 ; Radical Teacher Number 90 ; 90 >
+      au < released ; 2011 ; Radical Teacher Number 91 ; 91 >
+      au < released ; 2011 ; Radical Teacher Number 92 ; 92 >
+      au < released ; 2012 ; Radical Teacher Number 93 ; 93 >
+      au < released ; 2012 ; Radical Teacher Number 94 ; 94 >
+      au < expected ; 2012 ; Radical Teacher Number 95 ; 95 >
+
+    }
+
+    {
+      title <
+        name = Visual Arts Research ;
+        issn = 0736-0770 ;
+        eissn = 2151-8009 ;
+        issnl = 0736-0770 
+      >
+
+      param[journal_dir] = visual_arts_research
+      attr[journal_id] = var
+
+      au < released ; 2010 ; Visual Arts Research Volume 36 ; 36 >
+      au < released ; 2011 ; Visual Arts Research Volume 37 ; 37 >
+      au < released ; 2012 ; Visual Arts Research Volume 38 ; 38 >
+
+    }
+
+  }
+  
+}

@@ -1,0 +1,29 @@
+{
+
+  publisher <
+    name = Apple Valley Review
+  >
+  
+  {
+  
+    title <
+      name = Apple Valley Review ;
+      issn = 1931-3888 ;
+      issnl = 1931-3888
+    >  
+    
+    rights = openaccess
+    plugin = org.lockss.plugin.applevalleyreview.AppleValleyReviewPlugin
+    implicit < status ; name ; volume ; param[year] >
+    param[base_url] = http://www.leahbrowning.net/
+
+    au < released ; Apple Valley Review Volume 1 ; 1 ; 2006 >
+    au < released ; Apple Valley Review Volume 2 ; 2 ; 2007 >
+    au < released ; Apple Valley Review Volume 3 ; 3 ; 2008 >
+    au < exists ; Apple Valley Review Volume 4 ; 4 ; 2009 >
+    au < exists ; Apple Valley Review Volume 5 ; 5 ; 2010 >
+    au < exists ; Apple Valley Review Volume 6 ; 6 ; 2011 >
+  
+  }
+  
+}

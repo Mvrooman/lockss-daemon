@@ -1,0 +1,205 @@
+#!/bin/sh
+# Do not edit the line above. The functions must work with
+# /bin/sh on Solaris. After any change to this file it must
+# be tested on both Linux and Solaris.
+
+# Common functions for lockss startup scripts
+
+set_lockss_user () {
+    if [ "X${1}" != X ]; then
+        case `uname -s` in
+        Linux)
+            HOME_DIR=`echo "cd ~$1 ; pwd" | sh`
+            ;;
+        SunOS)
+            HOME_DIR=`echo "cd ~$1 ; pwd" | /usr/bin/bash`
+            ;;
+        esac
+        if [ "X${HOME_DIR}" = X ] ; then
+            echo "No home dir for $1"
+            exit 1
+        fi
+    fi
+    if [ "X${LOCKSS_HOME}" != "X" -a -f ${LOCKSS_HOME}/etc/lockss/config.dat ]
+    then
+        CFG_FILE=${LOCKSS_HOME}/etc/lockss/config.dat
+    elif [ -f ${HOME_DIR}/etc/lockss/config.dat ]
+    then
+        CFG_FILE=${HOME_DIR}/etc/lockss/config.dat
+    elif [ -f /etc/lockss/config.dat ]
+    then
+        CFG_FILE=/etc/lockss/config.dat
+    else
+        CFG_FILE=
+    fi
+    export CFG_FILE
+    if [ "${LOCKSS_USER}X" = "X" -a "X${CFG_FILE}" != "X" ]
+    then
+        LOCKSS_USER=`sed -n '/^LOCKSS_USER="\(.*\)"/s//\1/p' ${CFG_FILE}`
+    fi
+    if [ "X${LOCKSS_USER}" = X ]
+    then
+        LOCKSS_USER=lockss
+    fi
+    export LOCKSS_USER
+}
+
+set_variables () {
+    if [ "X${1}" = X -o "X${1}" = Xroot ] ; then
+       echo "set_variables needs a non-root argument"
+       exit 1
+    fi
+    OS_TYPE=`uname -s`
+    case ${OS_TYPE} in
+    SunOS)
+        # Next line weird because of evaluation order of
+        # ~ and shell parameters
+        HOME_DIR=`echo "cd ~$1 ; pwd" | /usr/bin/bash`
+        if [ "X${LOCKSS_HOME}" = X ]
+        then
+            export HOME_DIR
+            echo "HOME_DIR ${HOME_DIR}"
+            if [ -d /etc/lockss ]
+            then
+                LOCKSS_HOME=
+            else
+                LOCKSS_HOME=${HOME_DIR}
+            fi
+            export LOCKSS_HOME
+        fi
+	# Old loop condition.
+        KEEP_GOING=${HOME_DIR}/KeepGoing
+        export KEEP_GOING
+        if [ "${LOCAL_TXT}X" = "X" ]
+        then
+            LOCAL_TXT=${HOME_DIR}/local.txt
+            export LOCAL_TXT
+        fi
+        if [ "X${LOCKSS_SSL_CONFIG}" = "X" ]
+        then
+            LOCKSS_SSL_CONFIG=${LOCKSS_HOME}/var/run/lockss/ssl.${1}.txt
+            export LOCKSS_SSL_CONFIG
+        fi
+        ;;
+    Linux)
+        export HOME_DIR=`echo "cd ~$1 ; pwd" | bash`
+        export LOCKSS_HOME=
+        export KEEP_GOING=${HOME_DIR}/KeepGoing
+        if [ "${LOCAL_TXT}X" = "X" ]
+        then
+            export LOCAL_TXT=${HOME_DIR}/local.txt
+        fi
+        if [ "X${LOCKSS_SSL_CONFIG}" = "X" ]
+        then
+            export LOCKSS_SSL_CONFIG=/var/run/lockss/ssl.${1}.txt
+        fi
+        ;;
+    esac
+    if [ "X${HOME_DIR}" = X ] ; then
+        echo "No home directory for $1"
+        exit 1
+    fi
+    if [ "${LOG_DIR}X" = "X" ]
+    then
+        LOG_DIR="${LOCKSS_HOME}/var/log/$1"
+        export LOG_DIR
+    fi
+    if [ "${LOG_FILE}X" = "X" ]
+    then
+        LOG_FILE="${LOG_DIR}/stdout"
+        export LOG_FILE
+    fi
+    if [ "${PID_FILE}X" = "X" ]
+    then
+        PID_FILE="${LOCKSS_HOME}/var/run/$1.pid"
+        export PID_FILE
+    fi
+    if [ "${CFG_FILE}X" = "X" ]
+    then
+        CFG_FILE=${LOCKSS_HOME}/etc/lockss/config.dat
+        export CFG_FILE
+    fi
+    if [ "${RUN_DIR}X" = "X" ]
+    then
+        RUN_DIR=${LOCKSS_HOME}/var/run/lockss
+        export RUN_DIR
+    fi
+    CONFIG_SCRIPT=${LOCKSS_HOME}/etc/lockss/hostconfig
+    export CONFIG_SCRIPT
+    LOCKFILE="${RUN_DIR}/startdaemon.lock.$1"
+}
+
+unset_variables () {
+    LOCAL_TXT=
+    LOG_DIR=
+    LOG_FILE=
+    PID_FILE=
+    CFG_FILE=
+    LOCKSS_USER=
+    LOCKSS_HOME=
+    KEEP_GOING=
+    CONFIG_SCRIPT=
+    LOCKSS_SSL_CONFIG=
+    RUN_DIR=
+    LOCKFILE=
+}
+
+ensure_dir() {
+    if [ ! -d "${1}" ]; then
+        mkdir -p "${1}"
+    fi
+}
+
+set_java_heap () {
+  # Don't set LOCKSS_JAVA_HEAP if it's already set
+  if [ "${LOCKSS_JAVA_HEAP}X" = X ] ; then
+    case `uname -s` in
+    Linux)
+        # Use 2/3 of physical memory for all daemons combined
+        # look in /proc/meminfo for "MemTotal:      1002108 kB"
+        if [ "${LOCKSS_JAVA_HEAP}X" = X -a -f /proc/meminfo ] ; then
+            MEM_IN_KB=`sed -n -e 's/MemTotal:[     ]*\([0-9]*\) kB/\1/p' </proc/meminfo`
+            MEM_IN_KB=`expr \( ${MEM_IN_KB} '*' 2 \) / \( 3 '*' ${DAEMON_COUNT} \)`
+            MEM_IN_MB=`expr ${MEM_IN_KB} '/' 1024`
+            if [ ${MEM_IN_MB} -lt ${MIN_JAVA_HEAP_IN_MB} ]; then
+                MEM_IN_MB=${MIN_JAVA_HEAP_IN_MB}
+            fi
+            if [ ${MEM_IN_MB} -gt ${MAX_JAVA_HEAP_IN_MB} ]; then
+                MEM_IN_MB=${MAX_JAVA_HEAP_IN_MB}
+            fi
+            LOCKSS_JAVA_HEAP=${MEM_IN_MB}m
+        elif [ "X${DEFAULT_JAVA_HEAP_IN_MB}" != X ] ; then
+            LOCKSS_JAVA_HEAP=${DEFAULT_JAVA_HEAP_IN_MB}m
+	else
+	    LOCKSS_JAVA_HEAP=500m
+        fi
+        ;;
+    SunOS)
+        # XXX figure out how to size physmem on Solaris
+        if [ "X${DEFAULT_JAVA_HEAP_IN_MB}" != X ] ; then
+            LOCKSS_JAVA_HEAP=${DEFAULT_JAVA_HEAP_IN_MB}m
+	else
+	    LOCKSS_JAVA_HEAP=500m
+        fi
+	;;
+    esac
+  fi
+}
+
+# True if argument is accessible only by root
+is_root_only() {
+    RET=1
+    RES=`find ${1} -maxdepth 0 -user root`
+    if [ "X${RES}" = "X${1}" ]
+    then
+        # Owned by root
+        RES=`find ${1} -maxdepth 0 -perm -040 -o -perm -020 -o -perm -010 -o -perm -04 -o -perm -02 -o -perm -01`
+        if [ "X${RES}" = X ]
+        then
+            # None of the permission bits 077 are set
+	    RET=0
+        fi
+    fi
+    return ${RET}
+}
+

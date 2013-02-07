@@ -1,0 +1,34 @@
+{
+
+  publisher <
+    name = Marshfield Clinic
+  >
+
+  {
+
+    title <
+      name = Clinical Medicine & Research ;
+      issn = 1539-4182 ;
+      eissn = 1554-6179 ;
+      issnl = 1539-4182
+    >
+
+    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
+    param[base_url] = http://www.clinmedres.org/
+    implicit < status ; year ; name ; param[volume_name] >
+
+    au < released ; 2003 ; Clinical Medicine & Research Volume 1 ; 1 >
+    au < released ; 2004 ; Clinical Medicine & Research Volume 2 ; 2 >
+    au < released ; 2005 ; Clinical Medicine & Research Volume 3 ; 3 >
+    au < released ; 2006 ; Clinical Medicine & Research Volume 4 ; 4 >
+    au < released ; 2007 ; Clinical Medicine & Research Volume 5 ; 5 >
+    au < released ; 2008 ; Clinical Medicine & Research Volume 6 ; 6 >
+    au < released ; 2009 ; Clinical Medicine & Research Volume 7 ; 7 >
+    au < released ; 2010 ; Clinical Medicine & Research Volume 8 ; 8 >
+    au < released ; 2011 ; Clinical Medicine & Research Volume 9 ; 9 >
+    au < released ; 2012 ; Clinical Medicine & Research Volume 10 ; 10 >
+
+  }
+
+}
+

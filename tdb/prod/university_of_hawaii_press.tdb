@@ -1,0 +1,612 @@
+{
+
+  publisher <
+    name = University of Hawai'i Press
+  >
+  
+  comment[notReady] = AUs where the manifest page was posted before the content. Click on link to content in manifest page to check.
+
+  {
+    title <
+      name = Archives of Asian Art ;
+      issn = 1944-6497 ;
+      eissn = 0066-6637 ;
+      issnl = 0066-6637
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = archives_of_asian_art
+      attr[journal_id] = aaa
+
+      au < released ; 2008 ; Archives of Asian Art Volume 58 ; 58 >
+      au < released ; 2009 ; Archives of Asian Art Volume 59 ; 59 >
+      au < released ; 2010 ; Archives of Asian Art Volume 60 ; 60 >
+      au < released ; 2011 ; Archives of Asian Art Volume 61 ; 61 >
+      au < notReady ; 2012 ; Archives of Asian Art Volume 62 ; 62 >
+      
+    }
+
+  }  
+  
+  {
+    title <
+      name = Asian Perspectives ;
+      issn = 0066-8435 ;
+      eissn = 1535-8283 ;
+      issnl = 0066-8435
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = asian_perspectives
+      attr[journal_id] = asi
+
+      au < released ; 2000 ; Asian Perspectives Volume 39 ; 39 >
+      au < released ; 2001 ; Asian Perspectives Volume 40 ; 40 >
+      au < released ; 2002 ; Asian Perspectives Volume 41 ; 41 >
+      au < released ; 2003 ; Asian Perspectives Volume 42 ; 42 >
+      au < released ; 2004 ; Asian Perspectives Volume 43 ; 43 >
+      au < released ; 2005 ; Asian Perspectives Volume 44 ; 44 >
+      au < released ; 2006 ; Asian Perspectives Volume 45 ; 45 >
+      au < released ; 2007 ; Asian Perspectives Volume 46 ; 46 >
+      au < released ; 2008 ; Asian Perspectives Volume 47 ; 47 >
+      au < released ; 2009 ; Asian Perspectives Volume 48 ; 48 >
+      au < released ; 2010 ; Asian Perspectives Volume 49 ; 49 >
+
+    }
+
+  }  
+
+  {
+    title <
+      name = Asian Theatre Journal ;
+      issn = 0742-5457 ;
+      eissn = 1527-2109 ;
+      issnl = 0742-5457
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = asian_theatre_journal
+      attr[journal_id] = atj
+
+      au < released ; 1999 ; Asian Theatre Journal Volume 16 ; 16 >
+      au < released ; 2000 ; Asian Theatre Journal Volume 17 ; 17 >
+      au < released ; 2001 ; Asian Theatre Journal Volume 18 ; 18 >
+      au < released ; 2002 ; Asian Theatre Journal Volume 19 ; 19 >
+      au < released ; 2003 ; Asian Theatre Journal Volume 20 ; 20 >
+      au < released ; 2004 ; Asian Theatre Journal Volume 21 ; 21 >
+      au < released ; 2005 ; Asian Theatre Journal Volume 22 ; 22 >
+      au < released ; 2006 ; Asian Theatre Journal Volume 23 ; 23 >
+      au < released ; 2007 ; Asian Theatre Journal Volume 24 ; 24 >
+      au < released ; 2008 ; Asian Theatre Journal Volume 25 ; 25 >
+      au < released ; 2009 ; Asian Theatre Journal Volume 26 ; 26 >
+      au < released ; 2010 ; Asian Theatre Journal Volume 27 ; 27 >
+      au < released ; 2011 ; Asian Theatre Journal Volume 28 ; 28 >
+      au < released ; 2012 ; Asian Theatre Journal Volume 29 ; 29 >
+
+    }
+
+  } 
+
+  {
+    title <
+      name = Azalea: Journal of Korean Literature & Culture ;
+      issn = 1944-6500 ;
+      eissn = 1939-6120 ;
+      issnl = 1939-6120
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = azalea
+      attr[journal_id] = aza
+
+      au < released ; 2007 ; Azalea: Journal of Korean Literature & Culture Volume 1 ; 1 >
+      au < released ; 2008 ; Azalea: Journal of Korean Literature & Culture Volume 2 ; 2 >
+      au < released ; 2010 ; Azalea: Journal of Korean Literature & Culture Volume 3 ; 3 >
+      au < released ; 2011 ; Azalea: Journal of Korean Literature & Culture Volume 4 ; 4 >
+      au < released ; 2012 ; Azalea: Journal of Korean Literature & Culture Volume 5 ; 5 >
+
+    }
+
+  } 
+  
+  {
+    title <
+      name = Biography ;
+      issn = 0162-4962 ;
+      eissn = 1529-1456 ;
+      issnl = 0162-4962
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = biography
+      attr[journal_id] = bio
+      
+      au < released ; 1978 ; Biography Volume 1 ; 1 >
+      au < released ; 1979 ; Biography Volume 2 ; 2 >
+      au < released ; 1980 ; Biography Volume 3 ; 3 >
+      au < released ; 1981 ; Biography Volume 4 ; 4 >
+      au < released ; 1982 ; Biography Volume 5 ; 5 >
+      au < released ; 1983 ; Biography Volume 6 ; 6 >
+      au < released ; 1984 ; Biography Volume 7 ; 7 >
+      au < released ; 1985 ; Biography Volume 8 ; 8 >
+      au < released ; 1986 ; Biography Volume 9 ; 9 >
+      au < released ; 1987 ; Biography Volume 10 ; 10 >
+      au < released ; 1988 ; Biography Volume 11 ; 11 >
+      au < released ; 1989 ; Biography Volume 12 ; 12 >
+      au < released ; 1990 ; Biography Volume 13 ; 13 >
+      au < released ; 1991 ; Biography Volume 14 ; 14 >
+      au < released ; 1992 ; Biography Volume 15 ; 15 >
+      au < released ; 1993 ; Biography Volume 16 ; 16 >
+      au < released ; 1994 ; Biography Volume 17 ; 17 >
+      au < released ; 1995 ; Biography Volume 18 ; 18 >
+      au < released ; 1996 ; Biography Volume 19 ; 19 >
+      au < released ; 1997 ; Biography Volume 20 ; 20 >
+      au < released ; 1998 ; Biography Volume 21 ; 21 >
+      au < released ; 1999 ; Biography Volume 22 ; 22 >
+      au < released ; 2000 ; Biography Volume 23 ; 23 >
+      au < released ; 2001 ; Biography Volume 24 ; 24 >
+      au < released ; 2002 ; Biography Volume 25 ; 25 >
+      au < released ; 2003 ; Biography Volume 26 ; 26 >
+      au < released ; 2004 ; Biography Volume 27 ; 27 >
+      au < released ; 2005 ; Biography Volume 28 ; 28 >
+      au < released ; 2006 ; Biography Volume 29 ; 29 >
+      au < released ; 2007 ; Biography Volume 30 ; 30 >
+      au < released ; 2008 ; Biography Volume 31 ; 31 >
+      au < released ; 2009 ; Biography Volume 32 ; 32 >
+      au < released ; 2010 ; Biography Volume 33 ; 33 >
+      au < released ; 2011 ; Biography Volume 34 ; 34 >
+      au < released ; 2012 ; Biography Volume 35 ; 35 >
+
+    }
+  }
+  
+  {
+    title <
+      name = Buddhist-Christian Studies ;
+      issn = 0882-0945 ;
+      eissn = 1527-9472 ;
+      issnl = 0882-0945
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/  
+      param[journal_dir] = buddhist-christian_studies
+      attr[journal_id] = bcs
+
+      au < released ; 1999 ; Buddhist-Christian Studies Volume 19 ; 19 >
+      au < released ; 2000 ; Buddhist-Christian Studies Volume 20 ; 20 >
+      au < released ; 2001 ; Buddhist-Christian Studies Volume 21 ; 21 >
+      au < released ; 2002 ; Buddhist-Christian Studies Volume 22 ; 22 >
+      au < released ; 2003 ; Buddhist-Christian Studies Volume 23 ; 23 >
+      au < released ; 2004 ; Buddhist-Christian Studies Volume 24 ; 24 >
+      au < released ; 2005 ; Buddhist-Christian Studies Volume 25 ; 25 >
+      au < released ; 2006 ; Buddhist-Christian Studies Volume 26 ; 26 >
+      au < released ; 2007 ; Buddhist-Christian Studies Volume 27 ; 27 >
+      au < released ; 2008 ; Buddhist-Christian Studies Volume 28 ; 28 >
+      au < released ; 2009 ; Buddhist-Christian Studies Volume 29 ; 29 >
+      au < released ; 2010 ; Buddhist-Christian Studies Volume 30 ; 30 >
+      au < released ; 2011 ; Buddhist-Christian Studies Volume 31 ; 31 >
+      au < released ; 2012 ; Buddhist-Christian Studies Volume 32 ; 32 >
+
+    }      
+  }
+  
+  {
+    title <
+      name = China Review International ;
+      issn = 1069-5834 ;
+      eissn = 1527-9367 ;
+      issnl = 1069-5834
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = china_review_international
+      attr[journal_id] = cri
+
+      au < released ; 1994 ; China Review International Volume 1 ; 1 >
+      au < released ; 1995 ; China Review International Volume 2 ; 2 >
+      au < released ; 1996 ; China Review International Volume 3 ; 3 >
+      au < released ; 1997 ; China Review International Volume 4 ; 4 >
+      au < released ; 1998 ; China Review International Volume 5 ; 5 >
+      au < released ; 1999 ; China Review International Volume 6 ; 6 >
+      au < released ; 2000 ; China Review International Volume 7 ; 7 >
+      au < released ; 2001 ; China Review International Volume 8 ; 8 >
+      au < released ; 2002 ; China Review International Volume 9 ; 9 >
+      au < released ; 2003 ; China Review International Volume 10 ; 10 >
+      au < released ; 2004 ; China Review International Volume 11 ; 11 >
+      au < released ; 2005 ; China Review International Volume 12 ; 12 >
+      au < released ; 2006 ; China Review International Volume 13 ; 13 >
+      au < released ; 2007 ; China Review International Volume 14 ; 14 >
+      au < released ; 2008 ; China Review International Volume 15 ; 15 >
+      au < released ; 2009 ; China Review International Volume 16 ; 16 >
+      au < released ; 2010 ; China Review International Volume 17 ; 17 >
+      au < released ; 2011 ; China Review International Volume 18 ; 18 >
+      
+    }
+  }
+  
+  {
+    title <
+      name = The Contemporary Pacific ;
+      issn = 1043-898X ;
+      eissn = 1527-9464 ;
+      issnl = 1043-898X
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = contemporary_pacific
+      attr[journal_id] = cp
+
+      au < released ; 2000 ; The Contemporary Pacific Volume 12 ; 12 >
+      au < released ; 2001 ; The Contemporary Pacific Volume 13 ; 13 >
+      au < released ; 2002 ; The Contemporary Pacific Volume 14 ; 14 >
+      au < released ; 2003 ; The Contemporary Pacific Volume 15 ; 15 >
+      au < released ; 2004 ; The Contemporary Pacific Volume 16 ; 16 >
+      au < released ; 2005 ; The Contemporary Pacific Volume 17 ; 17 >
+      au < released ; 2006 ; The Contemporary Pacific Volume 18 ; 18 >
+      au < released ; 2007 ; The Contemporary Pacific Volume 19 ; 19 >
+      au < released ; 2008 ; The Contemporary Pacific Volume 20 ; 20 >
+      au < released ; 2009 ; The Contemporary Pacific Volume 21 ; 21 >
+      au < released ; 2010 ; The Contemporary Pacific Volume 22 ; 22 >
+      au < released ; 2011 ; The Contemporary Pacific Volume 23 ; 23 >
+      au < released ; 2012 ; The Contemporary Pacific Volume 24 ; 24 >
+    
+    }
+  }
+
+  {
+    title <
+      name = Cross-Currents: East Asian History and Culture Review ;
+      issn = 2158-9666 ;
+      eissn = 2158-9674
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = cross_currents_east_asian_history_and_culture_review
+      attr[journal_id] = ach
+      
+      au < released ; 2012 ; Cross-Currents: East Asian History and Culture Review Volume 1 ; 1 >
+ 
+    }  
+  }
+
+  {
+    title <
+      name = Journal of Korean Religions ;
+      issn = 2093-7288 
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = journal_of_korean_religions
+      attr[journal_id] = jkr
+ 
+      au < released ; 2010 ; Journal of Korean Religions Volume 1 ; 1 >
+      au < released ; 2011 ; Journal of Korean Religions Volume 2 ; 2 >
+      au < released ; 2012 ; Journal of Korean Religions Volume 3 ; 3 >
+ 
+    }  
+  }
+  
+  {
+    title <
+      name = Journal of World History ;
+      issn = 1045-6007 ;
+      eissn = 1527-8050 ;
+      issnl = 1045-6007
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = journal_of_world_history
+      attr[journal_id] = jwh
+      
+      comment[notReady] = Manifest page exists but content is not yet online as of June 2012.
+
+      au < released ; 1996 ; Journal of World History Volume 7 ; 7 >
+      au < released ; 1997 ; Journal of World History Volume 8 ; 8 >
+      au < released ; 1998 ; Journal of World History Volume 9 ; 9 >
+      au < released ; 1999 ; Journal of World History Volume 10 ; 10 >
+      au < released ; 2000 ; Journal of World History Volume 11 ; 11 >
+      au < released ; 2001 ; Journal of World History Volume 12 ; 12 >
+      au < released ; 2002 ; Journal of World History Volume 13 ; 13 >
+      au < released ; 2003 ; Journal of World History Volume 14 ; 14 >
+      au < released ; 2004 ; Journal of World History Volume 15 ; 15 >
+      au < released ; 2005 ; Journal of World History Volume 16 ; 16 >
+      au < released ; 2006 ; Journal of World History Volume 17 ; 17 >
+      au < released ; 2007 ; Journal of World History Volume 18 ; 18 >
+      au < released ; 2008 ; Journal of World History Volume 19 ; 19 >
+      au < released ; 2009 ; Journal of World History Volume 20 ; 20 >
+      au < released ; 2010 ; Journal of World History Volume 21 ; 21 >
+      au < released ; 2011 ; Journal of World History Volume 22 ; 22 >
+      au < notReady ; 2012 ; Journal of World History Volume 23 ; 23 >
+
+    }
+  }
+  
+  {
+    title <
+      name = Ka Ho'oilina/The Legacy ;
+      issn = 1535-3133 ;
+      eissn = 1542-4243 ;
+      issnl = 1535-3133
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = ka_hooilina_the_legacy
+      attr[journal_id] = kah
+      
+      au < released ; 2002 ; Ka Ho'oilina/The Legacy Puke (Volume) 1 ; 1 >
+      au < released ; 2003 ; Ka Ho'oilina/The Legacy Puke (Volume) 2 ; 2 >
+      au < released ; 2004 ; Ka Ho'oilina/The Legacy Puke (Volume) 3 ; 3 >
+      au < released ; 2005 ; Ka Ho'oilina/The Legacy Puke (Volume) 4 ; 4 >
+      au < released ; 2006 ; Ka Ho'oilina/The Legacy Puke (Volume) 5 ; 5 >
+
+    }
+  }
+  
+  {
+    title <
+      name = Korean Studies ;
+      issn = 0145-840X ;
+      eissn = 1529-1529 ;
+      issnl = 0145-840X
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = korean_studies
+      attr[journal_id] = ks
+
+      au < released ; 1977 ; Korean Studies Volume 1 ; 1 >
+      au < released ; 1978 ; Korean Studies Volume 2 ; 2 >
+      au < released ; 1979 ; Korean Studies Volume 3 ; 3 >
+      au < released ; 1980 ; Korean Studies Volume 4 ; 4 >
+      au < released ; 1981 ; Korean Studies Volume 5 ; 5 >
+      au < released ; 1982 ; Korean Studies Volume 6 ; 6 >
+      au < released ; 1983 ; Korean Studies Volume 7 ; 7 >
+      au < released ; 1984 ; Korean Studies Volume 8 ; 8 >
+      au < released ; 1985 ; Korean Studies Volume 9 ; 9 >
+      au < released ; 1986 ; Korean Studies Volume 10 ; 10 >
+      au < released ; 1987 ; Korean Studies Volume 11 ; 11 >
+      au < released ; 1988 ; Korean Studies Volume 12 ; 12 >
+      au < released ; 1989 ; Korean Studies Volume 13 ; 13 >
+      au < released ; 1990 ; Korean Studies Volume 14 ; 14 >
+      au < released ; 1991 ; Korean Studies Volume 15 ; 15 >
+      au < released ; 1992 ; Korean Studies Volume 16 ; 16 >
+      au < released ; 1993 ; Korean Studies Volume 17 ; 17 >
+      au < released ; 1994 ; Korean Studies Volume 18 ; 18 >
+      au < released ; 1995 ; Korean Studies Volume 19 ; 19 >
+      au < released ; 1996 ; Korean Studies Volume 20 ; 20 >
+      au < released ; 1997 ; Korean Studies Volume 21 ; 21 >
+      au < released ; 1998 ; Korean Studies Volume 22 ; 22 >
+      au < released ; 1999 ; Korean Studies Volume 23 ; 23 >
+      au < released ; 2000 ; Korean Studies Volume 24 ; 24 >
+      au < released ; 2001 ; Korean Studies Volume 25 ; 25 >
+      au < released ; 2002 ; Korean Studies Volume 26 ; 26 >
+      au < released ; 2003 ; Korean Studies Volume 27 ; 27 >
+      au < released ; 2004 ; Korean Studies Volume 28 ; 28 >
+      au < released ; 2005 ; Korean Studies Volume 29 ; 29 >
+      au < released ; 2006 ; Korean Studies Volume 30 ; 30 >
+      au < released ; 2007 ; Korean Studies Volume 31 ; 31 >
+      au < released ; 2008 ; Korean Studies Volume 32 ; 32 >
+      au < released ; 2009 ; Korean Studies Volume 33 ; 33 >
+      au < released ; 2010 ; Korean Studies Volume 34 ; 34 >
+      au < released ; 2011 ; Korean Studies Volume 35 ; 35 >
+      au < expected ; 2012 ; Korean Studies Volume 36 ; 36 >
+    
+    }
+  }
+  
+  {
+    title <
+      name = Manoa ;
+      issn = 1045-7909 ;
+      eissn = 1527-943X ;
+      issnl = 1045-7909
+    >
+
+comment[mn20] = URL with 403 Forbidden error
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = manoa
+      attr[journal_id] = man
+
+      au < released ; 1999 ; Manoa Volume 11 ; 11 >
+      au < released ; 2000 ; Manoa Volume 12 ; 12 >
+      au < released ; 2001 ; Manoa Volume 13 ; 13 >
+      au < released ; 2002 ; Manoa Volume 14 ; 14 >
+      au < released ; 2003 ; Manoa Volume 15 ; 15 >
+      au < released ; 2004 ; Manoa Volume 16 ; 16 >
+      au < released ; 2005 ; Manoa Volume 17 ; 17 >
+      au < released ; 2006 ; Manoa Volume 18 ; 18 >
+      au < released ; 2007 ; Manoa Volume 19 ; 19 >
+      au < notReady ; 2008 ; Manoa Volume 20 ; 20 >
+      au < released ; 2009 ; Manoa Volume 21 ; 21 >
+      au < released ; 2010 ; Manoa Volume 22 ; 22 >
+      au < released ; 2011 ; Manoa Volume 23 ; 23 >
+      au < released ; 2012 ; Manoa Volume 24 ; 24 >
+    
+    }
+  }
+  
+  {
+    title <
+      name = Oceanic Linguistics ;
+      issn = 1527-9421 ;
+      eissn = 0029-8115 ;
+      issnl = 0029-8115
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = oceanic_linguistics
+      attr[journal_id] = ol
+      
+      au < released ; 1999 ; Oceanic Linguistics Volume 38 ; 38 >
+      au < released ; 2000 ; Oceanic Linguistics Volume 39 ; 39 >
+      au < released ; 2001 ; Oceanic Linguistics Volume 40 ; 40 >
+      au < released ; 2002 ; Oceanic Linguistics Volume 41 ; 41 >
+      au < released ; 2003 ; Oceanic Linguistics Volume 42 ; 42 >
+      au < released ; 2004 ; Oceanic Linguistics Volume 43 ; 43 >
+      au < released ; 2005 ; Oceanic Linguistics Volume 44 ; 44 >
+      au < released ; 2006 ; Oceanic Linguistics Volume 45 ; 45 >
+      au < released ; 2007 ; Oceanic Linguistics Volume 46 ; 46 >
+      au < released ; 2008 ; Oceanic Linguistics Volume 47 ; 47 >
+      au < released ; 2009 ; Oceanic Linguistics Volume 48 ; 48 >
+      au < released ; 2010 ; Oceanic Linguistics Volume 49 ; 49 >
+      au < released ; 2011 ; Oceanic Linguistics Volume 50 ; 50 >
+      au < released ; 2012 ; Oceanic Linguistics Volume 51 ; 51 >
+    
+    }
+  }
+  
+  {
+
+    title <
+      name = Pacific Science ;
+      issn = 0030-8870 ;
+      eissn = 1534-6188 ;
+      issnl = 0030-8870
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume_name] >
+      plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin
+      param[base_url] = http://www.bioone.org/
+      param[journal_id] = pasc
+      attr[journal_id] = pasc
+  
+      au < ready ; 2005 ; Pacific Science Volume 59 ; 59 >
+      au < ready ; 2006 ; Pacific Science Volume 60 ; 60 >
+      au < ready ; 2007 ; Pacific Science Volume 61 ; 61 >
+      au < ready ; 2008 ; Pacific Science Volume 62 ; 62 >
+      au < ready ; 2009 ; Pacific Science Volume 63 ; 63 >
+      au < ready ; 2010 ; Pacific Science Volume 64 ; 64 >
+      au < ready ; 2011 ; Pacific Science Volume 65 ; 65 >
+      au < manifest ; 2012 ; Pacific Science Volume 66 ; 66 >
+
+    }
+    
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = pacific_science
+      attr[journal_id] = psc
+
+      au < released ; 2001 ; Pacific Science Volume 55 ; 55 >
+      au < released ; 2002 ; Pacific Science Volume 56 ; 56 >
+      au < released ; 2003 ; Pacific Science Volume 57 ; 57 >
+      au < released ; 2004 ; Pacific Science Volume 58 ; 58 >
+      au < released ; 2005 ; Pacific Science Volume 59 ; 59 >
+      au < released ; 2006 ; Pacific Science Volume 60 ; 60 >
+      au < released ; 2007 ; Pacific Science Volume 61 ; 61 >
+      
+      
+    }
+
+  }
+    
+  {
+    title <
+      name = Philosophy East and West ;
+      issn = 0031-8221 ;
+      eissn = 1529-1898 ;
+      issnl = 0031-8221
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = philosophy_east_and_west
+      attr[journal_id] = pew
+
+      au < released ; 2000 ; Philosophy East and West Volume 50 ; 50 >
+      au < released ; 2001 ; Philosophy East and West Volume 51 ; 51 >
+      au < released ; 2002 ; Philosophy East and West Volume 52 ; 52 >
+      au < released ; 2003 ; Philosophy East and West Volume 53 ; 53 >
+      au < released ; 2004 ; Philosophy East and West Volume 54 ; 54 >
+      au < released ; 2005 ; Philosophy East and West Volume 55 ; 55 >
+      au < released ; 2006 ; Philosophy East and West Volume 56 ; 56 >
+      au < released ; 2007 ; Philosophy East and West Volume 57 ; 57 >
+      au < released ; 2008 ; Philosophy East and West Volume 58 ; 58 >
+      au < released ; 2009 ; Philosophy East and West Volume 59 ; 59 >
+      au < released ; 2010 ; Philosophy East and West Volume 60 ; 60 >
+      au < released ; 2011 ; Philosophy East and West Volume 61 ; 61 >
+      au < released ; 2012 ; Philosophy East and West Volume 62 ; 62 >
+    
+    }
+  }
+  
+  {
+    title <
+      name = Yearbook of the Association of Pacific Coast Geographers ;
+      issn = 0066-9628 ;
+      eissn = 1551-3211 ;
+      issnl = 0066-9628
+    >
+
+    {
+      implicit < status ; year ; name ; param[volume] >
+      plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
+      param[base_url] = http://muse.jhu.edu/
+      param[journal_dir] = yearbook_of_the_association_of_pacific_coast_geographers
+      attr[journal_id] = pcg
+
+      au < released ; 2004 ; Yearbook of the Association of Pacific Coast Geographers Volume 66 ; 66 >
+      au < released ; 2005 ; Yearbook of the Association of Pacific Coast Geographers Volume 67 ; 67 >
+      au < released ; 2006 ; Yearbook of the Association of Pacific Coast Geographers Volume 68 ; 68 >
+      au < released ; 2007 ; Yearbook of the Association of Pacific Coast Geographers Volume 69 ; 69 >
+      au < released ; 2008 ; Yearbook of the Association of Pacific Coast Geographers Volume 70 ; 70 >
+      au < released ; 2009 ; Yearbook of the Association of Pacific Coast Geographers Volume 71 ; 71 >
+      au < released ; 2010 ; Yearbook of the Association of Pacific Coast Geographers Volume 72 ; 72 >
+      au < released ; 2011 ; Yearbook of the Association of Pacific Coast Geographers Volume 73 ; 73 >
+      au < released ; 2012 ; Yearbook of the Association of Pacific Coast Geographers Volume 74 ; 74 >
+    
+    }
+
+  }
+
+}

@@ -1,0 +1,314 @@
+#!/bin/bash
+# Script run as root from /etc/init.d/lockss to start the daemon
+# as the specific user provided as the argument. Although this
+# script is common to Linux and Solaris it runs under bash on both.
+# After any change to this file it must be tested on both Linux
+# and Solaris.
+
+is_secure() {
+    RET=1
+    RES=`find ${1} -maxdepth 0 -user root`
+    if [ "X${RES}" = "X${1}" ]
+    then
+        # Owned by root
+        RES=`find ${1} -maxdepth 0 -perm -020 -o -perm -02`
+        if [ "X${RES}" = X ]
+        then
+            # Neither of permission bits 022 is set
+	    RET=0
+        fi
+    fi
+    return ${RET}
+}
+
+MAX_STARTS=3	# Max number of quick daemon deaths before give up
+RMDUP_SCRIPT=${LOCKSS_HOME}/etc/lockss/rmdup.pl
+RMDUP_PID=${LOCKSS_HOME}/var/run/lockss/rmdup.pid
+RMDUP_STATE=${LOCKSS_HOME}/var/run/lockss/rmdup.state
+RMDUP_OUT=${LOCKSS_HOME}/var/run/lockss/rmdup.sh
+
+case `uname -s` in
+SunOS)
+    PATH=/usr/xpg4/bin:$PATH
+    ;;
+esac
+if [ -f ${LOCKSS_HOME}/etc/lockss/functions ] ; then
+    if is_secure ${LOCKSS_HOME}/etc/lockss/functions ; then
+        . ${LOCKSS_HOME}/etc/lockss/functions
+    else
+        echo "${LOCKSS_HOME}/etc/lockss/functions insecure"
+        exit 1
+    fi
+else
+    echo "Can't find LOCKSS functions"
+    exit 1
+fi
+if [ "X$1" = X ]; then
+    echo "Usage: startdaemon user"
+    exit 1
+fi
+set_variables $1
+if [ -f ${CFG_FILE} ]; then
+    # CFG_FILE should only set environment variables - avoid executing it
+    for KEY in `sed -n 's/^\([A-Z0-9_]*\)=.*$/\1/p' <${CFG_FILE}` ; do
+        VALUE=`sed -n -e '/\`/d' -e /${KEY}=/s///p <${CFG_FILE}`
+        VALUE2=`echo ${VALUE} | sed -n '/^"\(.*\)"$/s//\1/p'`
+        if [ "X${VALUE2}" = X ]; then
+            # Not quoted
+            export ${KEY}=${VALUE}
+        else
+            # ${VALUE} quoted
+            export ${KEY}="\"${VALUE2}\""
+        fi
+    done
+#    set_variables_from ${CFG_FILE}
+else
+    echo "${CFG_FILE} missing; run ${CFG_SCRIPT}"
+    exit 1
+fi
+if [ "X${LOCKSS_CONFIG_VERSION}" != X ] ; then
+    CURRENT_CONFIG_VERSION=`sed -n 's/^.*LOCKSS_CONFIG_VERSION=\([1-9][0-9]*\).*$/\1/p' <${LOCKSS_HOME}/etc/lockss/hostconfig`
+    if [ "X${CURRENT_CONFIG_VERSION}" != X -a "${LOCKSS_CONFIG_VERSION}" != "${CURRENT_CONFIG_VERSION}" ] ; then
+        echo "Config version skew: required ${CURRENT_CONFIG_VERSION} have ${LOCKSS_CONFIG_VERSION}."
+        echo "Not starting LOCKSS. Please run ${LOCKSS_HOME}/etc/lockss/hostconfig."
+        exit 1
+    fi
+fi
+if [ "X${LOG_FILE}" = X -o ! -f ${LOG_FILE} ]; then
+    echo "No log file - can't start $1"
+    exit 1
+fi
+
+ensure_dir "${RUN_DIR}"
+TEMPFILE="${RUN_DIR}/startdaemon.$$"
+
+## exit if startdaemon is already running
+
+# check for stale lock file left over from abnormal exit or system crash
+if [ -f "${LOCKFILE}" ]; then
+    SPID=`cat "${LOCKFILE}"`
+    if [ "X${SPID}" != X ]; then
+	if ps -p "${SPID}" | grep -q startdaemon; then
+	    # PID in lock file is a startdaemon process.  If it's us, we
+	    # already hold the lock.  (Most likely this means a stale lock
+	    # file was present when the system booted, and we got the same
+	    # pid we had last time.)
+	    if [ "X${SPID}" = "$$" ]; then
+		echo "My PID (${SPID}) already locked" >>${LOG_FILE}
+		ALREADY_LOCKED=yes
+	    fi
+	else
+	    echo "${SPID} isn't a startdaemon, deleting ${LOCKFILE}" >>${LOG_FILE}
+	    rm "${LOCKFILE}"
+	fi
+    else
+	echo "deleting empty ${LOCKFILE}" >>${LOG_FILE}
+	rm "${LOCKFILE}"
+    fi
+fi
+
+# Attempt to get lock: check writability and put current PID in TEMPFILE.
+# (Don't know PID of long-running process yet.  The lock condition is that
+# the PID file contains the PID of a 'startdaemon' process, so use this one
+# for now and replace with the long-running process below.)
+
+if [ "X${ALREADY_LOCKED}" != Xyes ]; then
+    if ! echo "$$" >${TEMPFILE} 2>/dev/null; then
+	echo "No permission to write ${TEMPFILE}" >>${LOG_FILE}
+	rm -f ${TEMPFILE}
+	exit 1
+    fi
+    # ln is atomic, fails if lock file already exists
+    if ! ln ${TEMPFILE} ${LOCKFILE} >/dev/null 2>&1; then
+	echo "startdaemon already running" >>${LOG_FILE}
+	rm -f ${TEMPFILE}
+	exit 1
+    fi
+
+    # got lock, delete tempfile, leaving our PID in lock file.
+    rm -f ${TEMPFILE}
+fi
+
+# Stale processes may still exist the first time this version is installed,
+# because the previous versions don't use this lock.  We own the lock at
+# this point but haven't started anything, so there should be no processes
+# running as this user.
+
+if [ "`ps --no-headers -u lockss`"X != X ]; then
+    rm -f ${KEEP_GOING}
+    killall -u $1 -s 9
+fi
+
+if [ -f /etc/cron.daily/mlocate.cron ]; then
+    if grep '^#/' /etc/cron.daily/mlocate.cron >/dev/null 2>&1
+    then
+        # Undo 1.48's disabling of updatedb
+        echo "Enabling updatedb" >>${LOG_FILE}
+        ed /etc/cron.daily/mlocate.cron >/dev/null 2>&1 <<Funky-EOF
+2,\$s/^#//
+w
+q
+Funky-EOF
+    fi
+    FIX_UPDATEDB="${LOCKSS_HOME}/etc/lockss/fix_updatedbconf"
+    if [ -x ${FIX_UPDATEDB} ]; then
+	UPDATEDB=/etc/updatedb.conf
+	TMP_UPDATEDB=`mktemp /etc/updatedb.tmp.XXXXXX`
+	if ${FIX_UPDATEDB} "${LOCKSS_DISK_PATHS}" <${UPDATEDB} >${TMP_UPDATEDB}; then
+	    if [ -s ${TMP_UPDATEDB} ]; then
+		if ! cmp -s ${TMP_UPDATEDB} ${UPDATEDB}; then
+		    echo "Modifying ${UPDATEDB}" >>${LOG_FILE}
+		    cp ${UPDATEDB} /etc/updatedb.conf.bak
+		    mv ${TMP_UPDATEDB} ${UPDATEDB}
+		fi
+	    fi
+	fi
+	rm -f ${TMP_UPDATEDB}
+    fi
+fi
+
+if [ -x ${LOCKSS_HOME}/etc/lockss/runssl.$1 ]; then
+    RUN_SSL="${LOCKSS_HOME}/etc/lockss/runssl.$1"
+elif [ -x ${LOCKSS_HOME}/etc/lockss/runssl ]; then
+    RUN_SSL="${LOCKSS_HOME}/etc/lockss/runssl"
+fi
+
+
+(
+
+# does_file_contain file "string"
+# returns 0 if file exists and its contents matches the string, otherwise
+# returns 1
+does_file_contain() {
+    local FILE="$1"
+    if [ ! -s "${FILE}" ]; then
+	return 1
+    fi
+    local CONT=`cat "${FILE}"`
+    if [ "${CONT}" != "$2" ]; then
+        return 1
+    fi
+    return 0
+}
+
+# return 0 if the loop should continue
+is_continue() {
+    does_file_contain "${KEEP_GOING}" ${MYPID} || return 1
+    does_file_contain "${LOCKFILE}" ${MYPID} || return 1
+    return 0
+}
+
+cleanup() {
+    rm -f ${LOCKFILE} ${KEEP_GOING}
+}
+
+trap "cleanup" 0 1 2 3 15
+
+# We want to use the PID of the subshell running the loop as both the loop
+# continuation condition and the startdaemon lock.  The normal way to get
+# the PID of a spawned process is with $! after spawning, but that happens
+# asynchronously with the subshell and we need the value inside the loop.
+# (In a subshell, $$ is the PID of the parent.)
+MYPID=`sh -c 'echo $PPID'`
+echo ${MYPID} >${KEEP_GOING}
+chown $1 ${KEEP_GOING}
+# put PID of spawned loop in lock file
+echo ${MYPID} >${LOCKFILE}
+
+while is_continue; do
+    if [ "X${START_FLAG}" = X ]; then
+        START_FLAG=`mktemp /tmp/lockss.start.XXXXXX`
+        date >${START_FLAG}
+        START_COUNT=1
+    fi
+    # If optional SSL setup script exists and is executable, run it.
+    # It will have the environment variables set by set_variables()
+    # in ${LOCKSS_HOME}/etc/lockss/functions and by ${CFG_FILE}
+    if [ "X${RUN_SSL}" != X ]; then
+        if [ -x ${RUN_SSL} ]; then
+            LOCKSS_CONFIG_DIR=${RUN_DIR}
+            mkdir -p ${LOCKSS_CONFIG_DIR}
+            chown root ${LOCKSS_CONFIG_DIR}
+            chmod go-w ${LOCKSS_CONFIG_DIR}
+            rm -f ${LOCKSS_SSL_CONFIG}
+            ${RUN_SSL} --release @RELEASENAME@ --user $1 >>${LOG_FILE} 2>&1
+            if [ -s ${LOCKSS_SSL_CONFIG} ]; then
+                chmod go-rwx ${LOCKSS_SSL_CONFIG}
+                chown $1 ${LOCKSS_SSL_CONFIG}
+            fi
+        fi
+    fi
+    case `uname -s` in
+    Linux)
+        if [ -x ${RMDUP_SCRIPT} ]; then
+            # There is an RMDUP script, is there a PID file for it?
+            RUN_RMDUP=NO
+            if [ -f ${RMDUP_PID} ]; then
+                if [ X`find ${RMDUP_PID} -ctime +1` != X ] ; then
+                    # It is more than a day old - assume its dead
+                    rm ${RMDUP_PID}
+                fi
+            fi
+            if [ ! -s ${RMDUP_PID} ]; then
+                if [ -f ${RMDUP_STATE} ]; then
+                    if [ X`find ${RMDUP_STATE} -atime +14` != X ]; then
+                        # The state is too old - run script again
+                        RUN_RMDUP=YES
+                    fi
+                else
+                    RUN_RMDUP=YES
+                    cat /dev/null >${RMDUP_STATE}
+                fi
+            fi
+            chown $1 ${RMDUP_STATE}
+            if [ "X${RUN_RMDUP}" = XYES ]; then
+                rm -f ${RMDUP_OUT}
+                cat /dev/null >${RMDUP_OUT}
+                chown $1 ${RMDUP_OUT}
+                runuser -s /bin/sh - $1 -c "nice -10 ${RMDUP_SCRIPT} ${RMDUP_PID} ${RMDUP_STATE} ${CFG_FILE} ${RMDUP_OUT}" &
+                echo $! >${RMDUP_PID}
+                chown $1 ${RMDUP_PID}
+            fi
+        fi
+        ;;
+    esac &
+
+    COMMAND="ulimit -S -c 0 >/dev/null 2>&1 ; ${LOCKSS_HOME}/etc/lockss/rundaemon wait"
+    case `uname -s` in
+    Linux)
+        runuser -s /bin/bash - $1 -c "${COMMAND}"
+        ;;
+    SunOS)
+        export USER=$1
+        cd /tmp
+        su $1 -c "${COMMAND}"
+        ;;
+    esac
+    EXIT_CODE=$?
+    echo "stopped with status ${EXIT_CODE} at `date`." >>${LOG_FILE}
+
+    START_COUNT=`expr ${START_COUNT} + 1`
+    if [ ${START_COUNT} -gt ${MAX_STARTS} ]; then
+        case `uname -s` in
+        Linux)
+            if [ X`find ${START_FLAG} -mmin +${MAX_STARTS}` = X ]; then
+# Disabled until can be debugged.
+                echo "Rapid daemon exit detected" >>${LOG_FILE}
+                # Daemon has been exiting once per minute - give up
+#                echo "Daemon exiting rapidly" >>${LOG_FILE}
+#                rm -f ${KEEP_GOING}
+            fi
+            ;;
+        SunOS)
+            # XXX -mmin unavailable on Solaris
+            ;;
+        esac
+        rm -f ${START_FLAG}
+        START_FLAG=""
+    fi
+    if is_continue; then
+        sleep 30
+    fi
+done ) &
+
+exit 0

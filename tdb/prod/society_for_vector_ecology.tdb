@@ -1,0 +1,31 @@
+{
+
+  publisher <
+    name = Society for Vector Ecology
+  >
+
+  plugin = org.lockss.plugin.bioone.BioOneAtyponPlugin  
+  implicit < status ; year ; name ; param[volume_name] >
+  param[base_url] = http://www.bioone.org/
+
+  {
+    title <
+      name = Journal of Vector Ecology ;
+      issn = 1081-1710 ;
+      eissn = 1948-7134 ;
+      issnl = 1081-1710
+    >
+    
+    param[journal_id] = jvec
+  
+    au < ready ; 2006 ; Journal of Vector Ecology Volume 31 ; 31 >
+    au < ready ; 2007 ; Journal of Vector Ecology Volume 32 ; 32 >
+    au < ready ; 2008 ; Journal of Vector Ecology Volume 33 ; 33 >
+    au < ready ; 2009 ; Journal of Vector Ecology Volume 34 ; 34 >
+    au < ready ; 2010 ; Journal of Vector Ecology Volume 35 ; 35 >
+    au < ready ; 2011 ; Journal of Vector Ecology Volume 36 ; 36 >
+    au < manifest ; 2012 ; Journal of Vector Ecology Volume 37 ; 37 >
+
+  }
+  
+}
