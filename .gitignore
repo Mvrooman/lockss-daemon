@@ -3,6 +3,12 @@
 .project
 .pydevproject
 .settings
+.settings/
+.idea/
+*.iws
+.DS_Store
+log/
+target/
 plugin-tool-log.txt
 bin/
 classes/
@@ -14,3 +20,4 @@ rpt-test-err/
 rpt-test-out/
 tempbuild/
 tmplib/
+out/
