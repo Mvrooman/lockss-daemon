@@ -1705,7 +1705,7 @@ public class RepositoryNodeImpl implements RepositoryNode {
 
   File getContentDir() {
     if (contentDir == null) {
-      contentDir = new File(nodeLocation, CONTENT_DIR);
+        contentDir = new File(nodeLocation.replace("?","").replace("COM8","COMEIGHT").replace("%5c","/"), CONTENT_DIR);//mvrooman replace is windows fix
     }
     return contentDir;
   }

@@ -801,6 +801,8 @@ public class ReindexingTask extends StepTask {
 	      new AuMetadataRecorder((ReindexingTask) task, mdManager, au)
 		  .recordMetadata(conn, mditr);
 
+          //new MongoAuMetadataRecorder((ReindexingTask) task, mdManager, au).recordMetadata(conn, mditr);
+
 	    }
 
 	    // Remove the AU just re-indexed from the list of AUs pending to be

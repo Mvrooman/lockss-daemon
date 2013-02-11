@@ -143,7 +143,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String CRON = "Cron";
   public static final String CLOCKSS_PARAMS = "ClockssParams";
   public static final String TRUEZIP_MANAGER = "TrueZipManager";
-  public static final String DB_MANAGER = "DbManager";
+  public static final String DB_MANAGER = "MongoDbManager";
   public static final String COUNTER_REPORTS_MANAGER = "CounterReportsManager";
 
   // Manager descriptors.  The order of this table determines the order in
@@ -175,7 +175,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
     // start plugin manager after generic services
     new ManagerDesc(PLUGIN_MANAGER, "org.lockss.plugin.PluginManager"),
     // start database manager before any manager that uses it.
-    new ManagerDesc(DB_MANAGER, "org.lockss.db.DbManager"),
+    new ManagerDesc(DB_MANAGER, "org.lockss.db.MongoDbManager"),
     // start metadata manager after pluggin manager and database manager.
     new ManagerDesc(METADATA_MANAGER, "org.lockss.metadata.MetadataManager"),
     // start proxy and servlets after plugin manager

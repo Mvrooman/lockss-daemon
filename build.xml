@@ -207,7 +207,7 @@ Args:
   <property name="protorpm.rpms" value="${protorpm.top}/RPMS" />
 
   <!-- Library jars -->
-
+  <property name="mongodb.jar"      value="${lib}/mongo-2.10.1.jar"/>
   <property name="rhino.jar"      value="${lib}/rhino.jar"/>
   <property name="js-engine.jar"  value="${lib}/js-engine.jar"/>
   <property name="script.jar"     value="${lib}/script.jar"/>
@@ -379,6 +379,7 @@ Args:
     <pathelement path="${truezip-driver-zip.jar}" />
     <pathelement path="${truezip-driver-tar.jar}" />
 <!-- XXX Shouldn't need this - figure out how to avoid dependency -->
+    <pathelement path="${mongodb.jar}" />
     <pathelement path="${truezip-swing.jar}" />
     <pathelement path="${javatar.jar}" />
     <pathelement path="${log4j.jar}" />
