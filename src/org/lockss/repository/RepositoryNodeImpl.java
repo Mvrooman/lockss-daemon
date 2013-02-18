@@ -184,7 +184,7 @@ public class RepositoryNodeImpl implements RepositoryNode {
   RepositoryNodeImpl(String url, String nodeLocation,
                      LockssRepositoryImpl repository) {
     this.url = url;
-    this.nodeLocation = nodeLocation;
+    this.nodeLocation = nodeLocation.replace("?","").replace("COM8","COMEIGHT").replace("%5c","/"); //windows folder structure fix
     this.repository = repository;
   }
 

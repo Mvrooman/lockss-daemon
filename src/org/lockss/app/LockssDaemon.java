@@ -120,6 +120,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String CRAWL_MANAGER = "CrawlManager";
   public static final String PLUGIN_MANAGER = "PluginManager";
   public static final String METADATA_MANAGER = "MetadataManager";
+  public static final String MONGO_METADATA_MANAGER = "MongoMetadataManager";
   public static final String POLL_MANAGER = "PollManager";
   public static final String PSM_MANAGER = "PsmManager";
   public static final String REPOSITORY_MANAGER = "RepositoryManager";
@@ -143,7 +144,8 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String CRON = "Cron";
   public static final String CLOCKSS_PARAMS = "ClockssParams";
   public static final String TRUEZIP_MANAGER = "TrueZipManager";
-  public static final String DB_MANAGER = "MongoDbManager";
+  public static final String DB_MANAGER = "DbManager";
+  public static final String MONGO_DB_MANAGER = "MongoDbManager"; //MONGOSVC
   public static final String COUNTER_REPORTS_MANAGER = "CounterReportsManager";
 
   // Manager descriptors.  The order of this table determines the order in
@@ -175,9 +177,11 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
     // start plugin manager after generic services
     new ManagerDesc(PLUGIN_MANAGER, "org.lockss.plugin.PluginManager"),
     // start database manager before any manager that uses it.
-    new ManagerDesc(DB_MANAGER, "org.lockss.db.MongoDbManager"),
+    new ManagerDesc(DB_MANAGER, "org.lockss.db.DbManager"),
+    new ManagerDesc(MONGO_DB_MANAGER, "org.lockss.db.MongoDbManager"),       //MONOSVC
     // start metadata manager after pluggin manager and database manager.
     new ManagerDesc(METADATA_MANAGER, "org.lockss.metadata.MetadataManager"),
+    new ManagerDesc(MONGO_METADATA_MANAGER, "org.lockss.metadata.MongoMetadataManager"),     //MONOSVC
     // start proxy and servlets after plugin manager
     new ManagerDesc(REMOTE_API, "org.lockss.remote.RemoteApi"),
     // Start the COUNTER reports manager.
@@ -459,6 +463,15 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
     return (MetadataManager) getManager(METADATA_MANAGER);
   }
 
+    /**
+     * return the metadata manager instance
+     * @return the MetadataManager
+     * @throws IllegalArgumentException if the manager is not available.
+     */
+    public MetadataManager getMongoMetadataManager() {
+        return (MetadataManager) getManager(MONGO_METADATA_MANAGER);
+    } //MONGOSVC
+
   /**
    * return the Account Manager
    * @return AccountManager
@@ -554,6 +567,17 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public DbManager getDbManager() {
     return (DbManager) getManager(DB_MANAGER);
   }
+
+    /**
+     * Provides the mongo database manager instance.
+     *
+     * @return a DbManager with the database manager instance.
+     * @throws IllegalArgumentException
+     *           if the manager is not available.
+     */
+    public DbManager getMongoDbManager() { //MONGOSVC
+        return (DbManager) getManager(MONGO_DB_MANAGER);
+    }
 
   /**
    * Provides the COUNTER reports manager.

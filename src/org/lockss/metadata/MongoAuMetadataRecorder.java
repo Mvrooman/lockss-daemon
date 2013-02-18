@@ -31,7 +31,16 @@
  */
 package org.lockss.metadata;
 
+import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+import org.bson.BSONEncoder;
+import org.bson.BSONObject;
 import org.lockss.db.DbManager;
+import org.lockss.db.MongoDbManager;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.Plugin;
@@ -152,7 +161,11 @@ public class MongoAuMetadataRecorder {
   private final MetadataManager mdManager;
 
   // The database manager.
-  private final DbManager dbManager;
+  private final DbManager dbManager;  //TODO:  To be deprecated
+
+    // The database manager.
+  private final DbManager mongoDbManager;
+
 
   // The archival unit.
   private final ArchivalUnit au;
@@ -182,6 +195,7 @@ public class MongoAuMetadataRecorder {
     this.task = task;
     this.mdManager = mdManager;
     dbManager = mdManager.getDbManager();
+    mongoDbManager = mdManager.getMongoDbManager();
     this.au = au;
 
     plugin = au.getPlugin();
@@ -478,7 +492,7 @@ public class MongoAuMetadataRecorder {
    * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
-  private void storeMetadata(Connection conn, ArticleMetadataInfo mdinfo)
+  private void storeMetadata(Connection conn, ArticleMetadataInfo mdinfo)    //Don't need nonn
       throws SQLException {
     final String DEBUG_HEADER = "storeMetadata(): ";
     if (log.isDebug3()) {
@@ -601,7 +615,19 @@ public class MongoAuMetadataRecorder {
     // Update or create the metadata item.
     updateOrCreateMdItem(conn, newAu, publicationSeq, mdinfo);
 
-    log.debug3(DEBUG_HEADER + "Done.");
+      //TODO:  Update updateOrCreateMdItem with proper changes, just save the info for now MONGOSVC
+      Gson gson = new Gson();
+      String metadataJson = gson.toJson(mdinfo);
+      // JSON.serialize(mdinfo);
+      DBObject metadataBson = (DBObject) JSON.parse(metadataJson);
+
+      DB database = ((MongoDbManager) mongoDbManager).getDatabase();
+      if (!database.collectionExists("AUMetadata"))
+          database.createCollection("AUMetadata", null);//move this to the same place tables get recreated
+      DBCollection collection = database.getCollection("AUMetadata");
+      collection.insert(metadataBson);
+
+      log.debug3(DEBUG_HEADER + "Done.");
   }
 
   /**

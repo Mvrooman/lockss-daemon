@@ -31,20 +31,6 @@
  */
 package org.lockss.metadata;
 
-import static java.sql.Types.*;
-import static org.lockss.db.DbManager.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.config.Configuration;
@@ -62,9 +48,15 @@ import org.lockss.plugin.Plugin.Feature;
 import org.lockss.plugin.PluginManager;
 import org.lockss.scheduler.Schedule;
 import org.lockss.util.Logger;
+import org.lockss.util.PatternIntMap;
 import org.lockss.util.StringUtil;
 import org.lockss.util.TimeBase;
-import org.lockss.util.PatternIntMap;
+
+import java.sql.*;
+import java.util.*;
+
+import static java.sql.Types.BIGINT;
+import static org.lockss.db.DbManager.*;
 
 /**
  * This class implements a metadata manager that is responsible for managing an
@@ -73,10 +65,10 @@ import org.lockss.util.PatternIntMap;
  * @author Philip Gust
  * @version 1.0
  */
-public class MetadataManager extends BaseLockssDaemonManager implements
+public class MongoMetadataManager extends MetadataManager implements
     ConfigurableManager {
 
-  private static Logger log = Logger.getLogger(MetadataManager.class);
+  private static Logger log = Logger.getLogger(MongoMetadataManager.class);
 
   /** prefix for config properties */
   public static final String PREFIX = Configuration.PREFIX + "metadataManager.";
@@ -277,7 +269,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       + "," + NAME_COLUMN
       + "," + NAME_TYPE_COLUMN
       + ") values (?,?,?)";
-	
+
   // Query to add an ISSN.
   private static final String INSERT_ISSN_QUERY = "insert into "
       + ISSN_TABLE
@@ -285,7 +277,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       + "," + ISSN_COLUMN
       + "," + ISSN_TYPE_COLUMN
       + ") values (?,?,?)";
-	
+
   // Query to add an ISBN.
   private static final String INSERT_ISBN_QUERY = "insert into "
       + ISBN_TABLE
@@ -423,7 +415,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   private static final String COUNT_ENABLED_PENDING_AUS_QUERY = "select "
       + "count(*) from " + PENDING_AU_TABLE
       + " where " + PRIORITY_COLUMN + " > " + MIN_INDEX_PRIORITY;
-  
+
   // Query to find enabled pending AUs sorted by priority.
   private static final String FIND_PRIORITIZED_PENDING_AUS_QUERY = "select "
       + PLUGIN_ID_COLUMN
@@ -432,7 +424,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       + " from " + PENDING_AU_TABLE
       + " where " + PRIORITY_COLUMN + " > " + MIN_INDEX_PRIORITY
       + " order by " + PRIORITY_COLUMN;
-  
+
   // Query to find a pending AU by its key and plugin identifier.
   private static final String FIND_PENDING_AU_QUERY = "select "
       + PLUGIN_ID_COLUMN
@@ -591,6 +583,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
     pluginMgr = getDaemon().getPluginManager();
     dbManager = getDaemon().getDbManager();
+    mongoDbManager = getDaemon().getMongoDbManager(); //MONGOSVC
 
     // Get a connection to the database.
     Connection conn;
@@ -612,11 +605,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
     DbManager.safeRollbackAndClose(conn);
 
-    StatusService statusServ = getDaemon().getStatusService();
-    statusServ.registerStatusAccessor(METADATA_STATUS_TABLE_NAME,
-        new MetadataManagerStatusAccessor(this));
-    statusServ.registerOverviewAccessor(METADATA_STATUS_TABLE_NAME,
-        new MetadataManagerStatusAccessor.IndexingOverview(this));
+//TODO:  Need to re-register this mvrooman
+//    StatusService statusServ = getDaemon().getStatusService();
+//    statusServ.registerStatusAccessor(METADATA_STATUS_TABLE_NAME,
+//        new MetadataManagerStatusAccessor(this));
+//    statusServ.registerOverviewAccessor(METADATA_STATUS_TABLE_NAME,
+//        new MetadataManagerStatusAccessor.IndexingOverview(this));
 
     resetConfig();
     log.debug(DEBUG_HEADER + "MetadataManager service successfully started");
@@ -632,11 +626,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of enabled pending AUs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @return a long with the number of enabled pending AUs.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private long getEnabledPendingAusCount(Connection conn) throws SQLException {
@@ -666,11 +660,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of articles in the metadata database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @return a long with the number of articles in the metadata database.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private long getArticleCount(Connection conn) throws SQLException {
@@ -699,7 +693,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Handles new configuration.
-   * 
+   *
    * @param config
    *          the new configuration
    * @param prevConfig
@@ -752,7 +746,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Sets the indexing enabled state of this manager.
-   * 
+   *
    * @param enable
    *          A boolean with the new enabled state of this manager.
    */
@@ -782,7 +776,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Sets the maximum reindexing task history list size.
-   * 
+   *
    * @param maxSize
    *          An int with the maximum reindexing task history list size.
    */
@@ -798,7 +792,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Sets up the index priority map.
-   * 
+   *
    * @param patternPairs A List<String> with the patterns.
    */
   private void installIndexPriorityAuidMap(List<String> patternPairs) {
@@ -845,7 +839,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Ensures that as many reindexing tasks as possible are running if the
    * manager is enabled.
-   * 
+   *
    * @return an int with the number of reindexing tasks started.
    */
   private int startReindexing() {
@@ -887,7 +881,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Cancels the reindexing task for the specified AU.
-   * 
+   *
    * @param auId
    *          A String with the AU identifier.
    * @return a boolean with <code>true</code> if task was canceled,
@@ -911,7 +905,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Ensures that as many re-indexing tasks as possible are running if the
    * manager is enabled.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @return an int with the number of reindexing tasks started.
@@ -947,7 +941,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
           break;
         }
 
-        // Loop through all the pending AUs. 
+        // Loop through all the pending AUs.
         for (String auId : auIds) {
           // Get the next pending AU.
           ArchivalUnit au = pluginMgr.getAuFromId(auId);
@@ -1010,7 +1004,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides a list of AuIds that require reindexing sorted by priority.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param maxAuIds
@@ -1065,13 +1059,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Cancels any running tasks associated with an AU and deletes the AU
    * metadata.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auId
    *          A String with the AU identifier.
    * @return an int with the number of articles deleted.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private int deleteAu(Connection conn, String auId) throws SQLException {
@@ -1098,7 +1092,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Notify listeners that an AU has been removed.
-   * 
+   *
    * @param auId the AuId of the AU that was removed
    * @param articleCount the number of articles deleted
    */
@@ -1107,7 +1101,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the ArticleMetadataExtractor for the specified AU.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU.
    * @return an ArticleMetadataExtractor with the article metadata extractor.
@@ -1129,12 +1123,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Removes an AU from the pending Aus table.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auId
    *          A String with the AU identifier.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   void removeFromPendingAus(Connection conn, String auId) throws SQLException {
@@ -1144,7 +1138,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
       String auKey = PluginManager.auKeyFromAuId(auId);
-  
+
       deletePendingAu.setString(1, pluginId);
       deletePendingAu.setString(2, auKey);
       dbManager.executeUpdate(deletePendingAu);
@@ -1162,7 +1156,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a task to the history.
-   * 
+   *
    * @param task
    *          A ReindexingTask with the task.
    */
@@ -1178,13 +1172,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * <p>
    * Temporary implementation runs as a LockssRunnable in a thread rather than
    * using the SchedService.
-   * 
+   *
    * @param task A ReindexingTask with the reindexing task.
    */
   private void runReindexingTask(final ReindexingTask task) {
     /*
      * Temporarily running task in its own thread rather than using SchedService
-     * 
+     *
      * @todo Update SchedService to handle this case
      */
     LockssRunnable runnable =
@@ -1207,7 +1201,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Removes from history tasks for a specified AU.
-   * 
+   *
    * @param auId
    *          A String with the AU identifier.
    * @return an int with the number of items removed.
@@ -1233,13 +1227,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Removes all metadata items for an AU.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auId
    *          A String with the AU identifier.
    * @return an int with the number of metadata items deleted.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   int removeAuMetadataItems(Connection conn, String auId) throws SQLException {
@@ -1274,13 +1268,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Removes an AU.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auId
    *          A String with the AU identifier.
    * @return an int with the number of rows deleted.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   int removeAu(Connection conn, String auId) throws SQLException {
@@ -1331,7 +1325,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides an indication of whether an Archival Unit is eligible for
    * reindexing.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the Archival Unit involved.
    * @return a boolean with <code>true</code> if the Archival Unit is eligible
@@ -1344,7 +1338,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides an indication of whether an Archival Unit is eligible for
    * reindexing.
-   * 
+   *
    * @param auId
    *          A String with the Archival Unit identifier.
    * @return a boolean with <code>true</code> if the Archival Unit is eligible
@@ -1357,7 +1351,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of active reindexing tasks.
-   * 
+   *
    * @return a long with the number of active reindexing tasks.
    */
   public long getActiveReindexingCount() {
@@ -1366,7 +1360,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of succesful reindexing operations.
-   * 
+   *
    * @return a long with the number of successful reindexing operations.
    */
   public long getSuccessfulReindexingCount() {
@@ -1375,7 +1369,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of unsuccesful reindexing operations.
-   * 
+   *
    * @return a long the number of unsuccessful reindexing operations.
    */
   public long getFailedReindexingCount() {
@@ -1384,7 +1378,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the list of reindexing tasks.
-   * 
+   *
    * @return a List<ReindexingTask> with the reindexing tasks.
    */
   public List<ReindexingTask> getReindexingTasks() {
@@ -1393,7 +1387,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the number of distinct articles in the metadata database.
-   * 
+   *
    * @return a long with the number of distinct articles in the metadata
    *         database.
    */
@@ -1404,7 +1398,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   // The number of AUs pending to be reindexed.
   /**
    * Provides the number of AUs pending to be reindexed.
-   * 
+   *
    * @return a long with the number of AUs pending to be reindexed.
    */
   public long getPendingAusCount() {
@@ -1413,7 +1407,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the indexing enabled state of this manager.
-   * 
+   *
    * @return a boolean with the indexing enabled state of this manager.
    */
   public boolean isIndexingEnabled() {
@@ -1423,7 +1417,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a plugin if existing or after creating it
    * otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginId
@@ -1431,7 +1425,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param platform
    *          A String with the publishing platform.
    * @return a Long with the identifier of the plugin.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findOrCreatePlugin(Connection conn, String pluginId,
@@ -1453,13 +1447,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a plugin.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginId
    *          A String with the plugin identifier.
    * @return a Long with the identifier of the plugin.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   Long findPlugin(Connection conn, String pluginId) throws SQLException {
@@ -1489,7 +1483,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a plugin to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginId
@@ -1497,7 +1491,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param platform
    *          A String with the publishing platform.
    * @return a Long with the identifier of the plugin just added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long addPlugin(Connection conn, String pluginId,
@@ -1533,7 +1527,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of an Archival Unit if existing or after creating
    * it otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginSeq
@@ -1541,7 +1535,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param auKey
    *          A String with the Archival Unit key.
    * @return a Long with the identifier of the Archival Unit.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findOrCreateAu(Connection conn, Long pluginSeq, String auKey)
@@ -1562,7 +1556,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of an Archival Unit.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginSeq
@@ -1570,7 +1564,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param auKey
    *          A String with the Archival Unit key.
    * @return a Long with the identifier of the Archival Unit.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   Long findAu(Connection conn, Long pluginSeq, String auKey)
@@ -1598,7 +1592,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds an Archival Unit to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pluginSeq
@@ -1606,7 +1600,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param auKey
    *          A String with the Archival Unit key.
    * @return a Long with the identifier of the Archival Unit just added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long addAu(Connection conn, Long pluginSeq, String auKey)
@@ -1642,13 +1636,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of an Archival Unit metadata.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auSeq
    *          A Long with the identifier of the Archival Unit.
    * @return a Long with the identifier of the Archival Unit metadata.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   Long findAuMd(Connection conn, Long auSeq)
@@ -1678,7 +1672,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds an Archival Unit metadata to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auSeq
@@ -1689,7 +1683,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A long with the extraction time of the metadata.
    * @return a Long with the identifier of the Archival Unit metadata just
    *         added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long addAuMd(Connection conn, Long auSeq, int version,
@@ -1726,12 +1720,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Updates the timestamp of the last extraction of an Archival Unit metadata.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auMdSeq
    *          A Long with the identifier of the Archival Unit metadata.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   void updateAuLastExtractionTime(Connection conn, Long auMdSeq)
@@ -1758,13 +1752,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publisher if existing or after creating it
    * otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publisher
    *          A String with the publisher name.
    * @return a Long with the identifier of the publisher.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findOrCreatePublisher(Connection conn, String publisher)
@@ -1785,13 +1779,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a publisher.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publisher
    *          A String with the publisher name.
    * @return a Long with the identifier of the publisher.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublisher(Connection conn, String publisher)
@@ -1821,13 +1815,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a publisher to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publisher
    *          A String with the publisher name.
    * @return a Long with the identifier of the publisher just added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long addPublisher(Connection conn, String publisher)
@@ -1862,7 +1856,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publication if existing or after creating it
    * otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pIssn
@@ -1884,7 +1878,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param volume
    *          A String with the bibliographic volume.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findOrCreatePublication(Connection conn, String pIssn,
@@ -1931,7 +1925,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides an indication of whether a metadata set corresponds to a book
    * series.
-   * 
+   *
    * @param pIssn
    *          A String with the print ISSN in the metadata.
    * @param eIssn
@@ -1968,7 +1962,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a book that belongs to a book series if existing
    * or after creating it otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pIssn
@@ -1990,7 +1984,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param volume
    *          A String with the bibliographic volume.
    * @return a Long with the identifier of the book.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findOrCreateBookInBookSeries(Connection conn, String pIssn,
@@ -2079,7 +2073,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides an indication of whether a metadata set corresponds to a book.
-   * 
+   *
    * @param pIsbn
    *          A String with the print ISBN in the metadata.
    * @param eIsbn
@@ -2100,7 +2094,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a book existing or after creating it otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pIsbn
@@ -2120,7 +2114,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param volume
    *          A String with the bibliographic volume.
    * @return a Long with the identifier of the book.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findOrCreateBook(Connection conn, String pIsbn, String eIsbn,
@@ -2179,7 +2173,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a journal if existing or after creating it
    * otherwise.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param pIssn
@@ -2195,7 +2189,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param proprietaryId
    *          A String with the proprietary identifier of the journal.
    * @return a Long with the identifier of the journal.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findOrCreateJournal(Connection conn, String pIssn,
@@ -2263,7 +2257,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publication by its title, publisher, ISSNs
    * and/or ISBNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param title
@@ -2281,7 +2275,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublication(Connection conn, String title, Long publisherSeq,
@@ -2330,7 +2324,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a publication to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param parentSeq
@@ -2346,7 +2340,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param publisherSeq
    *          A Long with the publisher identifier.
    * @return a Long with the identifier of the publication just added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long addPublication(Connection conn, Long parentSeq,
@@ -2409,13 +2403,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of the metadata item of a publication.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publicationSeq
    *          A Long with the identifier of the publication.
    * @return a Long with the identifier of the metadata item of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findPublicationMetadataItem(Connection conn, Long publicationSeq)
@@ -2449,7 +2443,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds to the database the ISSNs of a metadata item.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -2458,7 +2452,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the print ISSN of the metadata item.
    * @param eIssn
    *          A String with the electronic ISSN of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void addMdItemIssns(Connection conn, Long mdItemSeq, String pIssn,
@@ -2505,7 +2499,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds to the database the ISBNs of a metadata item.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -2514,7 +2508,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the print ISBN of the metadata item.
    * @param eIsbn
    *          A String with the electronic ISBN of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void addMdItemIsbns(Connection conn, Long mdItemSeq, String pIsbn,
@@ -2562,14 +2556,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Adds to the database the name of a metadata item, if it does not exist
    * already.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
    *          A Long with the metadata item identifier.
    * @param mdItemName
    *          A String with the name to be added, if new.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void addNewMdItemName(Connection conn, Long mdItemSeq,
@@ -2596,7 +2590,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Adds to the database the ISSNs of a metadata item, if they do not exist
    * already.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -2605,7 +2599,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the print ISSN of the metadata item.
    * @param eIssn
    *          A String with the electronic ISSN of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void addNewMdItemIssns(Connection conn, Long mdItemSeq, String pIssn,
@@ -2645,7 +2639,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Adds to the database the ISBNs of a metadata item, if they do not exist
    * already.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -2654,7 +2648,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the print ISBN of the metadata item.
    * @param eIsbn
    *          A String with the electronic ISBN of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void addNewMdItemIsbns(Connection conn, Long mdItemSeq, String pIsbn,
@@ -2694,7 +2688,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publication by its title, publisher, ISSNs and
    * ISBNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param title
@@ -2712,7 +2706,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByIssnsOrIsbnsOrName(Connection conn,
@@ -2733,7 +2727,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publication by its publisher and title or
    * ISSNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param title
@@ -2747,7 +2741,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByIssnsOrName(Connection conn, String title,
@@ -2767,7 +2761,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides the identifier of a publication by its publisher and title or
    * ISBNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param title
@@ -2781,7 +2775,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByIsbnsOrName(Connection conn, String title,
@@ -2800,7 +2794,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a publication by its publisher and ISSNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publisherSeq
@@ -2812,7 +2806,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByIssns(Connection conn, Long publisherSeq,
@@ -2857,7 +2851,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a publication by its publisher and ISBNs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param publisherSeq
@@ -2869,7 +2863,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByIsbns(Connection conn, Long publisherSeq,
@@ -2910,7 +2904,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a publication by its title and publisher.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param title
@@ -2920,7 +2914,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param mdItemType
    *          A String with the type of publication to be identified.
    * @return a Long with the identifier of the publication.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Long findPublicationByName(Connection conn, String title,
@@ -2959,13 +2953,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the identifier of a metadata item type by its name.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param typeName
    *          A String with the name of the metadata item type.
    * @return a Long with the identifier of the metadata item type.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long findMetadataItemType(Connection conn, String typeName)
@@ -3000,7 +2994,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a metadata item to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param parentSeq
@@ -3014,7 +3008,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param coverage
    *          A String with the metadata item coverage.
    * @return a Long with the identifier of the metadata item just added.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public Long addMdItem(Connection conn, Long parentSeq,
@@ -3066,14 +3060,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the names of a metadata item.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
    *          A Long with the metadata item identifier.
    * @return a Map<String, String> with the names and name types of the metadata
    *         item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private Map<String, String> getMdItemNames(Connection conn, Long mdItemSeq)
@@ -3104,7 +3098,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds a metadata item name to the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -3113,7 +3107,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the name of the metadata item.
    * @param type
    *          A String with the type of name of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public void addMdItemName(Connection conn, Long mdItemSeq, String name,
@@ -3144,7 +3138,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds to the database a metadata item URL.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
@@ -3153,7 +3147,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    *          A String with the feature of the metadata item URL.
    * @param url
    *          A String with the metadata item URL.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public void addMdItemUrl(Connection conn, Long mdItemSeq, String feature,
@@ -3179,14 +3173,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds to the database a metadata item DOI.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param mdItemSeq
    *          A Long with the metadata item identifier.
    * @param doi
    *          A String with the DOI of the metadata item.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   public void addMdItemDoi(Connection conn, Long mdItemSeq, String doi)
@@ -3217,7 +3211,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Adds an AU to the list of AUs to be reindexed.
    * Does incremental reindexing if possible.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU to be reindexed.
    * @return <code>true</code> if au was added for reindexing
@@ -3229,7 +3223,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Adds an AU to the list of AUs to be reindexed.
    * Does incremental reindexing if possible.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU to be reindexed.
    * @param inBatch
@@ -3240,18 +3234,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   public boolean addAuToReindex(ArchivalUnit au, boolean inBatch) {
     return addAuToReindex(au, inBatch, false);
   }
-  
+
   /**
    * Adds an AU to the list of AUs to be reindexed. Optionally causes
    * full reindexing by removing the AU from the database.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU to be reindexed.
    * @param inBatch
    *          A boolean indicating whether the reindexing of this AU should be
    *          performed as part of a batch.
    * @param fullReindex
-   *          Causes a full reindex by removing that AU from the database. 
+   *          Causes a full reindex by removing that AU from the database.
    * @return <code>true</code> if au was added for reindexing
    */
   public boolean addAuToReindex(
@@ -3271,7 +3265,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         }
 
         log.debug2(DEBUG_HEADER + "Adding AU to reindex: " + au.getName());
-        
+
         if (pendingAusBatchConnection == null) {
           pendingAusBatchConnection = dbManager.getConnection();
 
@@ -3296,7 +3290,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         if (fullReindex) {
           removeAu(pendingAusBatchConnection, au.getAuId());
         }
-        
+
         startReindexing(pendingAusBatchConnection);
         pendingAusBatchConnection.commit();
 
@@ -3304,7 +3298,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         if (fullReindex) {
           metadataArticleCount = getArticleCount(pendingAusBatchConnection);
         }
-        
+
         return true;
 
       } catch (SQLException ex) {
@@ -3321,12 +3315,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Removes an AU with disabled indexing from the table of pending AUs.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auId
    *          A String with the Archiva lUnit identifier.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private void removeDisabledFromPendingAus(Connection conn, String auId)
@@ -3337,7 +3331,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
       String auKey = PluginManager.auKeyFromAuId(auId);
-  
+
       deletePendingAu.setString(1, pluginId);
       deletePendingAu.setString(2, auKey);
       dbManager.executeUpdate(deletePendingAu);
@@ -3355,7 +3349,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Reschedules a reindexing task for a specified AU.
-   * 
+   *
    * @param auId
    *          A String with the Archiva lUnit identifier.
    * @return <code>true</code> if task was rescheduled, <code>false</code>
@@ -3378,7 +3372,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Disables the indexing of an AU.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU for which indexing is to be disabled.
    * @return <code>true</code> if au was added for reindexing,
@@ -3435,12 +3429,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds AUs to the list of pending AUs to reindex.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param aus
    *          A Collection<ArchivalUnit> with the AUs to add.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   void addToPendingAus(Connection conn, Collection<ArchivalUnit> aus)
@@ -3450,7 +3444,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Adds AUs to the list of pending AUs to reindex.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param aus
@@ -3458,7 +3452,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @param inBatch
    *          A boolean indicating whether adding these AUs to the list of
    *          pending AUs to reindex should be performed as part of a batch.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   void addToPendingAus(Connection conn, Collection<ArchivalUnit> aus,
@@ -3550,7 +3544,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides an indication of whether an AU has article metadata.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the Archival Unit.
    * @return <code>true</code> if the AU has article metadata,
@@ -3576,7 +3570,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Notifies listeners that an AU is being reindexed.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the Archival Unit.
    */
@@ -3585,7 +3579,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Notifies listeners that an AU is finished being reindexed.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the Archival Unit.
    * @param status
@@ -3597,7 +3591,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Deletes an AU and starts the next reindexing task.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the Archival Unit.
    * @return <code>true</code> if the AU was deleted, <code>false</code>
@@ -3638,14 +3632,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the metadata version of a plugin.
-   * 
+   *
    * @param plugin
    *          A Plugin with the plugin.
    * @return an int with the plugin metadata version.
    */
   int getPluginMetadataVersionNumber(Plugin plugin) {
     final String DEBUG_HEADER = "getPluginMetadataVersionNumber(): ";
-  
+
     int version = 1;
     String pluginVersion = plugin.getFeatureVersion(Feature.Metadata);
     if (log.isDebug3()) {
@@ -3671,7 +3665,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("Plugin version '" + pluginVersion + "' does not end with a "
 	  + "number after '" + prefix + "': Using " + version);
     }
-    
+
     log.debug3(DEBUG_HEADER + "version = " + version);
     return version;
   }
@@ -3692,7 +3686,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * Provides an indication of whether the version of the metadata of an AU
    * stored in the database has been obtained with an obsolete version of the
    * plugin.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU involved.
    * @return <code>true</code> if the metadata was obtained with a version of
@@ -3702,11 +3696,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   boolean isAuMetadataForObsoletePlugin(ArchivalUnit au) {
     final String DEBUG_HEADER = "isAuMetadataForObsoletePlugin(): ";
 
-    // Get the plugin version of the stored AU metadata. 
+    // Get the plugin version of the stored AU metadata.
     int auVersion = getAuMetadataVersion(au);
     log.debug(DEBUG_HEADER + "auVersion = " + auVersion);
 
-    // Get the current version of the plugin. 
+    // Get the current version of the plugin.
     int pVersion = getPluginMetadataVersionNumber(au.getPlugin());
     log.debug(DEBUG_HEADER + "pVersion = " + pVersion);
 
@@ -3715,7 +3709,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the version of the metadata of an AU stored in the database.
-   * 
+   *
    * @param au
    *          An ArchivalUnit with the AU involved.
    * @return an int with the version of the metadata of the AU stored in the
@@ -3743,14 +3737,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the version of the metadata of an AU stored in the database.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param au
    *          An ArchivalUnit with the AU involved.
    * @return an int with the version of the metadata of the AU stored in the
    *         database.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private int getAuMetadataVersion(Connection conn, ArchivalUnit au)
@@ -3790,7 +3784,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * Provides an indication of whether the version of the metadata of an AU
    * stored in the database has been obtained with an obsolete version of the
    * plugin.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param au
@@ -3798,18 +3792,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @return <code>true</code> if the metadata was obtained with a version of
    *         the plugin previous to the current version, <code>false</code>
    *         otherwise.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   boolean isAuMetadataForObsoletePlugin(Connection conn, ArchivalUnit au)
       throws SQLException {
     final String DEBUG_HEADER = "isAuMetadataForObsoletePlugin(): ";
 
-    // Get the plugin version of the stored AU metadata. 
+    // Get the plugin version of the stored AU metadata.
     int auVersion = getAuMetadataVersion(conn, au);
     log.debug2(DEBUG_HEADER + "auVersion = " + auVersion);
 
-    // Get the current version of the plugin. 
+    // Get the current version of the plugin.
     int pVersion = getPluginMetadataVersionNumber(au.getPlugin());
     log.debug2(DEBUG_HEADER + "pVersion = " + pVersion);
 
@@ -3818,13 +3812,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the extraction time of an Archival Unit metadata.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param auSeq
    *          A Long with the identifier of the Archival Unit.
    * @return a long with the extraction time of the Archival Unit metadata.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   long getAuExtractionTime(Connection conn, Long auSeq)
@@ -3855,7 +3849,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Provides an indication of whether the metadata of an AU has not been saved
    * in the database after the last successful crawl of the AU.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param au
@@ -3863,14 +3857,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * @return <code>true</code> if the metadata of the AU has not been saved in
    *         the database after the last successful crawl of the AU,
    *         <code>false</code> otherwise.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   boolean isAuCrawledAndNotExtracted(Connection conn, ArchivalUnit au)
       throws SQLException {
     final String DEBUG_HEADER = "isAuCrawledAndNotExtracted(): ";
 
-    // Get the time of the last successful crawl of the AU. 
+    // Get the time of the last successful crawl of the AU.
     long lastCrawlTime = AuUtil.getAuState(au).getLastCrawlTime();
     log.debug2(DEBUG_HEADER + "lastCrawlTime = " + lastCrawlTime);
 
@@ -3882,13 +3876,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
   /**
    * Provides the extraction time of an Archival Unit metadata.
-   * 
+   *
    * @param conn
    *          A Connection with the database connection to be used.
    * @param au
    *          An ArchivalUnit with the AU involved.
    * @return a long with the extraction time of the Archival Unit metadata.
-   * @throws SQLException
+   * @throws java.sql.SQLException
    *           if any problem occurred accessing the database.
    */
   private long getAuExtractionTime(Connection conn, ArchivalUnit au)

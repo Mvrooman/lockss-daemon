@@ -125,6 +125,7 @@ public class ReindexingTask extends StepTask {
 
   // The metadata manager.
   private final MetadataManager mdManager;
+  private final MetadataManager mongoMdManager; //MONGOSVC
 
   private final Emitter emitter;
   private int extractedCount = 0;
@@ -164,6 +165,7 @@ public class ReindexingTask extends StepTask {
     this.auNoSubstance = AuUtil.getAuState(au).hasNoSubstance();
     dbManager = LockssDaemon.getLockssDaemon().getDbManager();
     mdManager = LockssDaemon.getLockssDaemon().getMetadataManager();
+    mongoMdManager = LockssDaemon.getLockssDaemon().getMongoMetadataManager(); //MONGOSVC
 
     // The accumulator of article metadata.
     emitter = new ReindexingEmitter();
@@ -798,10 +800,13 @@ public class ReindexingTask extends StepTask {
 	    if (mditr.hasNext()) {
 
 	      // Yes: Write the AU metadata to the database.
-	      new AuMetadataRecorder((ReindexingTask) task, mdManager, au)
-		  .recordMetadata(conn, mditr);
+//	      new AuMetadataRecorder((ReindexingTask) task, mdManager, au)
+//		  .recordMetadata(conn, mditr);
 
-          //new MongoAuMetadataRecorder((ReindexingTask) task, mdManager, au).recordMetadata(conn, mditr);
+
+          //record in parallel  MONGOSVC
+          new MongoAuMetadataRecorder((ReindexingTask) task, mongoMdManager, au)
+          .recordMetadata(conn, mditr);
 
 	    }
 

@@ -1506,13 +1506,14 @@ public class MongoDbManager extends DbManager
    */
   @Override
   public void startService() {
+      log.info("Starting mongoDB manager");
       ready = ready && mongoDatabase != null;
       if (ready) {
           return;
       }
       MongoClient mongoClient = null;
       try {
-          mongoClient = new MongoClient("localhost", 27017);
+          mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
           mongoDatabase = mongoClient.getDB("lockss");
 
       } catch (UnknownHostException e) {
@@ -1520,7 +1521,6 @@ public class MongoDbManager extends DbManager
           //TODO:  Add logging/handling here
       }
       ready=true;
-      ((Number)mongoDatabase.eval("")).intValue() ;
 
 //    final String DEBUG_HEADER = "startService(): ";
 //    log.debug2(DEBUG_HEADER + "dataSource != null = " + (dataSource != null));
@@ -3475,4 +3475,10 @@ public class MongoDbManager extends DbManager
 
     return statement;
   }
+
+    public DB getDatabase()
+    {
+        return mongoDatabase;
+    }
+
 }

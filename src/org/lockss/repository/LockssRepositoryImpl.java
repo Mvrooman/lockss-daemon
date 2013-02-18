@@ -115,6 +115,7 @@ public class LockssRepositoryImpl
     // Test code still needs this.
     nodeCache =
       new UniqueRefLruCache(RepositoryManager.DEFAULT_MAX_PER_AU_CACHE_SIZE);
+      rootLocation = rootLocation.replace("?","").replace("COM8","COMEIGHT").replace("%5c","/");  ////windows folder structure fix
   }
 
   public void startService() {
@@ -215,7 +216,7 @@ public class LockssRepositoryImpl
     } else {
       // determine proper node location
       nodeLocation = LockssRepositoryImpl.mapUrlToFileLocation(rootLocation,
-          canonUrl);
+          canonUrl).replace("?","").replace("COM8","COMEIGHT").replace("%5c","/"); ////windows folder structure fix
       node = new RepositoryNodeImpl(canonUrl, nodeLocation, this);
     }
 
