@@ -38,7 +38,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.File;
@@ -49,7 +49,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.metadata.MetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
@@ -74,7 +74,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
       + " where " + IS_PUBLISHER_INVOLVED_COLUMN + " = ?";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
   private MetadataManager metadataManager;
   private CounterReportsManager counterReportsManager;
 
@@ -91,7 +91,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     props.setProperty(LockssRepositoryImpl.PARAM_CACHE_LOCATION, tempDirPath);
     props.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST,
 	      tempDirPath);
-    props.setProperty(DbManager.PARAM_DATASOURCE_CLASSNAME,
+    props.setProperty(SqlDbManager.PARAM_DATASOURCE_CLASSNAME,
 	"org.apache.derby.jdbc.ClientDataSource");
     props.setProperty(CounterReportsManager.PARAM_COUNTER_ENABLED, "true");
     props.setProperty(CounterReportsManager.PARAM_REPORT_BASEDIR_PATH,
@@ -104,10 +104,10 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager();
     theDaemon.setMetadataManager(metadataManager);
@@ -131,7 +131,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -181,7 +181,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
                                    RECORDABLE_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
   }
 
@@ -293,18 +293,18 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     String sql = SQL_QUERY_REQUEST_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     assertEquals(expected, count);
@@ -330,19 +330,19 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     String sql = SQL_QUERY_REQUEST_BY_INVOLVEMENT_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setBoolean(1, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     assertEquals(expected, count);

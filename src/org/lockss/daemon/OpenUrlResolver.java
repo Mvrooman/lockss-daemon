@@ -31,7 +31,7 @@ in this Software without prior written authorization from Stanford University.
 */
 package org.lockss.daemon;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -56,7 +56,7 @@ import org.lockss.config.TdbPublisher;
 import org.lockss.config.TdbTitle;
 import org.lockss.config.TdbUtil;
 import org.lockss.daemon.ConfigParamDescr.InvalidFormatException;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.biblio.BibliographicItem;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuUtil;
@@ -973,7 +973,7 @@ public class OpenUrlResolver {
     OpenUrlInfo resolved = noOpenUrlInfo;
     try {
       // resolve from database manager
-      DbManager dbMgr = daemon.getDbManager();
+      SqlDbManager dbMgr = daemon.getDbManager();
       resolved = resolveFromDoi(dbMgr, doi);
     } catch (IllegalArgumentException ex) {
     }
@@ -1050,7 +1050,7 @@ public class OpenUrlResolver {
    * @param doi the DOI
    * @return the OpenUrlInfo
    */
-  private OpenUrlInfo resolveFromDoi(DbManager dbMgr, String doi) {
+  private OpenUrlInfo resolveFromDoi(SqlDbManager dbMgr, String doi) {
     String url = null;
     Connection conn = null;
     try {
@@ -1072,7 +1072,7 @@ public class OpenUrlResolver {
       log.error("Getting DOI:" + doi, ex);
       
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
     return new OpenUrlInfo(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
   }
@@ -1103,7 +1103,7 @@ public class OpenUrlResolver {
       // resolve article from database manager
       String[] issns = (title == null) ? 
         new String[] { issn } : title.getIssns();
-      DbManager dbMgr = daemon.getDbManager();
+      SqlDbManager dbMgr = daemon.getDbManager();
       resolved = resolveFromIssn(dbMgr, issns, date, 
                                 volume, issue, spage, author, atitle);
     } catch (IllegalArgumentException ex) {
@@ -1136,7 +1136,7 @@ public class OpenUrlResolver {
    * @return the article URL
    */
   private OpenUrlInfo resolveFromIssn(
-      DbManager dbMgr,
+      SqlDbManager dbMgr,
       String[] issns, String date, String volume, String issue, 
       String spage, String author, String atitle) {
           
@@ -1279,7 +1279,7 @@ public class OpenUrlResolver {
       log.error("Getting ISSNs:" + Arrays.toString(issns), ex);
         
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
     return resolved;
   }
@@ -1940,7 +1940,7 @@ public class OpenUrlResolver {
     // only go to database manager if requesting individual article/chapter
     try {
       // resolve from database manager
-      DbManager dbMgr = daemon.getDbManager();
+      SqlDbManager dbMgr = daemon.getDbManager();
       resolved = resolveFromIsbn(
           dbMgr, isbn, date, volume, edition, spage, author, atitle);
     } catch (IllegalArgumentException ex) {
@@ -1983,7 +1983,7 @@ public class OpenUrlResolver {
    * @return the url
    */
   private OpenUrlInfo resolveFromIsbn(
-      DbManager dbMgr, String isbn, 
+      SqlDbManager dbMgr, String isbn, 
       String date, String volume, String edition, 
       String spage, String author, String atitle) {
     final String DEBUG_HEADER = "resolveFromIsbn(): ";
@@ -2119,7 +2119,7 @@ public class OpenUrlResolver {
       log.error("Getting ISBN:" + isbn, ex);
         
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
     return resolved;
   }

@@ -38,7 +38,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.BufferedReader;
@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsBookReport2L;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.metadata.MetadataManager;
@@ -66,7 +66,7 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
   private static final String SECTION_URL = "http://example.com/section.url";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
   private MetadataManager metadataManager;
   private CounterReportsManager counterReportsManager;
 
@@ -91,10 +91,10 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager();
     theDaemon.setMetadataManager(metadataManager);
@@ -255,7 +255,7 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -299,7 +299,7 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
                                    FULL_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return mdItemSeq;
@@ -316,7 +316,7 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -358,7 +358,7 @@ public class TestCounterReportsBookReport2L extends LockssTestCase {
                                    SECTION_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return mdItemSeq;

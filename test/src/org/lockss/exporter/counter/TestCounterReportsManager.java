@@ -43,7 +43,7 @@ import java.io.PrintWriter;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.metadata.MetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
@@ -54,7 +54,7 @@ import org.lockss.util.IOUtil;
 
 public class TestCounterReportsManager extends LockssTestCase {
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
   private MetadataManager metadataManager;
   private CounterReportsManager counterReportsManager;
 
@@ -79,10 +79,10 @@ public class TestCounterReportsManager extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager();
     theDaemon.setMetadataManager(metadataManager);
@@ -175,7 +175,7 @@ public class TestCounterReportsManager extends LockssTestCase {
    */
   public void runTestNotReady() throws Exception {
     counterReportsManager.stopService();
-    dbManager.stopService();
+    sqlDbManager.stopService();
     startService();
     assertEquals(false, counterReportsManager.isReady());
     assertEquals(false, counterReportsManager.deleteReportOutputFile(""));

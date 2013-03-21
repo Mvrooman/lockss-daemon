@@ -31,7 +31,7 @@
  */
 package org.lockss.metadata;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.Plugin;
@@ -155,7 +155,7 @@ public class AuMetadataRecorder {
   private final MetadataManager mdManager;
 
   // The database manager.
-  private final DbManager dbManager;
+  private final SqlDbManager sqlDbManager;
 
   // The archival unit.
   private final ArchivalUnit au;
@@ -184,7 +184,7 @@ public class AuMetadataRecorder {
       ArchivalUnit au) {
     this.task = task;
     this.mdManager = mdManager;
-    dbManager = mdManager.getDbManager();
+    sqlDbManager = mdManager.getDbManager();
     this.au = au;
 
     plugin = au.getPlugin();
@@ -245,7 +245,7 @@ public class AuMetadataRecorder {
 	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
 	    + mdinfo.publisher + "'");
 	mdinfo.accessUrl =
-	    DbManager.truncateVarchar(mdinfo.accessUrl, MAX_URL_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.accessUrl, MAX_URL_COLUMN);
       }
     }
 
@@ -256,7 +256,7 @@ public class AuMetadataRecorder {
       if (isbn.length() > MAX_ISBN_COLUMN) {
 	log.warning("isbn too long '" + mdinfo.isbn + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.isbn = DbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
+	mdinfo.isbn = SqlDbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
       } else {
 	mdinfo.isbn = isbn;
       }
@@ -269,7 +269,7 @@ public class AuMetadataRecorder {
       if (isbn.length() > MAX_ISBN_COLUMN) {
 	log.warning("eisbn too long '" + mdinfo.eisbn + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.eisbn = DbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
+	mdinfo.eisbn = SqlDbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
       } else {
 	mdinfo.eisbn = isbn;
       }
@@ -282,7 +282,7 @@ public class AuMetadataRecorder {
       if (issn.length() > MAX_ISSN_COLUMN) {
 	log.warning("issn too long '" + mdinfo.issn + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.issn = DbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
+	mdinfo.issn = SqlDbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
       } else {
 	mdinfo.issn = issn;
       }
@@ -295,7 +295,7 @@ public class AuMetadataRecorder {
       if (issn.length() > MAX_ISSN_COLUMN) {
 	log.warning("issn too long '" + mdinfo.eissn + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.eissn = DbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
+	mdinfo.eissn = SqlDbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
       } else {
 	mdinfo.eissn = issn;
       }
@@ -311,7 +311,7 @@ public class AuMetadataRecorder {
       if (doi.length() > MAX_DOI_COLUMN) {
 	log.warning("doi too long '" + mdinfo.doi + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.doi = DbManager.truncateVarchar(doi, MAX_DOI_COLUMN);
+	mdinfo.doi = SqlDbManager.truncateVarchar(doi, MAX_DOI_COLUMN);
       } else {
 	mdinfo.doi = doi;
       }
@@ -322,7 +322,7 @@ public class AuMetadataRecorder {
 	log.warning("pubDate too long '" + mdinfo.pubDate + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.pubDate =
-	    DbManager.truncateVarchar(mdinfo.pubDate, MAX_DATE_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.pubDate, MAX_DATE_COLUMN);
       }
     }
 
@@ -331,7 +331,7 @@ public class AuMetadataRecorder {
 	log.warning("volume too long '" + mdinfo.pubDate + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.volume =
-	    DbManager.truncateVarchar(mdinfo.volume, MAX_VOLUME_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.volume, MAX_VOLUME_COLUMN);
       }
     }
 
@@ -340,7 +340,7 @@ public class AuMetadataRecorder {
 	log.warning("issue too long '" + mdinfo.issue + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.issue =
-	    DbManager.truncateVarchar(mdinfo.issue, MAX_ISSUE_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.issue, MAX_ISSUE_COLUMN);
       }
     }
 
@@ -350,7 +350,7 @@ public class AuMetadataRecorder {
 	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
 	    + mdinfo.publisher + "'");
 	mdinfo.startPage =
-	    DbManager.truncateVarchar(mdinfo.startPage, MAX_START_PAGE_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.startPage, MAX_START_PAGE_COLUMN);
       }
     }
 
@@ -360,7 +360,7 @@ public class AuMetadataRecorder {
 	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
 	    + mdinfo.publisher + "'");
 	mdinfo.articleTitle =
-	    DbManager.truncateVarchar(mdinfo.articleTitle, MAX_NAME_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.articleTitle, MAX_NAME_COLUMN);
       }
     }
 
@@ -369,7 +369,7 @@ public class AuMetadataRecorder {
 	log.warning("publisher too long '" + mdinfo.publisher
 	    + "' for title: '" + mdinfo.journalTitle + "'");
 	mdinfo.publisher =
-	    DbManager.truncateVarchar(mdinfo.publisher, MAX_NAME_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.publisher, MAX_NAME_COLUMN);
       }
     }
 
@@ -378,7 +378,7 @@ public class AuMetadataRecorder {
 	log.warning("journal title too long '" + mdinfo.journalTitle
 	    + "' for publisher: " + mdinfo.publisher + "'");
 	mdinfo.journalTitle =
-	    DbManager.truncateVarchar(mdinfo.journalTitle, MAX_NAME_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.journalTitle, MAX_NAME_COLUMN);
       }
     }
 
@@ -388,7 +388,7 @@ public class AuMetadataRecorder {
 	if (author.length() > MAX_AUTHOR_COLUMN) {
 	  log.warning("author too long '" + author + "' for title: '"
 	      + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	  authors.add(DbManager.truncateVarchar(author, MAX_AUTHOR_COLUMN));
+	  authors.add(SqlDbManager.truncateVarchar(author, MAX_AUTHOR_COLUMN));
 	} else {
 	  authors.add(author);
 	}
@@ -402,7 +402,7 @@ public class AuMetadataRecorder {
 	if (keyword.length() > MAX_KEYWORD_COLUMN) {
 	  log.warning("keyword too long '" + keyword + "' for title: '"
 	      + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	  keywords.add(DbManager.truncateVarchar(keyword, MAX_KEYWORD_COLUMN));
+	  keywords.add(SqlDbManager.truncateVarchar(keyword, MAX_KEYWORD_COLUMN));
 	} else {
 	  keywords.add(keyword);
 	}
@@ -418,7 +418,7 @@ public class AuMetadataRecorder {
 	      + "' for title: '" + mdinfo.journalTitle + "' publisher: "
 	      + mdinfo.publisher + "'");
 	  featuredUrls.put(key,
-	                   DbManager.truncateVarchar(mdinfo.featuredUrlMap.
+	                   SqlDbManager.truncateVarchar(mdinfo.featuredUrlMap.
 	                                             get(key), MAX_URL_COLUMN));
 	} else {
 	  featuredUrls.put(key, mdinfo.featuredUrlMap.get(key));
@@ -432,7 +432,7 @@ public class AuMetadataRecorder {
 	log.warning("endPage too long '" + mdinfo.endPage + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.endPage =
-	    DbManager.truncateVarchar(mdinfo.endPage, MAX_END_PAGE_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.endPage, MAX_END_PAGE_COLUMN);
       }
     }
 
@@ -441,7 +441,7 @@ public class AuMetadataRecorder {
 	log.warning("coverage too long '" + mdinfo.coverage + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.coverage =
-	    DbManager.truncateVarchar(mdinfo.coverage, MAX_COVERAGE_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.coverage, MAX_COVERAGE_COLUMN);
       }
     } else {
 	mdinfo.coverage = "fulltext";
@@ -453,7 +453,7 @@ public class AuMetadataRecorder {
 	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
 	    + mdinfo.publisher + "'");
 	mdinfo.itemNumber =
-	    DbManager.truncateVarchar(mdinfo.itemNumber, MAX_ITEM_NO_COLUMN);
+	    SqlDbManager.truncateVarchar(mdinfo.itemNumber, MAX_ITEM_NO_COLUMN);
       }
     }
 
@@ -463,7 +463,7 @@ public class AuMetadataRecorder {
 	    + mdinfo.proprietaryIdentifier + "' for title: '"
 	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
 	mdinfo.proprietaryIdentifier =
-	    DbManager.truncateVarchar(mdinfo.proprietaryIdentifier,
+	    SqlDbManager.truncateVarchar(mdinfo.proprietaryIdentifier,
 				      MAX_PUBLICATION_ID_COLUMN);
       }
     }
@@ -623,12 +623,12 @@ public class AuMetadataRecorder {
       throws SQLException {
     final String DEBUG_HEADER = "updateAuMd(): ";
     PreparedStatement updateAu =
-	dbManager.prepareStatement(conn, UPDATE_AU_MD_QUERY);
+	sqlDbManager.prepareStatement(conn, UPDATE_AU_MD_QUERY);
 
     try {
       updateAu.setShort(1, (short) version);
       updateAu.setLong(2, auMdSeq);
-      int count = dbManager.executeUpdate(updateAu);
+      int count = sqlDbManager.executeUpdate(updateAu);
 
       if (log.isDebug3()) {
 	log.debug3(DEBUG_HEADER + "count = " + count);
@@ -852,19 +852,19 @@ public class AuMetadataRecorder {
     final String DEBUG_HEADER = "getMdItemTypeName(): ";
     String typeName = null;
     PreparedStatement getMdItemTypeName =
-	dbManager.prepareStatement(conn, GET_MD_ITEM_TYPE_NAME_QUERY);
+	sqlDbManager.prepareStatement(conn, GET_MD_ITEM_TYPE_NAME_QUERY);
     ResultSet resultSet = null;
 
     try {
       getMdItemTypeName.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(getMdItemTypeName);
+      resultSet = sqlDbManager.executeQuery(getMdItemTypeName);
 
       if (resultSet.next()) {
 	typeName = resultSet.getString(TYPE_NAME_COLUMN);
 	log.debug3(DEBUG_HEADER + "typeName = " + typeName);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseResultSet(resultSet);
       getMdItemTypeName.close();
     }
 
@@ -893,20 +893,20 @@ public class AuMetadataRecorder {
     ResultSet resultSet = null;
 
     PreparedStatement findMdItem =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_QUERY);
 
     try {
       findMdItem.setLong(1, mdItemTypeSeq);
       findMdItem.setLong(2, auMdSeq);
       findMdItem.setString(3, accessUrl);
 
-      resultSet = dbManager.executeQuery(findMdItem);
+      resultSet = sqlDbManager.executeQuery(findMdItem);
       if (resultSet.next()) {
 	mdItemSeq = resultSet.getLong(MD_ITEM_SEQ_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findMdItem);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findMdItem);
     }
 
     log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
@@ -1010,14 +1010,14 @@ public class AuMetadataRecorder {
     }
 
     PreparedStatement insertMdItemAuthor =
-	dbManager.prepareStatement(conn, INSERT_AUTHOR_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_AUTHOR_QUERY);
 
     try {
       for (String author : authors) {
 	insertMdItemAuthor.setLong(1, mdItemSeq);
 	insertMdItemAuthor.setString(2, author);
 	insertMdItemAuthor.setLong(3, mdItemSeq);
-	int count = dbManager.executeUpdate(insertMdItemAuthor);
+	int count = sqlDbManager.executeUpdate(insertMdItemAuthor);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -1025,7 +1025,7 @@ public class AuMetadataRecorder {
 	}
       }
     } finally {
-      DbManager.safeCloseStatement(insertMdItemAuthor);
+      SqlDbManager.safeCloseStatement(insertMdItemAuthor);
     }
   }
 
@@ -1050,13 +1050,13 @@ public class AuMetadataRecorder {
     }
 
     PreparedStatement insertMdItemKeyword =
-	dbManager.prepareStatement(conn, INSERT_KEYWORD_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_KEYWORD_QUERY);
 
     try {
       for (String keyword : keywords) {
 	insertMdItemKeyword.setLong(1, mdItemSeq);
 	insertMdItemKeyword.setString(2, keyword);
-	int count = dbManager.executeUpdate(insertMdItemKeyword);
+	int count = sqlDbManager.executeUpdate(insertMdItemKeyword);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -1064,7 +1064,7 @@ public class AuMetadataRecorder {
 	}
       }
     } finally {
-      DbManager.safeCloseStatement(insertMdItemKeyword);
+      SqlDbManager.safeCloseStatement(insertMdItemKeyword);
     }
   }
 
@@ -1096,7 +1096,7 @@ public class AuMetadataRecorder {
     newUrls.put(ACCESS_URL_FEATURE, accessUrl);
 
     PreparedStatement findMdItemFeaturedUrl =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_FEATURED_URL_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_FEATURED_URL_QUERY);
 
     ResultSet resultSet = null;
     String feature;
@@ -1105,7 +1105,7 @@ public class AuMetadataRecorder {
     try {
       // Get the existing URLs.
       findMdItemFeaturedUrl.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findMdItemFeaturedUrl);
+      resultSet = sqlDbManager.executeQuery(findMdItemFeaturedUrl);
 
       // Loop through all the URLs already linked to the metadata item.
       while (resultSet.next()) {
@@ -1124,7 +1124,7 @@ public class AuMetadataRecorder {
       }
 
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseResultSet(resultSet);
       findMdItemFeaturedUrl.close();
     }
 
@@ -1154,14 +1154,14 @@ public class AuMetadataRecorder {
     Set<String> newAuthors = new HashSet<String>(authors);
 
     PreparedStatement findMdItemAuthor =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_AUTHOR_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_AUTHOR_QUERY);
 
     ResultSet resultSet = null;
 
     try {
       // Get the existing authors.
       findMdItemAuthor.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findMdItemAuthor);
+      resultSet = sqlDbManager.executeQuery(findMdItemAuthor);
 
       List<String> oldAuthors = new ArrayList<String>();
 
@@ -1174,7 +1174,7 @@ public class AuMetadataRecorder {
       // Remove them from the collection to be added.
       newAuthors.removeAll(oldAuthors);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseResultSet(resultSet);
       findMdItemAuthor.close();
     }
 
@@ -1204,14 +1204,14 @@ public class AuMetadataRecorder {
     Set<String> newKeywords = new HashSet<String>(keywords);
 
     PreparedStatement findMdItemKeyword =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_KEYWORD_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_KEYWORD_QUERY);
 
     ResultSet resultSet = null;
 
     try {
       // Get the existing keywords.
       findMdItemKeyword.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findMdItemKeyword);
+      resultSet = sqlDbManager.executeQuery(findMdItemKeyword);
 
       List<String> oldKeywords = new ArrayList<String>();
 
@@ -1224,7 +1224,7 @@ public class AuMetadataRecorder {
       // Remove them from the collection to be added.
       newKeywords.removeAll(oldKeywords);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseResultSet(resultSet);
       findMdItemKeyword.close();
     }
 
@@ -1251,19 +1251,19 @@ public class AuMetadataRecorder {
     }
 
     PreparedStatement findMdItemDoi =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_DOI_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_DOI_QUERY);
 
     ResultSet resultSet = null;
 
     try {
       findMdItemDoi.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findMdItemDoi);
+      resultSet = sqlDbManager.executeQuery(findMdItemDoi);
 
       if (!resultSet.next()) {
 	mdManager.addMdItemDoi(conn, mdItemSeq, doi);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseResultSet(resultSet);
       findMdItemDoi.close();
     }
   }
@@ -1295,7 +1295,7 @@ public class AuMetadataRecorder {
     final String DEBUG_HEADER = "updateBibItem(): ";
     int updatedCount = 0;
     PreparedStatement updateBibItem =
-	dbManager.prepareStatement(conn, UPDATE_BIB_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, UPDATE_BIB_ITEM_QUERY);
 
     try {
       updateBibItem.setString(1, volume);
@@ -1304,9 +1304,9 @@ public class AuMetadataRecorder {
       updateBibItem.setString(4, endPage);
       updateBibItem.setString(5, itemNo);
       updateBibItem.setLong(6, mdItemSeq);
-      updatedCount = dbManager.executeUpdate(updateBibItem);
+      updatedCount = sqlDbManager.executeUpdate(updateBibItem);
     } finally {
-      DbManager.safeCloseStatement(updateBibItem);
+      SqlDbManager.safeCloseStatement(updateBibItem);
     }
 
     log.debug3(DEBUG_HEADER + "updatedCount = " + updatedCount);
@@ -1340,7 +1340,7 @@ public class AuMetadataRecorder {
     final String DEBUG_HEADER = "addBibItem(): ";
     int addedCount = 0;
     PreparedStatement insertBibItem =
-	dbManager.prepareStatement(conn, INSERT_BIB_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_BIB_ITEM_QUERY);
 
     try {
       insertBibItem.setLong(1, mdItemSeq);
@@ -1349,9 +1349,9 @@ public class AuMetadataRecorder {
       insertBibItem.setString(4, startPage);
       insertBibItem.setString(5, endPage);
       insertBibItem.setString(6, itemNo);
-      addedCount = dbManager.executeUpdate(insertBibItem);
+      addedCount = sqlDbManager.executeUpdate(insertBibItem);
     } finally {
-      DbManager.safeCloseStatement(insertBibItem);
+      SqlDbManager.safeCloseStatement(insertBibItem);
     }
 
     log.debug3(DEBUG_HEADER + "addedCount = " + addedCount);

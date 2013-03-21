@@ -31,7 +31,7 @@
  */
 
 /**
- * Test class for org.lockss.db.DbManager.
+ * Test class for org.lockss.db.SqlDbManager.
  * 
  * @author Fernando Garcia-Loygorri
  * @version 1.0
@@ -55,7 +55,7 @@ public class TestDbManager extends LockssTestCase {
 
   private MockLockssDaemon theDaemon;
   private String tempDirPath;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
 
   @Override
   public void setUp() throws Exception {
@@ -97,7 +97,7 @@ public class TestDbManager extends LockssTestCase {
     props.setProperty(LockssRepositoryImpl.PARAM_CACHE_LOCATION, tempDirPath);
     props
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
-    props.setProperty(DbManager.PARAM_DATASOURCE_DATABASENAME,
+    props.setProperty(SqlDbManager.PARAM_DATASOURCE_DATABASENAME,
 		      new File(tempDirPath, "db/TestDbManager")
 			  .getCanonicalPath());
     ConfigurationUtil.setCurrentConfigFromProps(props);
@@ -115,7 +115,7 @@ public class TestDbManager extends LockssTestCase {
     props.setProperty(LockssRepositoryImpl.PARAM_CACHE_LOCATION, tempDirPath);
     props
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
-    props.setProperty(DbManager.PARAM_DATASOURCE_CLASSNAME,
+    props.setProperty(SqlDbManager.PARAM_DATASOURCE_CLASSNAME,
 		      "org.apache.derby.jdbc.ClientDataSource");
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
@@ -132,15 +132,15 @@ public class TestDbManager extends LockssTestCase {
     props.setProperty(LockssRepositoryImpl.PARAM_CACHE_LOCATION, tempDirPath);
     props
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
-    props.setProperty(DbManager.PARAM_DATASOURCE_CLASSNAME, "java.lang.String");
+    props.setProperty(SqlDbManager.PARAM_DATASOURCE_CLASSNAME, "java.lang.String");
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
     startService();
-    assertEquals(false, dbManager.isReady());
+    assertEquals(false, sqlDbManager.isReady());
 
     Connection conn = null;
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
     } catch (SQLException sqle) {
     }
     assertNull(conn);
@@ -160,17 +160,17 @@ public class TestDbManager extends LockssTestCase {
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
     startService();
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, "testtable"));
-    assertTrue(dbManager.createTableIfMissing(conn, "testtable",
+    assertFalse(sqlDbManager.tableExists(conn, "testtable"));
+    assertTrue(sqlDbManager.createTableIfMissing(conn, "testtable",
 					      TABLE_CREATE_SQL));
-    assertTrue(dbManager.tableExists(conn, "testtable"));
+    assertTrue(sqlDbManager.tableExists(conn, "testtable"));
 
-    DbManager.safeRollbackAndClose(conn);
-    conn = dbManager.getConnection();
+    SqlDbManager.safeRollbackAndClose(conn);
+    conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, "testtable"));
+    assertFalse(sqlDbManager.tableExists(conn, "testtable"));
   }
 
   /**
@@ -186,21 +186,21 @@ public class TestDbManager extends LockssTestCase {
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
     startService();
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     Logger logger = Logger.getLogger("testCommitOrRollback");
-    DbManager.commitOrRollback(conn, logger);
-    DbManager.safeCloseConnection(conn);
+    SqlDbManager.commitOrRollback(conn, logger);
+    SqlDbManager.safeCloseConnection(conn);
 
     conn = null;
     try {
-      DbManager.commitOrRollback(conn, logger);
+      SqlDbManager.commitOrRollback(conn, logger);
     } catch (NullPointerException sqle) {
     }
   }
 
   @Override
   public void tearDown() throws Exception {
-    dbManager.stopService();
+    sqlDbManager.stopService();
     theDaemon.stopDaemon();
     super.tearDown();
   }
@@ -212,29 +212,29 @@ public class TestDbManager extends LockssTestCase {
    */
   protected void createTable() throws Exception {
     startService();
-    assertEquals(true, dbManager.isReady());
+    assertEquals(true, sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, "testtable"));
-    assertTrue(dbManager.createTableIfMissing(conn, "testtable",
+    assertFalse(sqlDbManager.tableExists(conn, "testtable"));
+    assertTrue(sqlDbManager.createTableIfMissing(conn, "testtable",
 					      TABLE_CREATE_SQL));
-    assertTrue(dbManager.tableExists(conn, "testtable"));
-    dbManager.logTableSchema(conn, "testtable");
-    assertFalse(dbManager.createTableIfMissing(conn, "testtable",
+    assertTrue(sqlDbManager.tableExists(conn, "testtable"));
+    sqlDbManager.logTableSchema(conn, "testtable");
+    assertFalse(sqlDbManager.createTableIfMissing(conn, "testtable",
 					       TABLE_CREATE_SQL));
   }
 
   /**
-   * Creates and starts the DbManager.
+   * Creates and starts the SqlDbManager.
    * 
    * @throws Exception
    */
   protected void startService() throws Exception {
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
   }
 
   /**
@@ -249,17 +249,17 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(0));
-    dbManager.setTargetDatabaseVersion(0);
-    dbManager.startService();
-    assertTrue(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(0));
+    sqlDbManager.setTargetDatabaseVersion(0);
+    sqlDbManager.startService();
+    assertTrue(sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, DbManager.OBSOLETE_METADATA_TABLE));
+    assertFalse(sqlDbManager.tableExists(conn, SqlDbManager.OBSOLETE_METADATA_TABLE));
   }
 
   /**
@@ -274,17 +274,17 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(1));
-    dbManager.setTargetDatabaseVersion(1);
-    dbManager.startService();
-    assertTrue(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(1));
+    sqlDbManager.setTargetDatabaseVersion(1);
+    sqlDbManager.startService();
+    assertTrue(sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertTrue(dbManager.tableExists(conn, DbManager.OBSOLETE_METADATA_TABLE));
+    assertTrue(sqlDbManager.tableExists(conn, SqlDbManager.OBSOLETE_METADATA_TABLE));
   }
 
   /**
@@ -299,13 +299,13 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(1));
-    dbManager.setTargetDatabaseVersion(0);
-    dbManager.startService();
-    assertFalse(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(1));
+    sqlDbManager.setTargetDatabaseVersion(0);
+    sqlDbManager.startService();
+    assertFalse(sqlDbManager.isReady());
   }
 
   /**
@@ -320,17 +320,17 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(0));
-    dbManager.setTargetDatabaseVersion(1);
-    dbManager.startService();
-    assertTrue(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(0));
+    sqlDbManager.setTargetDatabaseVersion(1);
+    sqlDbManager.startService();
+    assertTrue(sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertTrue(dbManager.tableExists(conn, DbManager.OBSOLETE_METADATA_TABLE));
+    assertTrue(sqlDbManager.tableExists(conn, SqlDbManager.OBSOLETE_METADATA_TABLE));
   }
 
   /**
@@ -345,18 +345,18 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(0));
-    dbManager.setTargetDatabaseVersion(2);
-    dbManager.startService();
-    assertTrue(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(0));
+    sqlDbManager.setTargetDatabaseVersion(2);
+    sqlDbManager.startService();
+    assertTrue(sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, DbManager.OBSOLETE_METADATA_TABLE));
-    assertTrue(dbManager.tableExists(conn, DbManager.VERSION_TABLE));
+    assertFalse(sqlDbManager.tableExists(conn, SqlDbManager.OBSOLETE_METADATA_TABLE));
+    assertTrue(sqlDbManager.tableExists(conn, SqlDbManager.VERSION_TABLE));
   }
 
   /**
@@ -371,18 +371,18 @@ public class TestDbManager extends LockssTestCase {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    assertTrue(dbManager.setUpDatabase(1));
-    dbManager.setTargetDatabaseVersion(2);
-    dbManager.startService();
-    assertTrue(dbManager.isReady());
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    assertTrue(sqlDbManager.setUpDatabase(1));
+    sqlDbManager.setTargetDatabaseVersion(2);
+    sqlDbManager.startService();
+    assertTrue(sqlDbManager.isReady());
 
-    Connection conn = dbManager.getConnection();
+    Connection conn = sqlDbManager.getConnection();
     assertNotNull(conn);
-    assertFalse(dbManager.tableExists(conn, DbManager.OBSOLETE_METADATA_TABLE));
-    assertTrue(dbManager.tableExists(conn, DbManager.VERSION_TABLE));
+    assertFalse(sqlDbManager.tableExists(conn, SqlDbManager.OBSOLETE_METADATA_TABLE));
+    assertTrue(sqlDbManager.tableExists(conn, SqlDbManager.VERSION_TABLE));
   }
 
   /**
@@ -401,17 +401,17 @@ public class TestDbManager extends LockssTestCase {
 
     String original = "Total characters = 21";
 
-    String truncated = DbManager.truncateVarchar(original, 30);
+    String truncated = SqlDbManager.truncateVarchar(original, 30);
     assertTrue(original.equals(truncated));
-    assertFalse(DbManager.isTruncatedVarchar(truncated));
+    assertFalse(SqlDbManager.isTruncatedVarchar(truncated));
 
-    truncated = DbManager.truncateVarchar(original, original.length());
+    truncated = SqlDbManager.truncateVarchar(original, original.length());
     assertTrue(original.equals(truncated));
-    assertFalse(DbManager.isTruncatedVarchar(truncated));
+    assertFalse(SqlDbManager.isTruncatedVarchar(truncated));
 
-    truncated = DbManager.truncateVarchar(original, original.length() - 3);
+    truncated = SqlDbManager.truncateVarchar(original, original.length() - 3);
     assertFalse(original.equals(truncated));
-    assertTrue(DbManager.isTruncatedVarchar(truncated));
+    assertTrue(SqlDbManager.isTruncatedVarchar(truncated));
     assertTrue(truncated.length() == original.length() - 3);
   }
 }

@@ -32,7 +32,7 @@
 
 package org.lockss.metadata;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +41,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.biblio.BibliographicItem;
 import org.lockss.util.Logger;
 import org.lockss.util.MetadataUtil;
@@ -345,15 +345,15 @@ final public class MetadataDatabaseUtil {
   static public List<BibliographicItem> getBibliographicItems() {
     List<BibliographicItem> items = new ArrayList<BibliographicItem>();
     Connection conn = null;
-    DbManager dbManager = null;
+    SqlDbManager sqlDbManager = null;
     PreparedStatement statement = null;
     ResultSet resultSet = null;
     
     try {
-      dbManager = getDaemon().getDbManager();
-      conn = dbManager.getConnection();
-      statement = dbManager.prepareStatement(conn, bibliographicItemsQuery);
-      resultSet = dbManager.executeQuery(statement);
+      sqlDbManager = getDaemon().getDbManager();
+      conn = sqlDbManager.getConnection();
+      statement = sqlDbManager.prepareStatement(conn, bibliographicItemsQuery);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       while (resultSet.next()) {
 	BibliographicItem item = new BibliographicDatabaseItem(resultSet);
@@ -364,9 +364,9 @@ final public class MetadataDatabaseUtil {
     } catch (SQLException ex) {
       log.warning(ex.getMessage());
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
     return items;
   }

@@ -45,7 +45,7 @@ import java.util.Map;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.TdbAu;
 import org.lockss.daemon.PluginException;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadata;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataField;
@@ -121,7 +121,7 @@ public class ReindexingTask extends StepTask {
   private ArticleMetadataBuffer articleMetadataInfoBuffer = null;
 
   // The database manager.
-  private final DbManager dbManager;
+  private final SqlDbManager sqlDbManager;
 
   // The metadata manager.
   private final MetadataManager mdManager;
@@ -162,7 +162,7 @@ public class ReindexingTask extends StepTask {
     this.auName = au.getName();
     this.auId = au.getAuId();
     this.auNoSubstance = AuUtil.getAuState(au).hasNoSubstance();
-    dbManager = LockssDaemon.getLockssDaemon().getDbManager();
+    sqlDbManager = LockssDaemon.getLockssDaemon().getDbManager();
     mdManager = LockssDaemon.getLockssDaemon().getMetadataManager();
 
     // The accumulator of article metadata.
@@ -675,7 +675,7 @@ public class ReindexingTask extends StepTask {
       try {
 	// Get a connection to the database.
 	message = "Cannot obtain a database connection";
-	conn = dbManager.getConnection();
+	conn = sqlDbManager.getConnection();
 
 	// Get the AU database identifier, if any.
 	message = "Cannot find the AU identifier for AU = " + auId
@@ -713,7 +713,7 @@ public class ReindexingTask extends StepTask {
       } catch (SQLException sqle) {
 	log.error(message + ": " + sqle);
       } finally {
-	DbManager.safeRollbackAndClose(conn);
+	SqlDbManager.safeRollbackAndClose(conn);
       }
       // Indicate that only new metadata after the last extraction is to be
       // included.
@@ -780,7 +780,7 @@ public class ReindexingTask extends StepTask {
 	    long removedArticleCount = 0L;
 
 	    // Get a connection to the database.
-	    conn = dbManager.getConnection();
+	    conn = sqlDbManager.getConnection();
 
 	    // Check whether the plugin version used to obtain the metadata
 	    // stored in the database is older than the current plugin version.
@@ -823,7 +823,7 @@ public class ReindexingTask extends StepTask {
 		+ " -- rescheduling", sqle);
 	    status = ReindexingStatus.Rescheduled;
 	  } finally {
-	    DbManager.safeRollbackAndClose(conn);
+	    SqlDbManager.safeRollbackAndClose(conn);
 	  }
 
 	  // Fall through if SQL exception occurred during update.
@@ -839,7 +839,7 @@ public class ReindexingTask extends StepTask {
 
 	  try {
 	    // Get a connection to the database.
-	    conn = dbManager.getConnection();
+	    conn = sqlDbManager.getConnection();
 
 	    // Attempt to move failed AU to end of pending list.
 	    mdManager.removeFromPendingAus(conn, au.getAuId());
@@ -856,7 +856,7 @@ public class ReindexingTask extends StepTask {
 	    log.warning("Error updating pending queue at FINISH" + " for "
 		+ status, sqle);
 	  } finally {
-	    DbManager.safeRollbackAndClose(conn);
+	    SqlDbManager.safeRollbackAndClose(conn);
 	  }
       }
 
@@ -892,7 +892,7 @@ public class ReindexingTask extends StepTask {
 
 	try {
 	  // Get a connection to the database.
-	  conn = dbManager.getConnection();
+	  conn = sqlDbManager.getConnection();
 
 	  // Schedule another task if available.
 	  mdManager.startReindexing(conn);
@@ -902,7 +902,7 @@ public class ReindexingTask extends StepTask {
 	} catch (SQLException sqle) {
 	  log.error("Cannot restart indexing", sqle);
 	} finally {
-	  DbManager.safeRollbackAndClose(conn);
+	  SqlDbManager.safeRollbackAndClose(conn);
 	}
       }
     }

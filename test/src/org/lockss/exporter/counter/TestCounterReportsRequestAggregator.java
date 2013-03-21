@@ -38,7 +38,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.File;
@@ -50,7 +50,7 @@ import java.util.Calendar;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.exporter.counter.CounterReportsRequestAggregator;
 import org.lockss.metadata.MetadataManager;
@@ -134,7 +134,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       + "and " + IS_PUBLISHER_INVOLVED_COLUMN + " = ?";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
   private MetadataManager metadataManager;
   private CounterReportsManager counterReportsManager;
 
@@ -163,10 +163,10 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager();
     theDaemon.setMetadataManager(metadataManager);
@@ -229,17 +229,17 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_BOOK_TYPE_AGGREGATED_TOTAL_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -261,17 +261,17 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_JOURNAL_TYPE_AGGREGATED_TOTAL_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -294,17 +294,17 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_JOURNAL_PUBYEAR_AGGREGATED_TOTAL_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -364,7 +364,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -406,7 +406,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
                                    FULL_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return publicationSeq;
@@ -423,7 +423,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -466,7 +466,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
                                    SECTION_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return publicationSeq;
@@ -487,17 +487,17 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_REQUEST_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -528,20 +528,20 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_BOOK_TYPE_AGGREGATED_MONTH_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setInt(1, requestYear);
       statement.setInt(2, requestMonth);
       statement.setBoolean(3, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -576,22 +576,22 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_TYPE_AGGREGATED_MONTH_BOOK_SELECT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setLong(1, publicationSeq);
       statement.setInt(2, requestYear);
       statement.setInt(3, requestMonth);
       statement.setBoolean(4, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	fullCount = resultSet.getInt(FULL_REQUESTS_COLUMN);
 	sectionCount = resultSet.getInt(SECTION_REQUESTS_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expectedFull, fullCount);
@@ -654,7 +654,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -700,7 +700,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
                                    PDF_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return publicationSeq;
@@ -731,20 +731,20 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_JOURNAL_TYPE_AGGREGATED_MONTH_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setInt(1, requestYear);
       statement.setInt(2, requestMonth);
       statement.setBoolean(3, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expected, count);
@@ -783,14 +783,14 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_TYPE_AGGREGATED_MONTH_JOURNAL_SELECT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setLong(1, publicationSeq);
       statement.setInt(2, requestYear);
       statement.setInt(3, requestMonth);
       statement.setBoolean(4, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	htmlCount = resultSet.getInt(HTML_REQUESTS_COLUMN);
@@ -798,8 +798,8 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 	totalCount = resultSet.getInt(TOTAL_REQUESTS_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expectedHtml, htmlCount);
@@ -837,22 +837,22 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
     String sql = SQL_QUERY_JOURNAL_PUBYEAR_AGGREGATED_MONTH_SELECT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setLong(1, publicationSeq);
       statement.setInt(2, requestYear);
       statement.setInt(3, requestMonth);
       statement.setBoolean(4, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	pubYear = resultSet.getString(PUBLICATION_YEAR_COLUMN);
 	count = resultSet.getInt(REQUESTS_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     assertEquals(expectedPublicationYear, pubYear);

@@ -32,7 +32,7 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.daemon;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +41,7 @@ import java.sql.SQLException;
 import java.util.*;
 import org.lockss.config.*;
 import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadata;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataField;
@@ -74,7 +74,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
   private PluginManager pluginManager;
   private OpenUrlResolver openUrlResolver;
   private boolean disableMetadataManager = false;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
 
   /** set of AUs reindexed by the MetadataManager */
   Set<String> ausReindexed = new HashSet<String>();
@@ -177,17 +177,17 @@ public class TestOpenUrlResolver extends LockssTestCase {
 
     ausReindexed.clear();
 
-    dbManager = new DbManager() {
+    sqlDbManager = new SqlDbManager() {
       public Connection getConnection() throws SQLException {
 	return super.getConnection();
       }
     };
 
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
 
     try {
-      dbManager.startService();
+      sqlDbManager.startService();
     } catch (IllegalArgumentException ex) {
       // ignored
     }
@@ -264,7 +264,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
   }
 
   public void createMetadata() throws Exception {
-    dbManager.startService();
+    sqlDbManager.startService();
 
     // reset set of reindexed aus
     ausReindexed.clear();
@@ -275,7 +275,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
     int expectedAuCount = 4;
     assertEquals(expectedAuCount, pluginManager.getAllAus().size());
     
-    Connection con = dbManager.getConnection();
+    Connection con = sqlDbManager.getConnection();
     
     long maxWaitTime = expectedAuCount * 20000; // 20 sec. per au
     int ausCount = waitForReindexing(expectedAuCount, maxWaitTime);
@@ -285,8 +285,8 @@ public class TestOpenUrlResolver extends LockssTestCase {
     assertEquals(0, metadataManager.getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
 
     String query = "select " + URL_COLUMN + " from " + URL_TABLE; 
-    PreparedStatement stmt = dbManager.prepareStatement(con, query);
-    ResultSet resultSet = dbManager.executeQuery(stmt);
+    PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
+    ResultSet resultSet = sqlDbManager.executeQuery(stmt);
     if (!resultSet.next()) {
       fail("No entries in " + URL_TABLE + " table");
     }

@@ -32,7 +32,7 @@
 package org.lockss.metadata;
 
 import static java.sql.Types.*;
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,7 +51,7 @@ import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
 import org.lockss.daemon.LockssRunnable;
 import org.lockss.daemon.status.StatusService;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.BaseArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
@@ -558,7 +558,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   private PluginManager pluginMgr = null;
 
   // The database manager.
-  private DbManager dbManager = null;
+  private SqlDbManager sqlDbManager = null;
 
   private PatternIntMap indexPriorityAuidMap;
 
@@ -587,13 +587,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug(DEBUG_HEADER + "Starting MetadataManager");
 
     pluginMgr = getDaemon().getPluginManager();
-    dbManager = getDaemon().getDbManager();
+    sqlDbManager = getDaemon().getDbManager();
 
     // Get a connection to the database.
     Connection conn;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
     } catch (SQLException ex) {
       log.error("Cannot connect to database", ex);
       return;
@@ -607,7 +607,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("Cannot get pending AUs and article counts", ex);
     }
 
-    DbManager.safeRollbackAndClose(conn);
+    SqlDbManager.safeRollbackAndClose(conn);
 
     StatusService statusServ = getDaemon().getStatusService();
     statusServ.registerStatusAccessor(METADATA_STATUS_TABLE_NAME,
@@ -623,7 +623,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * registers AuEvent handler and performs initial scan of AUs
    */
   void startStarter() {
-    MetadataStarter starter = new MetadataStarter(dbManager, this, pluginMgr);
+    MetadataStarter starter = new MetadataStarter(sqlDbManager, this, pluginMgr);
     new Thread(starter).start();
   }
 
@@ -641,11 +641,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     long rowCount = -1;
 
     PreparedStatement stmt =
-	dbManager.prepareStatement(conn, COUNT_ENABLED_PENDING_AUS_QUERY);
+	sqlDbManager.prepareStatement(conn, COUNT_ENABLED_PENDING_AUS_QUERY);
     ResultSet resultSet = null;
 
     try {
-      resultSet = dbManager.executeQuery(stmt);
+      resultSet = sqlDbManager.executeQuery(stmt);
       resultSet.next();
       rowCount = resultSet.getLong(1);
     } catch (SQLException sqle) {
@@ -653,8 +653,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + COUNT_ENABLED_PENDING_AUS_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(stmt);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(stmt);
     }
 
     log.debug3(DEBUG_HEADER + "rowCount = " + rowCount);
@@ -675,10 +675,10 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     long rowCount = -1;
 
     PreparedStatement stmt =
-	dbManager.prepareStatement(conn, COUNT_BIB_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, COUNT_BIB_ITEM_QUERY);
     ResultSet resultSet = null;
     try {
-      resultSet = dbManager.executeQuery(stmt);
+      resultSet = sqlDbManager.executeQuery(stmt);
       resultSet.next();
       rowCount = resultSet.getLong(1);
     } catch (SQLException sqle) {
@@ -686,8 +686,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + COUNT_BIB_ITEM_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(stmt);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(stmt);
     }
 
     log.debug3(DEBUG_HEADER + "rowCount = " + rowCount);
@@ -758,7 +758,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug(DEBUG_HEADER + "enabled: " + enable);
 
     // Start or stop reindexing if initialized.
-    if (dbManager != null) {
+    if (sqlDbManager != null) {
       if (!reindexingEnabled && enable) {
 	if (everEnabled) {
         // Start reindexing
@@ -851,13 +851,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     Connection conn = null;
     int count = 0;
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
       count = startReindexing(conn);
       conn.commit();
     } catch (SQLException sqle) {
       log.error("Cannot start reindexing", sqle);
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     log.debug3(DEBUG_HEADER + "count = " + count);
@@ -1025,9 +1025,9 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       ResultSet results = null;
 
       try {
-	selectPendingAus = dbManager.prepareStatement(conn,
+	selectPendingAus = sqlDbManager.prepareStatement(conn,
 	    FIND_PRIORITIZED_PENDING_AUS_QUERY);
-        results = dbManager.executeQuery(selectPendingAus);
+        results = sqlDbManager.executeQuery(selectPendingAus);
 
         while ((auIds.size() < maxAuIds) && results.next()) {
           String pluginId = results.getString(PLUGIN_ID_COLUMN);
@@ -1050,8 +1050,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	log.error("Cannot identify the enabled pending AUs", sqle);
 	log.error("SQL = '" + FIND_PRIORITIZED_PENDING_AUS_QUERY + "'.");
       } finally {
-        DbManager.safeCloseResultSet(results);
-        DbManager.safeCloseStatement(selectPendingAus);
+        SqlDbManager.safeCloseResultSet(results);
+        SqlDbManager.safeCloseStatement(selectPendingAus);
       }
     }
 
@@ -1136,7 +1136,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    */
   void removeFromPendingAus(Connection conn, String auId) throws SQLException {
     PreparedStatement deletePendingAu =
-	dbManager.prepareStatement(conn, DELETE_PENDING_AU_QUERY);
+	sqlDbManager.prepareStatement(conn, DELETE_PENDING_AU_QUERY);
 
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
@@ -1144,14 +1144,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   
       deletePendingAu.setString(1, pluginId);
       deletePendingAu.setString(2, auKey);
-      dbManager.executeUpdate(deletePendingAu);
+      sqlDbManager.executeUpdate(deletePendingAu);
     } catch (SQLException sqle) {
       log.error("Cannot remove AU from pending table", sqle);
       log.error("auId = '" + auId + "'.");
       log.error("SQL = '" + DELETE_PENDING_AU_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseStatement(deletePendingAu);
+      SqlDbManager.safeCloseStatement(deletePendingAu);
     }
 
     pendingAusCount = getEnabledPendingAusCount(conn);
@@ -1245,7 +1245,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug3(DEBUG_HEADER + "SQL = '" + DELETE_MD_ITEM_QUERY + "'.");
     int count = -1;
     PreparedStatement deletePendingAu =
-	dbManager.prepareStatement(conn, DELETE_MD_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, DELETE_MD_ITEM_QUERY);
 
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
@@ -1255,14 +1255,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
       deletePendingAu.setString(1, pluginId);
       deletePendingAu.setString(2, auKey);
-      count = dbManager.executeUpdate(deletePendingAu);
+      count = sqlDbManager.executeUpdate(deletePendingAu);
     } catch (SQLException sqle) {
       log.error("Cannot delete AU metadata items", sqle);
       log.error("auid = " + auId);
       log.error("SQL = '" + DELETE_MD_ITEM_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseStatement(deletePendingAu);
+      SqlDbManager.safeCloseStatement(deletePendingAu);
     }
 
     log.debug3(DEBUG_HEADER + "count = " + count);
@@ -1286,7 +1286,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug3(DEBUG_HEADER + "SQL = '" + DELETE_AU_QUERY + "'.");
     int count = -1;
     PreparedStatement deleteAu =
-	dbManager.prepareStatement(conn, DELETE_AU_QUERY);
+	sqlDbManager.prepareStatement(conn, DELETE_AU_QUERY);
 
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
@@ -1296,14 +1296,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
       deleteAu.setString(1, pluginId);
       deleteAu.setString(2, auKey);
-      count = dbManager.executeUpdate(deleteAu);
+      count = sqlDbManager.executeUpdate(deleteAu);
     } catch (SQLException sqle) {
       log.error("Cannot delete AU", sqle);
       log.error("auid = " + auId);
       log.error("SQL = '" + DELETE_AU_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseStatement(deleteAu);
+      SqlDbManager.safeCloseStatement(deleteAu);
     }
 
     log.debug3(DEBUG_HEADER + "count = " + count);
@@ -1466,18 +1466,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     ResultSet resultSet = null;
 
     PreparedStatement findPlugin =
-	dbManager.prepareStatement(conn, FIND_PLUGIN_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PLUGIN_QUERY);
 
     try {
       findPlugin.setString(1, pluginId);
 
-      resultSet = dbManager.executeQuery(findPlugin);
+      resultSet = sqlDbManager.executeQuery(findPlugin);
       if (resultSet.next()) {
 	pluginSeq = resultSet.getLong(PLUGIN_SEQ_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPlugin);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findPlugin);
     }
 
     log.debug3(DEBUG_HEADER + "pluginSeq = " + pluginSeq);
@@ -1502,14 +1502,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "addPlugin(): ";
     Long pluginSeq = null;
     ResultSet resultSet = null;
-    PreparedStatement insertPlugin = dbManager.prepareStatement(conn,
+    PreparedStatement insertPlugin = sqlDbManager.prepareStatement(conn,
 	INSERT_PLUGIN_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     try {
       // skip auto-increment key field #0
       insertPlugin.setString(1, pluginId);
       insertPlugin.setString(2, platform);
-      dbManager.executeUpdate(insertPlugin);
+      sqlDbManager.executeUpdate(insertPlugin);
       resultSet = insertPlugin.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -1520,8 +1520,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       pluginSeq = resultSet.getLong(1);
       log.debug3(DEBUG_HEADER + "Added pluginSeq = " + pluginSeq);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertPlugin);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertPlugin);
     }
 
     return pluginSeq;
@@ -1573,21 +1573,21 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   Long findAu(Connection conn, Long pluginSeq, String auKey)
       throws SQLException {
     final String DEBUG_HEADER = "findAu(): ";
-    PreparedStatement findAu = dbManager.prepareStatement(conn, FIND_AU_QUERY);
+    PreparedStatement findAu = sqlDbManager.prepareStatement(conn, FIND_AU_QUERY);
     ResultSet resultSet = null;
     Long auSeq = null;
 
     try {
       findAu.setLong(1, pluginSeq);
       findAu.setString(2, auKey);
-      resultSet = dbManager.executeQuery(findAu);
+      resultSet = sqlDbManager.executeQuery(findAu);
       if (resultSet.next()) {
 	auSeq = resultSet.getLong(AU_SEQ_COLUMN);
 	log.debug3(DEBUG_HEADER + "Found auSeq = " + auSeq);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findAu);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findAu);
     }
 
     return auSeq;
@@ -1609,7 +1609,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   private Long addAu(Connection conn, Long pluginSeq, String auKey)
       throws SQLException {
     final String DEBUG_HEADER = "addAu(): ";
-    PreparedStatement insertAu = dbManager.prepareStatement(conn,
+    PreparedStatement insertAu = sqlDbManager.prepareStatement(conn,
 	INSERT_AU_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     ResultSet resultSet = null;
@@ -1619,7 +1619,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       // skip auto-increment key field #0
       insertAu.setLong(1, pluginSeq);
       insertAu.setString(2, auKey);
-      dbManager.executeUpdate(insertAu);
+      sqlDbManager.executeUpdate(insertAu);
       resultSet = insertAu.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -1630,8 +1630,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       auSeq = resultSet.getLong(1);
       log.debug3(DEBUG_HEADER + "Added auSeq = " + auSeq);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertAu);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertAu);
     }
 
     return auSeq;
@@ -1654,19 +1654,19 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     Long auMdSeq = null;
     ResultSet resultSet = null;
 
-    PreparedStatement findAuMd = dbManager.prepareStatement(conn,
+    PreparedStatement findAuMd = sqlDbManager.prepareStatement(conn,
 	FIND_AU_MD_QUERY);
 
     try {
       findAuMd.setLong(1, auSeq);
 
-      resultSet = dbManager.executeQuery(findAuMd);
+      resultSet = sqlDbManager.executeQuery(findAuMd);
       if (resultSet.next()) {
 	auMdSeq = resultSet.getLong(AU_MD_SEQ_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findAuMd);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findAuMd);
     }
 
     log.debug3(DEBUG_HEADER + "auMdSeq = " + auMdSeq);
@@ -1692,7 +1692,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   public Long addAuMd(Connection conn, Long auSeq, int version,
       long extractTime) throws SQLException {
     final String DEBUG_HEADER = "addAuMd(): ";
-    PreparedStatement insertAuMd = dbManager.prepareStatement(conn,
+    PreparedStatement insertAuMd = sqlDbManager.prepareStatement(conn,
 	INSERT_AU_MD_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     ResultSet resultSet = null;
@@ -1703,7 +1703,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       insertAuMd.setLong(1, auSeq);
       insertAuMd.setShort(2, (short) version);
       insertAuMd.setLong(3, extractTime);
-      dbManager.executeUpdate(insertAuMd);
+      sqlDbManager.executeUpdate(insertAuMd);
       resultSet = insertAuMd.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -1714,8 +1714,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       auMdSeq = resultSet.getLong(1);
       log.debug3(DEBUG_HEADER + "Added auMdSeq = " + auMdSeq);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertAuMd);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertAuMd);
     }
 
     return auMdSeq;
@@ -1734,19 +1734,19 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   void updateAuLastExtractionTime(Connection conn, Long auMdSeq)
       throws SQLException {
     PreparedStatement updateAuLastExtractionTime =
-	dbManager.prepareStatement(conn, UPDATE_AU_MD_EXTRACT_TIME_QUERY);
+	sqlDbManager.prepareStatement(conn, UPDATE_AU_MD_EXTRACT_TIME_QUERY);
 
     try {
       updateAuLastExtractionTime.setLong(1, TimeBase.nowMs());
       updateAuLastExtractionTime.setLong(2, auMdSeq);
-      dbManager.executeUpdate(updateAuLastExtractionTime);
+      sqlDbManager.executeUpdate(updateAuLastExtractionTime);
     } catch (SQLException sqle) {
       log.error("Cannot update the AU extraction time", sqle);
       log.error("auMdSeq = '" + auMdSeq + "'.");
       log.error("SQL = '" + UPDATE_AU_MD_EXTRACT_TIME_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseStatement(updateAuLastExtractionTime);
+      SqlDbManager.safeCloseStatement(updateAuLastExtractionTime);
     }
 
     pendingAusCount = getEnabledPendingAusCount(conn);
@@ -1798,18 +1798,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     ResultSet resultSet = null;
 
     PreparedStatement findPublisher =
-	dbManager.prepareStatement(conn, FIND_PUBLISHER_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PUBLISHER_QUERY);
 
     try {
       findPublisher.setString(1, publisher);
 
-      resultSet = dbManager.executeQuery(findPublisher);
+      resultSet = sqlDbManager.executeQuery(findPublisher);
       if (resultSet.next()) {
 	publisherSeq = resultSet.getLong(PUBLISHER_SEQ_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPublisher);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findPublisher);
     }
 
     log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
@@ -1832,13 +1832,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "addPublisher(): ";
     Long publisherSeq = null;
     ResultSet resultSet = null;
-    PreparedStatement insertPublisher = dbManager.prepareStatement(conn,
+    PreparedStatement insertPublisher = sqlDbManager.prepareStatement(conn,
 	INSERT_PUBLISHER_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     try {
       // skip auto-increment key field #0
       insertPublisher.setString(1, publisher);
-      dbManager.executeUpdate(insertPublisher);
+      sqlDbManager.executeUpdate(insertPublisher);
       resultSet = insertPublisher.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -1849,8 +1849,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       publisherSeq = resultSet.getLong(1);
       log.debug3(DEBUG_HEADER + "Added publisherSeq = " + publisherSeq);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertPublisher);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertPublisher);
     }
 
     return publisherSeq;
@@ -2373,7 +2373,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
     ResultSet resultSet = null;
 
-    PreparedStatement insertPublication = dbManager.prepareStatement(conn,
+    PreparedStatement insertPublication = sqlDbManager.prepareStatement(conn,
 	INSERT_PUBLICATION_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     try {
@@ -2381,7 +2381,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       insertPublication.setLong(1, mdItemSeq);
       insertPublication.setLong(2, publisherSeq);
       insertPublication.setString(3, proprietaryId);
-      dbManager.executeUpdate(insertPublication);
+      sqlDbManager.executeUpdate(insertPublication);
       resultSet = insertPublication.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -2397,8 +2397,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + INSERT_PUBLICATION_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertPublication);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertPublication);
     }
 
     return publicationSeq;
@@ -2420,13 +2420,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "findPublicationMetadataItem(): ";
     Long mdItemSeq = null;
     PreparedStatement findMdItem =
-	dbManager.prepareStatement(conn, FIND_PUBLICATION_METADATA_ITEM_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PUBLICATION_METADATA_ITEM_QUERY);
     ResultSet resultSet = null;
 
     try {
       findMdItem.setLong(1, publicationSeq);
 
-      resultSet = dbManager.executeQuery(findMdItem);
+      resultSet = sqlDbManager.executeQuery(findMdItem);
       if (resultSet.next()) {
 	mdItemSeq = resultSet.getLong(MD_ITEM_SEQ_COLUMN);
 	log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
@@ -2437,8 +2437,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	log.error("SQL = '" + FIND_PUBLICATION_METADATA_ITEM_QUERY + "'.");
 	throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findMdItem);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findMdItem);
     }
 
     return mdItemSeq;
@@ -2467,7 +2467,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement insertIssn =
-	dbManager.prepareStatement(conn, INSERT_ISSN_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_ISSN_QUERY);
 
     try {
       if (pIssn != null) {
@@ -2475,7 +2475,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	insertIssn.setLong(1, mdItemSeq);
 	insertIssn.setString(2, pIssn);
 	insertIssn.setString(3, P_ISSN_TYPE);
-	int count = dbManager.executeUpdate(insertIssn);
+	int count = sqlDbManager.executeUpdate(insertIssn);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -2488,7 +2488,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	insertIssn.setLong(1, mdItemSeq);
 	insertIssn.setString(2, eIssn);
 	insertIssn.setString(3, E_ISSN_TYPE);
-	int count = dbManager.executeUpdate(insertIssn);
+	int count = sqlDbManager.executeUpdate(insertIssn);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -2496,7 +2496,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	}
       }
     } finally {
-      DbManager.safeCloseStatement(insertIssn);
+      SqlDbManager.safeCloseStatement(insertIssn);
     }
   }
 
@@ -2523,7 +2523,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement insertIsbn =
-	dbManager.prepareStatement(conn, INSERT_ISBN_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_ISBN_QUERY);
 
     try {
       if (pIsbn != null) {
@@ -2531,7 +2531,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	insertIsbn.setLong(1, mdItemSeq);
 	insertIsbn.setString(2, pIsbn);
 	insertIsbn.setString(3, P_ISBN_TYPE);
-	int count = dbManager.executeUpdate(insertIsbn);
+	int count = sqlDbManager.executeUpdate(insertIsbn);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -2544,7 +2544,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	insertIsbn.setLong(1, mdItemSeq);
 	insertIsbn.setString(2, eIsbn);
 	insertIsbn.setString(3, E_ISBN_TYPE);
-	int count = dbManager.executeUpdate(insertIsbn);
+	int count = sqlDbManager.executeUpdate(insertIsbn);
 
 	if (log.isDebug3()) {
 	  log.debug3(DEBUG_HEADER + "count = " + count);
@@ -2552,7 +2552,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	}
       }
     } finally {
-      DbManager.safeCloseStatement(insertIsbn);
+      SqlDbManager.safeCloseStatement(insertIsbn);
     }
   }
 
@@ -2612,13 +2612,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement findIssns =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_ISSN_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_ISSN_QUERY);
 
     ResultSet resultSet = null;
 
     try {
       findIssns.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findIssns);
+      resultSet = sqlDbManager.executeQuery(findIssns);
 
       while (resultSet.next()) {
 	if (pIssn != null && pIssn.equals(resultSet.getString(ISSN_COLUMN))
@@ -2632,8 +2632,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	}
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findIssns);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findIssns);
     }
 
     addMdItemIssns(conn, mdItemSeq, pIssn, eIssn);
@@ -2661,13 +2661,13 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement findIsbns =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_ISBN_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_ISBN_QUERY);
 
     ResultSet resultSet = null;
 
     try {
       findIsbns.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(findIsbns);
+      resultSet = sqlDbManager.executeQuery(findIsbns);
 
       while (resultSet.next()) {
 	if (pIsbn != null && pIsbn.equals(resultSet.getString(ISBN_COLUMN))
@@ -2681,8 +2681,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	}
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findIsbns);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findIsbns);
     }
 
     addMdItemIsbns(conn, mdItemSeq, pIsbn, eIsbn);
@@ -2824,7 +2824,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_ISSNS_QUERY
 	+ "'.");
     PreparedStatement findPublicationByIssns =
-	dbManager.prepareStatement(conn, FIND_PUBLICATION_BY_ISSNS_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PUBLICATION_BY_ISSNS_QUERY);
 
     try {
       findPublicationByIssns.setLong(1, publisherSeq);
@@ -2832,7 +2832,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       findPublicationByIssns.setString(3, eIssn);
       findPublicationByIssns.setString(4, mdItemType);
 
-      resultSet = dbManager.executeQuery(findPublicationByIssns);
+      resultSet = sqlDbManager.executeQuery(findPublicationByIssns);
       if (resultSet.next()) {
 	publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
 	log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
@@ -2845,8 +2845,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + FIND_PUBLICATION_BY_ISSNS_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPublicationByIssns);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findPublicationByIssns);
     }
 
     return publicationSeq;
@@ -2877,7 +2877,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_ISBNS_QUERY
 	+ "'.");
     PreparedStatement findPublicationByIsbns =
-	dbManager.prepareStatement(conn, FIND_PUBLICATION_BY_ISBNS_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PUBLICATION_BY_ISBNS_QUERY);
 
     try {
       findPublicationByIsbns.setLong(1, publisherSeq);
@@ -2885,7 +2885,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       findPublicationByIsbns.setString(3, eIsbn);
       findPublicationByIsbns.setString(4, mdItemType);
 
-      resultSet = dbManager.executeQuery(findPublicationByIsbns);
+      resultSet = sqlDbManager.executeQuery(findPublicationByIsbns);
       if (resultSet.next()) {
 	publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
 	log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
@@ -2898,8 +2898,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + FIND_PUBLICATION_BY_ISBNS_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPublicationByIsbns);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findPublicationByIsbns);
     }
 
     return publicationSeq;
@@ -2928,14 +2928,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_NAME_QUERY
     		+ "'.");
     PreparedStatement findPublicationByName =
-	dbManager.prepareStatement(conn, FIND_PUBLICATION_BY_NAME_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PUBLICATION_BY_NAME_QUERY);
 
     try {
       findPublicationByName.setLong(1, publisherSeq);
       findPublicationByName.setString(2, title);
       findPublicationByName.setString(3, mdItemType);
 
-      resultSet = dbManager.executeQuery(findPublicationByName);
+      resultSet = sqlDbManager.executeQuery(findPublicationByName);
       if (resultSet.next()) {
 	publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
 	log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
@@ -2947,8 +2947,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + FIND_PUBLICATION_BY_NAME_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPublicationByName);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findPublicationByName);
     }
 
     return publicationSeq;
@@ -2972,12 +2972,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     ResultSet resultSet = null;
 
     PreparedStatement findMdItemType =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_TYPE_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_TYPE_QUERY);
 
     try {
       findMdItemType.setString(1, typeName);
 
-      resultSet = dbManager.executeQuery(findMdItemType);
+      resultSet = sqlDbManager.executeQuery(findMdItemType);
       if (resultSet.next()) {
 	mdItemTypeSeq = resultSet.getLong(MD_ITEM_TYPE_SEQ_COLUMN);
       }
@@ -2987,8 +2987,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + FIND_MD_ITEM_TYPE_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findMdItemType);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(findMdItemType);
     }
 
     log.debug3(DEBUG_HEADER + "mdItemTypeSeq = " + mdItemTypeSeq);
@@ -3018,7 +3018,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       Long mdItemTypeSeq, Long auMdSeq, String date,
       String coverage) throws SQLException {
     final String DEBUG_HEADER = "addMdItem(): ";
-    PreparedStatement insertMdItem = dbManager.prepareStatement(conn,
+    PreparedStatement insertMdItem = sqlDbManager.prepareStatement(conn,
 	INSERT_MD_ITEM_QUERY, Statement.RETURN_GENERATED_KEYS);
 
     ResultSet resultSet = null;
@@ -3039,7 +3039,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       }
       insertMdItem.setString(4, date);
       insertMdItem.setString(5, coverage);
-      dbManager.executeUpdate(insertMdItem);
+      sqlDbManager.executeUpdate(insertMdItem);
       resultSet = insertMdItem.getGeneratedKeys();
 
       if (!resultSet.next()) {
@@ -3054,8 +3054,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("SQL = '" + INSERT_MD_ITEM_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertMdItem);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(insertMdItem);
     }
 
     return mdItemSeq;
@@ -3078,12 +3078,12 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "getMdItemNames(): ";
     Map<String, String> names = new HashMap<String, String>();
     PreparedStatement getNames =
-	dbManager.prepareStatement(conn, FIND_MD_ITEM_NAME_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_MD_ITEM_NAME_QUERY);
     ResultSet resultSet = null;
 
     try {
       getNames.setLong(1, mdItemSeq);
-      resultSet = dbManager.executeQuery(getNames);
+      resultSet = sqlDbManager.executeQuery(getNames);
       while (resultSet.next()) {
 	names.put(resultSet.getString(NAME_COLUMN),
 		  resultSet.getString(NAME_TYPE_COLUMN));
@@ -3092,8 +3092,8 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	    + resultSet.getString(NAME_TYPE_COLUMN) + "'.");
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(getNames);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(getNames);
     }
 
     return names;
@@ -3122,20 +3122,20 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement insertMdItemName =
-	dbManager.prepareStatement(conn, INSERT_MD_ITEM_NAME_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_MD_ITEM_NAME_QUERY);
 
     try {
       insertMdItemName.setLong(1, mdItemSeq);
       insertMdItemName.setString(2, name);
       insertMdItemName.setString(3, type);
-      int count = dbManager.executeUpdate(insertMdItemName);
+      int count = sqlDbManager.executeUpdate(insertMdItemName);
 
       if (log.isDebug3()) {
 	log.debug3(DEBUG_HEADER + "count = " + count);
 	log.debug3(DEBUG_HEADER + "Added metadata item name = " + name);
       }
     } finally {
-      DbManager.safeCloseStatement(insertMdItemName);
+      SqlDbManager.safeCloseStatement(insertMdItemName);
     }
   }
 
@@ -3157,20 +3157,20 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       String url) throws SQLException {
     final String DEBUG_HEADER = "addMdItemUrl(): ";
     PreparedStatement insertMdItemUrl =
-	dbManager.prepareStatement(conn, INSERT_URL_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_URL_QUERY);
 
     try {
       insertMdItemUrl.setLong(1, mdItemSeq);
       insertMdItemUrl.setString(2, feature);
       insertMdItemUrl.setString(3, url);
-      int count = dbManager.executeUpdate(insertMdItemUrl);
+      int count = sqlDbManager.executeUpdate(insertMdItemUrl);
 
       if (log.isDebug3()) {
 	log.debug3(DEBUG_HEADER + "count = " + count);
 	log.debug3(DEBUG_HEADER + "Added URL = " + url);
       }
     } finally {
-      DbManager.safeCloseStatement(insertMdItemUrl);
+      SqlDbManager.safeCloseStatement(insertMdItemUrl);
     }
   }
 
@@ -3195,19 +3195,19 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     }
 
     PreparedStatement insertMdItemDoi =
-	dbManager.prepareStatement(conn, INSERT_DOI_QUERY);
+	sqlDbManager.prepareStatement(conn, INSERT_DOI_QUERY);
 
     try {
       insertMdItemDoi.setLong(1, mdItemSeq);
       insertMdItemDoi.setString(2, doi);
-      int count = dbManager.executeUpdate(insertMdItemDoi);
+      int count = sqlDbManager.executeUpdate(insertMdItemDoi);
 
       if (log.isDebug3()) {
 	log.debug3(DEBUG_HEADER + "count = " + count);
 	log.debug3(DEBUG_HEADER + "Added DOI = " + doi);
       }
     } finally {
-      DbManager.safeCloseStatement(insertMdItemDoi);
+      SqlDbManager.safeCloseStatement(insertMdItemDoi);
     }
   }
 
@@ -3270,7 +3270,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         log.debug2(DEBUG_HEADER + "Adding AU to reindex: " + au.getName());
         
         if (pendingAusBatchConnection == null) {
-          pendingAusBatchConnection = dbManager.getConnection();
+          pendingAusBatchConnection = sqlDbManager.getConnection();
 
           if (pendingAusBatchConnection == null) {
             log.error("Cannot connect to database"
@@ -3309,7 +3309,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         return false;
       } finally {
 	if (!inBatch) {
-	  DbManager.safeRollbackAndClose(pendingAusBatchConnection);
+	  SqlDbManager.safeRollbackAndClose(pendingAusBatchConnection);
 	  pendingAusBatchConnection = null;
 	}
       }
@@ -3329,7 +3329,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   private void removeDisabledFromPendingAus(Connection conn, String auId)
       throws SQLException {
     PreparedStatement deletePendingAu =
-	dbManager.prepareStatement(conn, DELETE_DISABLED_PENDING_AU_QUERY);
+	sqlDbManager.prepareStatement(conn, DELETE_DISABLED_PENDING_AU_QUERY);
 
     try {
       String pluginId = PluginManager.pluginIdFromAuId(auId);
@@ -3337,14 +3337,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   
       deletePendingAu.setString(1, pluginId);
       deletePendingAu.setString(2, auKey);
-      dbManager.executeUpdate(deletePendingAu);
+      sqlDbManager.executeUpdate(deletePendingAu);
     } catch (SQLException sqle) {
       log.error("Cannot remove disabled AU from pending table", sqle);
       log.error("auId = '" + auId + "'.");
       log.error("SQL = '" + DELETE_DISABLED_PENDING_AU_QUERY + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseStatement(deletePendingAu);
+      SqlDbManager.safeCloseStatement(deletePendingAu);
     }
 
     pendingAusCount = getEnabledPendingAusCount(conn);
@@ -3389,7 +3389,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
       try {
         log.debug2(DEBUG_HEADER + "Disabing indexing for AU " + au.getName());
-        conn = dbManager.getConnection();
+        conn = sqlDbManager.getConnection();
 
         if (conn == null) {
           log.error("Cannot connect to database"
@@ -3409,14 +3409,14 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         removeFromPendingAus(conn, auId);
 
         PreparedStatement insertDisabledPendingAu =
-            dbManager.prepareStatement(conn, INSERT_DISABLED_PENDING_AU_QUERY);
+            sqlDbManager.prepareStatement(conn, INSERT_DISABLED_PENDING_AU_QUERY);
 
         String pluginId = PluginManager.pluginIdFromAuId(auId);
         String auKey = PluginManager.auKeyFromAuId(auId);
 
         insertDisabledPendingAu.setString(1, pluginId);
         insertDisabledPendingAu.setString(2, auKey);
-        int count = dbManager.executeUpdate(insertDisabledPendingAu);
+        int count = sqlDbManager.executeUpdate(insertDisabledPendingAu);
   	log.debug2(DEBUG_HEADER + "count = " + count);
         conn.commit();
 
@@ -3425,7 +3425,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         log.error("Cannot disable AU: " + au.getName(), ex);
         return false;
       } finally {
-        DbManager.safeRollbackAndClose(conn);
+        SqlDbManager.safeRollbackAndClose(conn);
       }
     }
   }
@@ -3462,11 +3462,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       boolean inBatch) throws SQLException {
     final String DEBUG_HEADER = "addToPendingAus(): ";
     PreparedStatement selectPendingAu =
-	dbManager.prepareStatement(conn, FIND_PENDING_AU_QUERY);
+	sqlDbManager.prepareStatement(conn, FIND_PENDING_AU_QUERY);
 
     if (insertPendingAuBatchStatement == null) {
       insertPendingAuBatchStatement =
-	  dbManager.prepareStatement(conn, INSERT_ENABLED_PENDING_AU_QUERY);
+	  sqlDbManager.prepareStatement(conn, INSERT_ENABLED_PENDING_AU_QUERY);
     }
 
     ResultSet results = null;
@@ -3488,7 +3488,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
           // Find the AU in the table.
           selectPendingAu.setString(1, pluginId);
           selectPendingAu.setString(2, auKey);
-          results = dbManager.executeQuery(selectPendingAu);
+          results = sqlDbManager.executeQuery(selectPendingAu);
 
           if (!results.next()) {
             // Only insert if entry does not exist.
@@ -3515,7 +3515,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
                        + " to pending list becuase it is already on the list");
           }
 
-          DbManager.safeCloseResultSet(results);
+          SqlDbManager.safeCloseResultSet(results);
 	}
       }
 
@@ -3530,16 +3530,16 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 	    + pendingAuBatchCurrentSize);
       }
     } finally {
-      DbManager.safeCloseResultSet(results);
+      SqlDbManager.safeCloseResultSet(results);
 
       // Check whether there are no more AUs to be batched.
       if (!inBatch) {
 	// Yes: Perform the insertion of all the AUs in the batch.
-	DbManager.safeCloseStatement(insertPendingAuBatchStatement);
+	SqlDbManager.safeCloseStatement(insertPendingAuBatchStatement);
 	insertPendingAuBatchStatement = null;
       }
 
-      DbManager.safeCloseStatement(selectPendingAu);
+      SqlDbManager.safeCloseStatement(selectPendingAu);
     }
 
     pendingAusCount = getEnabledPendingAusCount(conn);
@@ -3609,7 +3609,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       try {
         log.debug2(DEBUG_HEADER + "Removing au to reindex: " + au.getName());
         // add pending AU
-        conn = dbManager.getConnection();
+        conn = sqlDbManager.getConnection();
 
         if (conn == null) {
           log.error("Cannot connect to database"
@@ -3628,7 +3628,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         log.error("Cannot remove au to pending AUs: " + au.getName(), ex);
         return false;
       } finally {
-        DbManager.safeRollbackAndClose(conn);
+        SqlDbManager.safeRollbackAndClose(conn);
       }
     }
   }
@@ -3724,7 +3724,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
     try {
       // Get a connection to the database.
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Get the version.
       version = getAuMetadataVersion(conn, au);
@@ -3732,7 +3732,7 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.error("Cannot get AU metadata version - Using " + version + ": "
 	  + sqle);
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     return version;
@@ -3766,18 +3766,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.debug2(DEBUG_HEADER + "auKey = " + auKey);
 
       selectMetadataVersion =
-	  dbManager.prepareStatement(conn, FIND_AU_METADATA_VERSION_QUERY);
+	  sqlDbManager.prepareStatement(conn, FIND_AU_METADATA_VERSION_QUERY);
       selectMetadataVersion.setString(1, pluginId);
       selectMetadataVersion.setString(2, auKey);
-      resultSet = dbManager.executeQuery(selectMetadataVersion);
+      resultSet = sqlDbManager.executeQuery(selectMetadataVersion);
 
       if (resultSet.next()) {
 	version = resultSet.getShort(MD_VERSION_COLUMN);
 	log.debug2(DEBUG_HEADER + "version = " + version);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(selectMetadataVersion);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(selectMetadataVersion);
     }
 
     return version;
@@ -3832,18 +3832,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
     ResultSet resultSet = null;
 
     try {
-      selectLastExtractionTime = dbManager.prepareStatement(conn,
+      selectLastExtractionTime = sqlDbManager.prepareStatement(conn,
 	  FIND_AU_MD_EXTRACT_TIME_BY_AUSEQ_QUERY);
       selectLastExtractionTime.setLong(1, auSeq);
-      resultSet = dbManager.executeQuery(selectLastExtractionTime);
+      resultSet = sqlDbManager.executeQuery(selectLastExtractionTime);
 
       if (resultSet.next()) {
 	timestamp = resultSet.getLong(EXTRACT_TIME_COLUMN);
 	log.debug2(DEBUG_HEADER + "timestamp = " + timestamp);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(selectLastExtractionTime);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(selectLastExtractionTime);
     }
 
     return timestamp;
@@ -3904,18 +3904,18 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       log.debug2(DEBUG_HEADER + "auKey = " + auKey);
 
       selectLastExtractionTime =
-	  dbManager.prepareStatement(conn, FIND_AU_MD_EXTRACT_TIME_BY_AU_QUERY);
+	  sqlDbManager.prepareStatement(conn, FIND_AU_MD_EXTRACT_TIME_BY_AU_QUERY);
       selectLastExtractionTime.setString(1, pluginId);
       selectLastExtractionTime.setString(2, auKey);
-      resultSet = dbManager.executeQuery(selectLastExtractionTime);
+      resultSet = sqlDbManager.executeQuery(selectLastExtractionTime);
 
       if (resultSet.next()) {
 	timestamp = resultSet.getLong(EXTRACT_TIME_COLUMN);
 	log.debug2(DEBUG_HEADER + "timestamp = " + timestamp);
       }
     } finally {
-	DbManager.safeCloseResultSet(resultSet);
-	DbManager.safeCloseStatement(selectLastExtractionTime);
+	SqlDbManager.safeCloseResultSet(resultSet);
+	SqlDbManager.safeCloseStatement(selectLastExtractionTime);
     }
 
     return timestamp;
@@ -3924,9 +3924,9 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   /**
    * Utility method to provide the database manager.
    * 
-   * @return a DbManager with the database manager.
+   * @return a SqlDbManager with the database manager.
    */
-  DbManager getDbManager() {
-    return dbManager;
+  SqlDbManager getDbManager() {
+    return sqlDbManager;
   }
 }

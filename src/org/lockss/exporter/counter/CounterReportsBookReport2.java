@@ -35,7 +35,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.exporter.counter.CounterReportsManager.*;
 import static org.lockss.metadata.MetadataManager.*;
 import java.sql.Connection;
@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 
@@ -263,8 +263,8 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       log.error("SQL = '" + sql + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "rows.size() = " + rows.size() + ".");
@@ -429,8 +429,8 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       log.error("SQL = '" + sql + "'.");
       throw cre;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "Done.");

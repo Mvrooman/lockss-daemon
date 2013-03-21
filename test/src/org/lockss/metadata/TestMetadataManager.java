@@ -31,7 +31,7 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.metadata;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.*;
 import java.io.*;
 import java.sql.Connection;
@@ -41,7 +41,7 @@ import java.sql.Statement;
 import java.util.*;
 import org.lockss.config.*;
 import org.lockss.daemon.PluginException;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadata;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataField;
@@ -65,7 +65,7 @@ public class TestMetadataManager extends LockssTestCase {
   private MetadataManager metadataManager;
   private PluginManager pluginManager;
   private String tempDirPath;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
 
   /** set of AuIds of AUs reindexed by the MetadataManager */
   Set<String> ausReindexed = new HashSet<String>();
@@ -116,10 +116,10 @@ public class TestMetadataManager extends LockssTestCase {
     // reset set of reindexed aus
     ausReindexed.clear();
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager() {
       /**
@@ -226,7 +226,7 @@ public class TestMetadataManager extends LockssTestCase {
   }
 
   private void runCreateMetadataTest() throws Exception {
-    Connection con = dbManager.getConnection();
+    Connection con = sqlDbManager.getConnection();
     
     assertEquals(0, metadataManager.activeReindexingTasks.size());
     assertEquals(0, metadataManager.
@@ -235,8 +235,8 @@ public class TestMetadataManager extends LockssTestCase {
     // check distinct access URLs
     String query =           
       "select distinct " + URL_COLUMN + " from " + URL_TABLE;
-    PreparedStatement stmt = dbManager.prepareStatement(con, query);
-    ResultSet resultSet = dbManager.executeQuery(stmt);
+    PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
+    ResultSet resultSet = sqlDbManager.executeQuery(stmt);
     int count = 0;
     while (resultSet.next()) {
       count++;
@@ -248,8 +248,8 @@ public class TestMetadataManager extends LockssTestCase {
     query =           
         "select distinct " + PLUGIN_ID_COLUMN 
         + " from " + PLUGIN_TABLE; 
-    stmt = dbManager.prepareStatement(con, query);
-    resultSet = dbManager.executeQuery(stmt);
+    stmt = sqlDbManager.prepareStatement(con, query);
+    resultSet = sqlDbManager.executeQuery(stmt);
     Set<String> results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(PLUGIN_ID_COLUMN));
@@ -268,8 +268,8 @@ public class TestMetadataManager extends LockssTestCase {
     // check DOIs
     query =           
         "select distinct " + DOI_COLUMN + " from " + DOI_TABLE; 
-    stmt = dbManager.prepareStatement(con, query);
-    resultSet = dbManager.executeQuery(stmt);
+    stmt = sqlDbManager.prepareStatement(con, query);
+    resultSet = sqlDbManager.executeQuery(stmt);
     results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(DOI_COLUMN));
@@ -279,8 +279,8 @@ public class TestMetadataManager extends LockssTestCase {
     // check ISSNs
     query = "select " + ISSN_COLUMN + "," + ISSN_TYPE_COLUMN
 	+ " from " + ISSN_TABLE;
-    stmt = dbManager.prepareStatement(con, query);
-    resultSet = dbManager.executeQuery(stmt);
+    stmt = sqlDbManager.prepareStatement(con, query);
+    resultSet = sqlDbManager.executeQuery(stmt);
     results = new HashSet<String>();
     while (resultSet.next()) {
       if (P_ISSN_TYPE.equals(resultSet.getString(ISSN_TYPE_COLUMN))) {
@@ -304,8 +304,8 @@ public class TestMetadataManager extends LockssTestCase {
     // check ISBNs
     query = "select " + ISBN_COLUMN + "," + ISBN_TYPE_COLUMN
 	+ " from " + ISBN_TABLE;
-    stmt = dbManager.prepareStatement(con, query);
-    resultSet = dbManager.executeQuery(stmt);
+    stmt = sqlDbManager.prepareStatement(con, query);
+    resultSet = sqlDbManager.executeQuery(stmt);
     results = new HashSet<String>();
     while (resultSet.next()) {
       if (P_ISBN_TYPE.equals(resultSet.getString(ISBN_TYPE_COLUMN))) {
@@ -350,12 +350,12 @@ public class TestMetadataManager extends LockssTestCase {
     // Add one AU.
     metadataManager.addAuToReindex(sau0, true);
 
-    Connection con = dbManager.getConnection();
+    Connection con = sqlDbManager.getConnection();
     
     // Check that nothing has been added yet.
     String query = "select count(*) from " + PENDING_AU_TABLE;
-    PreparedStatement stmt = dbManager.prepareStatement(con, query);
-    ResultSet resultSet = dbManager.executeQuery(stmt);
+    PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
+    ResultSet resultSet = sqlDbManager.executeQuery(stmt);
     int count = -1;
     if (resultSet.next()) {
       count = resultSet.getInt(1);
@@ -366,7 +366,7 @@ public class TestMetadataManager extends LockssTestCase {
     metadataManager.addAuToReindex(sau1, true);
     
     // Check that one batch has been executed.
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     count = -1;
     if (resultSet.next()) {
       count = resultSet.getInt(1);
@@ -377,7 +377,7 @@ public class TestMetadataManager extends LockssTestCase {
     metadataManager.addAuToReindex(sau2, true);
 
     // Check that the third AU has not been added yet.
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     count = -1;
     if (resultSet.next()) {
       count = resultSet.getInt(1);
@@ -388,7 +388,7 @@ public class TestMetadataManager extends LockssTestCase {
     metadataManager.addAuToReindex(sau3, true);
     
     // Check that the second batch has been executed.
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     count = -1;
     if (resultSet.next()) {
       count = resultSet.getInt(1);
@@ -399,7 +399,7 @@ public class TestMetadataManager extends LockssTestCase {
     metadataManager.addAuToReindex(sau4, false);
 
     // Check that all the AUs have been added.
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     count = -1;
     if (resultSet.next()) {
       count = resultSet.getInt(1);
@@ -408,8 +408,8 @@ public class TestMetadataManager extends LockssTestCase {
 
     // Clear the table of pending AUs.
     query = "delete from " + PENDING_AU_TABLE;
-    stmt = dbManager.prepareStatement(con, query);
-    count = dbManager.executeUpdate(stmt);
+    stmt = sqlDbManager.prepareStatement(con, query);
+    count = sqlDbManager.executeUpdate(stmt);
     assertEquals(5, count);
 
     con.commit();
@@ -419,7 +419,7 @@ public class TestMetadataManager extends LockssTestCase {
   }
 
   private void runModifyMetadataTest() throws Exception {
-    Connection con = dbManager.getConnection();
+    Connection con = sqlDbManager.getConnection();
     
     // check unique plugin IDs
     String query = "select distinct u." + URL_COLUMN 
@@ -438,8 +438,8 @@ public class TestMetadataManager extends LockssTestCase {
         + " = m." + AU_MD_SEQ_COLUMN
         + " and m." + MD_ITEM_SEQ_COLUMN 
         + " = u." + MD_ITEM_SEQ_COLUMN;
-    PreparedStatement stmt = dbManager.prepareStatement(con, query);
-    ResultSet resultSet = dbManager.executeQuery(stmt);
+    PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
+    ResultSet resultSet = sqlDbManager.executeQuery(stmt);
     Set<String> results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(1));
@@ -469,7 +469,7 @@ public class TestMetadataManager extends LockssTestCase {
     assertEquals(ausCount, expectedAuCount);
 
     // ensure AU contains as many metadata table entries as before
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(1));
@@ -478,7 +478,7 @@ public class TestMetadataManager extends LockssTestCase {
   }
   
   private void runDeleteMetadataTest() throws Exception {
-    Connection con = dbManager.getConnection();
+    Connection con = sqlDbManager.getConnection();
     
     // check unique plugin IDs
     String query = "select distinct u." + URL_COLUMN 
@@ -497,8 +497,8 @@ public class TestMetadataManager extends LockssTestCase {
         + " = m." + AU_MD_SEQ_COLUMN
         + " and m." + MD_ITEM_SEQ_COLUMN 
         + " = u." + MD_ITEM_SEQ_COLUMN;
-    PreparedStatement stmt = dbManager.prepareStatement(con, query);
-    ResultSet resultSet = dbManager.executeQuery(stmt);
+    PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
+    ResultSet resultSet = sqlDbManager.executeQuery(stmt);
     Set<String> results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(1));
@@ -517,7 +517,7 @@ public class TestMetadataManager extends LockssTestCase {
     assertEquals(21, articleCount);
 
     // ensure metadata table entries for the AU are deleted
-    resultSet = dbManager.executeQuery(stmt);
+    resultSet = sqlDbManager.executeQuery(stmt);
     results = new HashSet<String>();
     while (resultSet.next()) {
       results.add(resultSet.getString(1));

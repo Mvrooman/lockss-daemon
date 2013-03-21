@@ -38,7 +38,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.BufferedReader;
@@ -52,7 +52,7 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsJournalReport5L;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.metadata.MetadataManager;
@@ -81,7 +81,7 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
       + PUBLICATION_TABLE + " where publication_seq > 2";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
+  private SqlDbManager sqlDbManager;
   private MetadataManager metadataManager;
   private CounterReportsManager counterReportsManager;
 
@@ -106,10 +106,10 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
     metadataManager = new MetadataManager();
     theDaemon.setMetadataManager(metadataManager);
@@ -314,7 +314,7 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
@@ -369,7 +369,7 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
                                    PDF_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return publicationSeq;
@@ -567,25 +567,25 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
     PreparedStatement statement = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       statement =
-	  dbManager.prepareStatement(conn, SQL_QUERY_PUBYEAR_REQUEST_DELETE);
-      dbManager.executeUpdate(statement);
-      DbManager.safeCloseStatement(statement);
+	  sqlDbManager.prepareStatement(conn, SQL_QUERY_PUBYEAR_REQUEST_DELETE);
+      sqlDbManager.executeUpdate(statement);
+      SqlDbManager.safeCloseStatement(statement);
 
       statement =
-	  dbManager.prepareStatement(conn, SQL_QUERY_TYPE_REQUEST_DELETE);
-      dbManager.executeUpdate(statement);
-      DbManager.safeCloseStatement(statement);
+	  sqlDbManager.prepareStatement(conn, SQL_QUERY_TYPE_REQUEST_DELETE);
+      sqlDbManager.executeUpdate(statement);
+      SqlDbManager.safeCloseStatement(statement);
 
-      statement = dbManager.prepareStatement(conn, SQL_QUERY_JOURNAL_DELETE);
-      dbManager.executeUpdate(statement);
+      statement = sqlDbManager.prepareStatement(conn, SQL_QUERY_JOURNAL_DELETE);
+      sqlDbManager.executeUpdate(statement);
 
       conn.commit();
     } finally {
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
   }
 }

@@ -43,7 +43,7 @@ import org.lockss.config.*;
 import org.lockss.crawler.CrawlManager;
 import org.lockss.daemon.*;
 import org.lockss.daemon.status.StatusService;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.hasher.HashService;
 import org.lockss.mail.MailService;
@@ -95,7 +95,7 @@ public class MockLockssDaemon extends LockssDaemon {
   RemoteApi remoteApi = null;
   IcpManager icpManager = null;
   ClockssParams clockssParams = null;
-  DbManager dbManager = null;
+  SqlDbManager sqlDbManager = null;
   CounterReportsManager counterReportsManager = null;
   Cron cron = null;
 
@@ -147,7 +147,7 @@ public class MockLockssDaemon extends LockssDaemon {
     identityManager = null;
     statusService = null;
     icpManager = null;
-    dbManager = null;
+    sqlDbManager = null;
     counterReportsManager = null;
     cron = null;
 
@@ -504,14 +504,14 @@ public class MockLockssDaemon extends LockssDaemon {
 
   /**
    * return the database manager instance
-   * @return the DbManager
+   * @return the SqlDbManager
    */
-  public DbManager getDbManager() {
-    if (dbManager == null) {
-      dbManager = (DbManager)newManager(LockssDaemon.DB_MANAGER);
-      managerMap.put(LockssDaemon.DB_MANAGER, dbManager);
+  public SqlDbManager getDbManager() {
+    if (sqlDbManager == null) {
+      sqlDbManager = (SqlDbManager)newManager(LockssDaemon.DB_MANAGER);
+      managerMap.put(LockssDaemon.DB_MANAGER, sqlDbManager);
     }
-    return dbManager;
+    return sqlDbManager;
   }
 
   /**
@@ -780,12 +780,12 @@ public class MockLockssDaemon extends LockssDaemon {
   }
 
   /**
-   * Set the DbManager
+   * Set the SqlDbManager
    * @param dbMan the new manager
    */
-  public void setDbManager(DbManager dbMan) {
-    dbManager = dbMan;
-    managerMap.put(LockssDaemon.DB_MANAGER, dbManager);
+  public void setDbManager(SqlDbManager dbMan) {
+    sqlDbManager = dbMan;
+    managerMap.put(LockssDaemon.DB_MANAGER, sqlDbManager);
   }
 
   /**

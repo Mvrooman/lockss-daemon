@@ -31,7 +31,7 @@
  */
 package org.lockss.metadata;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.lockss.app.LockssDaemon;
 import org.lockss.daemon.LockssRunnable;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuEvent;
 import org.lockss.plugin.AuEventHandler;
@@ -54,25 +54,25 @@ import org.lockss.util.Logger;
 public class MetadataStarter extends LockssRunnable {
   private static Logger log = Logger.getLogger(MetadataStarter.class);
 
-  private final DbManager dbManager;
+  private final SqlDbManager sqlDbManager;
   private final MetadataManager mdManager;
   private final PluginManager pluginManager;
 
   /**
    * Constructor.
    * 
-   * @param dbManager
-   *          A DbManager with the database manager.
+   * @param sqlDbManager
+   *          A SqlDbManager with the database manager.
    * @param mdManager
    *          A MetadataManager with the metadata manager.
    * @param pluginManager
    *          A PluginManager with the plugin manager.
    */
-  public MetadataStarter(DbManager dbManager, MetadataManager mdManager,
+  public MetadataStarter(SqlDbManager sqlDbManager, MetadataManager mdManager,
       PluginManager pluginManager) {
     super("MetadataStarter");
 
-    this.dbManager = dbManager;
+    this.sqlDbManager = sqlDbManager;
     this.mdManager = mdManager;
     this.pluginManager = pluginManager;
   }
@@ -101,7 +101,7 @@ public class MetadataStarter extends LockssRunnable {
     Connection conn;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
     } catch (SQLException sqle) {
       log.error("Cannot connect to database -- extraction not started", sqle);
       return;
@@ -152,7 +152,7 @@ public class MetadataStarter extends LockssRunnable {
     } catch (SQLException sqle) {
       log.error("Cannot add to pending AUs table \"" + PENDING_AU_TABLE + "\"",
 		sqle);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
       return;
     }
 
@@ -163,7 +163,7 @@ public class MetadataStarter extends LockssRunnable {
     } catch (SQLException sqle) {
       log.error("Cannot start reindexing AUs", sqle);
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
   }
 

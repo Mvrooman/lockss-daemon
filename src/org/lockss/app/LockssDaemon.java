@@ -36,7 +36,7 @@ import org.apache.commons.lang.SystemUtils;
 import org.lockss.util.*;
 import org.lockss.alert.*;
 import org.lockss.daemon.*;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.account.*;
 import org.lockss.hasher.*;
@@ -143,7 +143,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String CRON = "Cron";
   public static final String CLOCKSS_PARAMS = "ClockssParams";
   public static final String TRUEZIP_MANAGER = "TrueZipManager";
-  public static final String DB_MANAGER = "DbManager";
+  public static final String DB_MANAGER = "SqlDbManager";
   public static final String COUNTER_REPORTS_MANAGER = "CounterReportsManager";
 
   // Manager descriptors.  The order of this table determines the order in
@@ -175,7 +175,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
     // start plugin manager after generic services
     new ManagerDesc(PLUGIN_MANAGER, "org.lockss.plugin.PluginManager"),
     // start database manager before any manager that uses it.
-    new ManagerDesc(DB_MANAGER, "org.lockss.db.DbManager"),
+    new ManagerDesc(DB_MANAGER, "org.lockss.db.SqlDbManager"),
     // start metadata manager after pluggin manager and database manager.
     new ManagerDesc(METADATA_MANAGER, "org.lockss.metadata.MetadataManager"),
     // start proxy and servlets after plugin manager
@@ -547,12 +547,12 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   /**
    * Provides the database manager instance.
    * 
-   * @return a DbManager with the database manager instance.
+   * @return a SqlDbManager with the database manager instance.
    * @throws IllegalArgumentException
    *           if the manager is not available.
    */
-  public DbManager getDbManager() {
-    return (DbManager) getManager(DB_MANAGER);
+  public SqlDbManager getDbManager() {
+    return (SqlDbManager) getManager(DB_MANAGER);
   }
 
   /**
