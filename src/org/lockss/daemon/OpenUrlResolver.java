@@ -57,6 +57,7 @@ import org.lockss.config.TdbTitle;
 import org.lockss.config.TdbUtil;
 import org.lockss.daemon.ConfigParamDescr.InvalidFormatException;
 import org.lockss.db.SqlDbManager;
+import org.lockss.db.SqlOpenUrlResolverDbManager;
 import org.lockss.exporter.biblio.BibliographicItem;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuUtil;
@@ -204,7 +205,7 @@ public class OpenUrlResolver {
     private ResolvedTo resolvedTo;
     private BibliographicItem resolvedBibliographicItem = null;
     
-    private OpenUrlInfo(String resolvedUrl, 
+    public OpenUrlInfo(String resolvedUrl, 
                         String proxySpec,
                         ResolvedTo resolvedTo) {
       this.resolvedUrl = resolvedUrl;
@@ -973,8 +974,9 @@ public class OpenUrlResolver {
     OpenUrlInfo resolved = noOpenUrlInfo;
     try {
       // resolve from database manager
-      SqlDbManager dbMgr = daemon.getDbManager();
-      resolved = resolveFromDoi(dbMgr, doi);
+      // TODO
+      DbManager dbMgr = daemon.getDbManager();
+      resolved = dbMgr.getO(doi);
     } catch (IllegalArgumentException ex) {
     }
     
@@ -1050,32 +1052,32 @@ public class OpenUrlResolver {
    * @param doi the DOI
    * @return the OpenUrlInfo
    */
-  private OpenUrlInfo resolveFromDoi(SqlDbManager dbMgr, String doi) {
-    String url = null;
-    Connection conn = null;
-    try {
-      conn = dbMgr.getConnection();
-
-      String query = "select u." + URL_COLUMN
-	  + " from " + URL_TABLE + " u,"
-	  + DOI_TABLE + " d"
-	  + " where u." + MD_ITEM_SEQ_COLUMN + " = d." + MD_ITEM_SEQ_COLUMN
-	  + " and upper(d." + DOI_COLUMN + ") = ?";
-      
-      PreparedStatement stmt = dbMgr.prepareStatement(conn, query);
-      stmt.setString(1, doi.toUpperCase());
-      ResultSet resultSet = dbMgr.executeQuery(stmt);
-      if (resultSet.next()) {
-        url = resultSet.getString(1);
-      }
-    } catch (SQLException ex) {
-      log.error("Getting DOI:" + doi, ex);
-      
-    } finally {
-      SqlDbManager.safeRollbackAndClose(conn);
-    }
-    return new OpenUrlInfo(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
-  }
+//  private OpenUrlInfo resolveFromDoi(SqlDbManager dbMgr, String doi) {
+//    String url = null;
+//    Connection conn = null;
+//    try {
+//      conn = dbMgr.getConnection();
+//
+//      String query = "select u." + URL_COLUMN
+//	  + " from " + URL_TABLE + " u,"
+//	  + DOI_TABLE + " d"
+//	  + " where u." + MD_ITEM_SEQ_COLUMN + " = d." + MD_ITEM_SEQ_COLUMN
+//	  + " and upper(d." + DOI_COLUMN + ") = ?";
+//      
+//      PreparedStatement stmt = dbMgr.prepareStatement(conn, query);
+//      stmt.setString(1, doi.toUpperCase());
+//      ResultSet resultSet = dbMgr.executeQuery(stmt);
+//      if (resultSet.next()) {
+//        url = resultSet.getString(1);
+//      }
+//    } catch (SQLException ex) {
+//      log.error("Getting DOI:" + doi, ex);
+//      
+//    } finally {
+//      SqlDbManager.safeRollbackAndClose(conn);
+//    }
+//    return new OpenUrlInfo(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
+//  }
 
   /**
    * Return article URL from an ISSN, date, volume, issue, spage, and author. 
