@@ -45,7 +45,7 @@ import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
 import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
@@ -55,7 +55,7 @@ import org.lockss.util.IOUtil;
 public class TestCounterReportsManager extends LockssTestCase {
   private MockLockssDaemon theDaemon;
   private SqlDbManager sqlDbManager;
-  private MetadataManager metadataManager;
+  private SqlMetadataManager sqlMetadataManager;
   private CounterReportsManager counterReportsManager;
 
   @Override
@@ -84,10 +84,10 @@ public class TestCounterReportsManager extends LockssTestCase {
     sqlDbManager.initService(theDaemon);
     sqlDbManager.startService();
 
-    metadataManager = new MetadataManager();
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
-    metadataManager.startService();
+    sqlMetadataManager = new SqlMetadataManager();
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
+    sqlMetadataManager.startService();
 
     Cron cron = new Cron();
     theDaemon.setCron(cron);

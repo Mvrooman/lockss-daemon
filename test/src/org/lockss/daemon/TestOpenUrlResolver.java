@@ -46,7 +46,7 @@ import org.lockss.extractor.ArticleMetadata;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataField;
 import org.lockss.extractor.MetadataTarget;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArticleFiles;
 import org.lockss.plugin.ArticleIteratorFactory;
@@ -70,13 +70,13 @@ public class TestOpenUrlResolver extends LockssTestCase {
 
   private SimulatedArchivalUnit sau0, sau1, sau2, sau3;
   private MockLockssDaemon theDaemon;
-  private MetadataManager metadataManager;
+  private SqlMetadataManager sqlMetadataManager;
   private PluginManager pluginManager;
   private OpenUrlResolver openUrlResolver;
   private boolean disableMetadataManager = false;
   private SqlDbManager sqlDbManager;
 
-  /** set of AUs reindexed by the MetadataManager */
+  /** set of AUs reindexed by the SqlMetadataManager */
   Set<String> ausReindexed = new HashSet<String>();
   
   public void setUp() throws Exception {
@@ -85,7 +85,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
     String paramIndexingEnabled = 
       Boolean.toString(!disableMetadataManager && true);
     final String tempDirPath = getTempDir().getAbsolutePath();
-    ConfigurationUtil.setFromArgs(MetadataManager.PARAM_INDEXING_ENABLED, 
+    ConfigurationUtil.setFromArgs(SqlMetadataManager.PARAM_INDEXING_ENABLED, 
                                   paramIndexingEnabled,
                                   ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST,
                                   new File(tempDirPath, "disk").toString());
@@ -192,7 +192,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
       // ignored
     }
 
-    metadataManager = new MetadataManager() {
+    sqlMetadataManager = new SqlMetadataManager() {
       /**
        * Notify listeners that an AU is being reindexed.
        * 
@@ -217,10 +217,10 @@ public class TestOpenUrlResolver extends LockssTestCase {
         }
       }
     };
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
     try {
-      metadataManager.startService();
+      sqlMetadataManager.startService();
     } catch (IllegalArgumentException ex) {
       // ignored
     }
@@ -269,7 +269,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
     // reset set of reindexed aus
     ausReindexed.clear();
 
-    metadataManager.restartService();
+    sqlMetadataManager.restartService();
     theDaemon.setAusStarted(true);
     
     int expectedAuCount = 4;
@@ -281,8 +281,8 @@ public class TestOpenUrlResolver extends LockssTestCase {
     int ausCount = waitForReindexing(expectedAuCount, maxWaitTime);
     assertEquals(expectedAuCount, ausCount);
     
-    assertEquals(0, metadataManager.getActiveReindexingCount());
-    assertEquals(0, metadataManager.getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
+    assertEquals(0, sqlMetadataManager.getActiveReindexingCount());
+    assertEquals(0, sqlMetadataManager.getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
 
     String query = "select " + URL_COLUMN + " from " + URL_TABLE; 
     PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);

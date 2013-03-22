@@ -55,7 +55,7 @@ public class MetadataStarter extends LockssRunnable {
   private static Logger log = Logger.getLogger(MetadataStarter.class);
 
   private final SqlDbManager sqlDbManager;
-  private final MetadataManager mdManager;
+  private final SqlMetadataManager mdManager;
   private final PluginManager pluginManager;
 
   /**
@@ -64,11 +64,11 @@ public class MetadataStarter extends LockssRunnable {
    * @param sqlDbManager
    *          A SqlDbManager with the database manager.
    * @param mdManager
-   *          A MetadataManager with the metadata manager.
+   *          A SqlMetadataManager with the metadata manager.
    * @param pluginManager
    *          A PluginManager with the plugin manager.
    */
-  public MetadataStarter(SqlDbManager sqlDbManager, MetadataManager mdManager,
+  public MetadataStarter(SqlDbManager sqlDbManager, SqlMetadataManager mdManager,
       PluginManager pluginManager) {
     super("MetadataStarter");
 

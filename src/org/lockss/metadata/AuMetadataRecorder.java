@@ -32,7 +32,7 @@
 package org.lockss.metadata;
 
 import static org.lockss.db.SqlDbManager.*;
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -152,7 +152,7 @@ public class AuMetadataRecorder {
   private final ReindexingTask task;
 
   // The metadata manager.
-  private final MetadataManager mdManager;
+  private final SqlMetadataManager mdManager;
 
   // The database manager.
   private final SqlDbManager sqlDbManager;
@@ -177,10 +177,10 @@ public class AuMetadataRecorder {
    * Constructor.
    * 
    * @param task A ReindexingTaskwith the calling task.
-   * @param mdManager A MetadataManager with the metadata manager.
+   * @param mdManager A SqlMetadataManager with the metadata manager.
    * @param au An ArchivalUnit with the archival unit.
    */
-  public AuMetadataRecorder(ReindexingTask task, MetadataManager mdManager,
+  public AuMetadataRecorder(ReindexingTask task, SqlMetadataManager mdManager,
       ArchivalUnit au) {
     this.task = task;
     this.mdManager = mdManager;

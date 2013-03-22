@@ -39,7 +39,7 @@
 package org.lockss.exporter.counter;
 
 import static org.lockss.db.SqlDbManager.*;
-import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
+import static org.lockss.metadata.SqlMetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.File;
 import java.sql.Connection;
@@ -50,7 +50,7 @@ import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
 import org.lockss.db.SqlDbManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
@@ -75,7 +75,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
   private MockLockssDaemon theDaemon;
   private SqlDbManager sqlDbManager;
-  private MetadataManager metadataManager;
+  private SqlMetadataManager sqlMetadataManager;
   private CounterReportsManager counterReportsManager;
 
   @Override
@@ -109,10 +109,10 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     sqlDbManager.initService(theDaemon);
     sqlDbManager.startService();
 
-    metadataManager = new MetadataManager();
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
-    metadataManager.startService();
+    sqlMetadataManager = new SqlMetadataManager();
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
+    sqlMetadataManager.startService();
 
     Cron cron = new Cron();
     theDaemon.setCron(cron);
@@ -135,11 +135,11 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
       // Add the publisher.
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher(conn, "publisher");
 
       // Add the publication.
       Long publicationSeq =
-	  metadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
 						  "9876543210987",
 						  "9876543210123", publisherSeq,
 						  "The Full Book", "2009-01-01",
@@ -147,37 +147,37 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  metadataManager.findOrCreatePlugin(conn, "fullPluginId",
+	  sqlMetadataManager.findOrCreatePlugin(conn, "fullPluginId",
 	      "fullPlatform");
 
       // Add the AU.
-      Long auSeq = metadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
+      Long auSeq = sqlMetadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = metadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
 
       Long parentSeq =
-	  metadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
 
-      metadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
+      sqlMetadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  metadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
+	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
 
-      Long mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
                                                  auMdSeq, "2009-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
+	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, "", IGNORABLE_URL);
+      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, "", IGNORABLE_URL);
 
-      mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
+	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    RECORDABLE_URL);
     } finally {
       conn.commit();

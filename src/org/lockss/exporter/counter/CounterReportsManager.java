@@ -53,7 +53,7 @@ import org.lockss.config.ConfigManager;
 import org.lockss.config.Configuration;
 import org.lockss.daemon.Cron;
 import org.lockss.db.SqlDbManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.util.FileUtil;
 import org.lockss.util.Logger;
 import org.lockss.util.TimeBase;
@@ -146,7 +146,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
   private SqlDbManager sqlDbManager = null;
 
   /** The metadata manager */
-  private MetadataManager metadataManager = null;
+  private SqlMetadataManager sqlMetadataManager = null;
 
   /**
    * Starts the CounterReportsManager service.
@@ -171,7 +171,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       return;
     }
 
-    metadataManager = getDaemon().getMetadataManager();
+    sqlMetadataManager = getDaemon().getMetadataManager();
     String errorMessage = null;
     boolean success = false;
 
@@ -183,7 +183,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 	  + "aggregation of all title requests";
 
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, ALL_PUBLISHERS_NAME);
+	  sqlMetadataManager.findOrCreatePublisher(conn, ALL_PUBLISHERS_NAME);
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
       if (publisherSeq == null) {
@@ -196,7 +196,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
       // Get the identifier of the dummy publication used for the aggregation of
       // all book requests.
-      allBooksPublicationSeq = metadataManager
+      allBooksPublicationSeq = sqlMetadataManager
 	  .findOrCreatePublication(conn, null, null, "CRBPISBN", "CRBEISBN",
 	                           publisherSeq, ALL_BOOKS_NAME, null, null,
 	                           null);
@@ -213,7 +213,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
       // Get the identifier of the dummy publication used for the aggregation of
       // all journal requests.
-      allJournalsPublicationSeq = metadataManager
+      allJournalsPublicationSeq = sqlMetadataManager
 	  .findOrCreatePublication(conn, "CRJPISSN", "CRJEISSN", null,null,
 	                           publisherSeq, ALL_JOURNALS_NAME, null, null,
 	                           null);

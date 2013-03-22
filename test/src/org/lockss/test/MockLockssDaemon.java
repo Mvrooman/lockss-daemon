@@ -47,7 +47,7 @@ import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.hasher.HashService;
 import org.lockss.mail.MailService;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.plugin.*;
 import org.lockss.truezip.*;
 import org.lockss.poller.PollManager;
@@ -88,7 +88,7 @@ public class MockLockssDaemon extends LockssDaemon {
   RepositoryManager repositoryManager = null;
   NodeManagerManager nodeManagerManager = null;
   PluginManager pluginManager = null;
-  MetadataManager metadataManager = null;
+  SqlMetadataManager sqlMetadataManager = null;
   IdentityManager identityManager = null;
   TrueZipManager tzipManager = null;
   StatusService statusService = null;
@@ -143,7 +143,7 @@ public class MockLockssDaemon extends LockssDaemon {
     proxyManager = null;
     crawlManager = null;
     pluginManager = null;
-    metadataManager = null;
+    sqlMetadataManager = null;
     identityManager = null;
     statusService = null;
     icpManager = null;
@@ -475,14 +475,14 @@ public class MockLockssDaemon extends LockssDaemon {
 
   /**
    * return the metadata manager instance
-   * @return the MetadataManager
+   * @return the SqlMetadataManager
    */
-  public MetadataManager getMetadataManager() {
-    if (metadataManager == null) {
-      metadataManager = (MetadataManager)newManager(LockssDaemon.METADATA_MANAGER);
-      managerMap.put(LockssDaemon.METADATA_MANAGER, metadataManager);
+  public SqlMetadataManager getMetadataManager() {
+    if (sqlMetadataManager == null) {
+      sqlMetadataManager = (SqlMetadataManager)newManager(LockssDaemon.METADATA_MANAGER);
+      managerMap.put(LockssDaemon.METADATA_MANAGER, sqlMetadataManager);
     }
-    return metadataManager;
+    return sqlMetadataManager;
   }
 
   /**
@@ -726,12 +726,12 @@ public class MockLockssDaemon extends LockssDaemon {
   }
 
   /**
-   * Set the MetadataManager
+   * Set the SqlMetadataManager
    * @param metadataMan the new manager
    */
-  public void setMetadataManager(MetadataManager metadataMan) {
-    metadataManager = metadataMan;
-    managerMap.put(LockssDaemon.METADATA_MANAGER, metadataManager);
+  public void setMetadataManager(SqlMetadataManager metadataMan) {
+    sqlMetadataManager = metadataMan;
+    managerMap.put(LockssDaemon.METADATA_MANAGER, sqlMetadataManager);
   }
 
   /**

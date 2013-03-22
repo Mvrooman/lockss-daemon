@@ -37,7 +37,7 @@ package org.lockss.exporter.counter;
 
 import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.exporter.counter.CounterReportsManager.*;
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

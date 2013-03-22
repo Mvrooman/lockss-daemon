@@ -89,7 +89,7 @@ public class OverviewStatus extends BaseLockssDaemonManager {
       org.lockss.state.ArchivalUnitStatus.SERVICE_STATUS_TABLE_NAME,
       org.lockss.repository.LockssRepositoryStatus.SPACE_TABLE_NAME,
       org.lockss.crawler.CrawlManagerImpl.CRAWL_STATUS_TABLE_NAME,
-      org.lockss.metadata.MetadataManager.METADATA_STATUS_TABLE_NAME,
+      org.lockss.metadata.SqlMetadataManager.METADATA_STATUS_TABLE_NAME,
       V3PollStatus.POLLER_STATUS_TABLE_NAME,
       V3PollStatus.VOTER_STATUS_TABLE_NAME,
       org.lockss.hasher.HashSvcSchedImpl.HASH_STATUS_TABLE,

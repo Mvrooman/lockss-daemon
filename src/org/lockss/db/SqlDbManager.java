@@ -2340,6 +2340,22 @@ public class SqlDbManager extends BaseLockssDaemonManager
 
     return getConnectionBeforeReady(maxRetryCount, retryDelay);
   }
+  
+  /**
+   * 
+   * @return
+   */
+  @Override
+  public boolean isConnectionReady() 
+		  throws Exception {
+	  if (!ready) {
+		  throw new SQLException("SqlDbManager has not been initialized.");
+	  }
+	  
+	  getConnectionBeforeReady(maxRetryCount, retryDelay);
+	  
+	  return true;
+  }
 
   /**
    * Commits a connection or rolls it back if it's not possible.

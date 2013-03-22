@@ -39,7 +39,7 @@
 package org.lockss.exporter.counter;
 
 import static org.lockss.db.SqlDbManager.*;
-import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
+import static org.lockss.metadata.SqlMetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,7 +53,7 @@ import org.lockss.daemon.Cron;
 import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsBookReport2;
 import org.lockss.exporter.counter.CounterReportsManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
@@ -67,7 +67,7 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
 
   private MockLockssDaemon theDaemon;
   private SqlDbManager sqlDbManager;
-  private MetadataManager metadataManager;
+  private SqlMetadataManager sqlMetadataManager;
   private CounterReportsManager counterReportsManager;
 
   @Override
@@ -96,10 +96,10 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
     sqlDbManager.initService(theDaemon);
     sqlDbManager.startService();
 
-    metadataManager = new MetadataManager();
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
-    metadataManager.startService();
+    sqlMetadataManager = new SqlMetadataManager();
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
+    sqlMetadataManager.startService();
 
     Cron cron = new Cron();
     theDaemon.setCron(cron);
@@ -258,11 +258,11 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
 
       // Add the publisher.
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher(conn, "publisher");
 
       // Add the publication.
       Long publicationSeq =
-	  metadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
 						  "9876543210987",
 						  "9876543210123", publisherSeq,
 						  "The Full Book", "2010-01-01",
@@ -270,31 +270,31 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  metadataManager.findOrCreatePlugin(conn, "fullPluginId",
+	  sqlMetadataManager.findOrCreatePlugin(conn, "fullPluginId",
 	      "fullPlatform");
 
       // Add the AU.
       Long auSeq =
-	  metadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
+	  sqlMetadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = metadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
 
       Long parentSeq =
-	  metadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
 
-      metadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
+      sqlMetadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  metadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
+	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
 
-      mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
+	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    FULL_URL);
     } finally {
       conn.commit();
@@ -319,11 +319,11 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
 
       // Add the publisher.
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher(conn, "publisher");
 
       // Add the publication.
       Long publicationSeq =
-	  metadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
 						  "9876543210234",
 						  "9876543210345", publisherSeq,
 						  "The Book In Sections",
@@ -331,29 +331,29 @@ public class TestCounterReportsBookReport2 extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  metadataManager.findOrCreatePlugin(conn, "secPluginId",
+	  sqlMetadataManager.findOrCreatePlugin(conn, "secPluginId",
 	      "secPlatform");
 
       // Add the AU.
       Long auSeq =
-	  metadataManager.findOrCreateAu(conn, pluginSeq, "secAuKey");
+	  sqlMetadataManager.findOrCreateAu(conn, pluginSeq, "secAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = metadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
 
       Long parentSeq =
-	  metadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
 
       Long mdItemTypeSeq =
-	  metadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK_CHAPTER);
+	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK_CHAPTER);
 
-      mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-02-02", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "Chapter Name",
+	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "Chapter Name",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    SECTION_URL);
     } finally {
       conn.commit();

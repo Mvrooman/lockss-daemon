@@ -282,7 +282,7 @@ class ArticleMetadataBuffer {
   public ArticleMetadataBuffer() throws IOException {
     if (outstream == null) {
       collectedMetadataFile = 
-          FileUtil.createTempFile("MetadataManager", "md");
+          FileUtil.createTempFile("SqlMetadataManager", "md");
       outstream =
           new ObjectOutputStream(
               new BufferedOutputStream(

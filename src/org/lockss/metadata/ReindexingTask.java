@@ -31,7 +31,7 @@
  */
 package org.lockss.metadata;
 
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
@@ -53,7 +53,7 @@ import org.lockss.extractor.MetadataTarget;
 import org.lockss.extractor.ArticleMetadataExtractor.Emitter;
 import org.lockss.extractor.MetadataException.ValidationException;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
-import org.lockss.metadata.MetadataManager.ReindexingStatus;
+import org.lockss.metadata.SqlMetadataManager.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArticleFiles;
 import org.lockss.plugin.AuUtil;
@@ -124,7 +124,7 @@ public class ReindexingTask extends StepTask {
   private final SqlDbManager sqlDbManager;
 
   // The metadata manager.
-  private final MetadataManager mdManager;
+  private final SqlMetadataManager mdManager;
 
   private final Emitter emitter;
   private int extractedCount = 0;
