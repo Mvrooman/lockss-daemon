@@ -3441,4 +3441,9 @@ public class SqlDbManager extends BaseLockssDaemonManager
 
     return statement;
   }
+
+@Override
+public OpenUrlResolverDbManager getOpenUrlResolverDbManager() {
+	return sqlOpenUrlResolverDbManager;
+}
 }

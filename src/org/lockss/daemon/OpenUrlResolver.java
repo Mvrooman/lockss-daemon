@@ -56,6 +56,8 @@ import org.lockss.config.TdbPublisher;
 import org.lockss.config.TdbTitle;
 import org.lockss.config.TdbUtil;
 import org.lockss.daemon.ConfigParamDescr.InvalidFormatException;
+import org.lockss.db.DbManager;
+import org.lockss.db.OpenUrlResolverDbManager;
 import org.lockss.db.SqlDbManager;
 import org.lockss.db.SqlOpenUrlResolverDbManager;
 import org.lockss.exporter.biblio.BibliographicItem;
@@ -213,7 +215,7 @@ public class OpenUrlResolver {
       this.proxySpec = proxySpec;
     }
 
-    protected static OpenUrlInfo newInstance(
+    public static OpenUrlInfo newInstance(
         String resolvedUrl, String proxySpec, ResolvedTo resolvedTo) {
       return ((resolvedTo == ResolvedTo.NONE) || (resolvedUrl == null)) 
           ? OpenUrlResolver.noOpenUrlInfo
@@ -976,7 +978,8 @@ public class OpenUrlResolver {
       // resolve from database manager
       // TODO
       DbManager dbMgr = daemon.getDbManager();
-      resolved = dbMgr.getO(doi);
+      OpenUrlResolverDbManager openUrlResolverDbManager = dbMgr.getOpenUrlResolverDbManager();
+      resolved = openUrlResolverDbManager.resolveFromDoi(doi);
     } catch (IllegalArgumentException ex) {
     }
     
@@ -1105,8 +1108,9 @@ public class OpenUrlResolver {
       // resolve article from database manager
       String[] issns = (title == null) ? 
         new String[] { issn } : title.getIssns();
-      SqlDbManager dbMgr = daemon.getDbManager();
-      resolved = resolveFromIssn(dbMgr, issns, date, 
+      DbManager dbMgr = daemon.getDbManager();
+      OpenUrlResolverDbManager openUrlResolverDbManager = dbMgr.getOpenUrlResolverDbManager();
+      resolved = openUrlResolverDbManager.resolveFromIssn(issns, date, 
                                 volume, issue, spage, author, atitle);
     } catch (IllegalArgumentException ex) {
       // intentionally ignore input error
@@ -1137,154 +1141,154 @@ public class OpenUrlResolver {
    * @param atitle the article title 
    * @return the article URL
    */
-  private OpenUrlInfo resolveFromIssn(
-      SqlDbManager dbMgr,
-      String[] issns, String date, String volume, String issue, 
-      String spage, String author, String atitle) {
-          
-    Connection conn = null;
-    OpenUrlInfo resolved = noOpenUrlInfo;
-    try {
-      conn = dbMgr.getConnection();
-
-      StringBuilder query = new StringBuilder();
-      StringBuilder from = new StringBuilder();
-      StringBuilder where = new StringBuilder();
-      ArrayList<String> args = new ArrayList<String>();
-
-      query.append("select distinct ");
-      query.append("u." + URL_COLUMN);
-      query.append(",");
-      query.append("p." + PLUGIN_ID_COLUMN);
-      query.append(",");
-      query.append("a." + AU_KEY_COLUMN);
-      
-      from.append(URL_TABLE + " u");
-      from.append("," + PLUGIN_TABLE + " p");
-      from.append("," + AU_TABLE + " a");
-      from.append("," + AU_MD_TABLE + " am");
-      from.append("," + MD_ITEM_TABLE + " m");
-      from.append("," + PUBLICATION_TABLE + " pu");
-      from.append("," + ISSN_TABLE + " i");
-
-      where.append("p." + PLUGIN_SEQ_COLUMN + " = ");
-      where.append("a." + PLUGIN_SEQ_COLUMN);
-      where.append(" and a." + AU_SEQ_COLUMN + " = ");
-      where.append("am." + AU_SEQ_COLUMN);
-      where.append(" and am." + AU_MD_SEQ_COLUMN + " = ");
-      where.append("m." + AU_MD_SEQ_COLUMN);
-      where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("u." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and m." + PARENT_SEQ_COLUMN + " = ");
-      where.append("pu." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and pu." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("i." + MD_ITEM_SEQ_COLUMN);
-
-      where.append(" and i." + ISSN_COLUMN + " in (");
-
-      String plaheholder = "?";
-      for (String issn : issns) {
-        where.append(plaheholder);
-        args.add(issn.replaceAll("-", "")); // strip punctuation
-        plaheholder = ",?";
-      }
-      where.append(")");
-
-      // true if properties specify an article
-      boolean hasArticleSpec = 
-          (spage != null) || (author != null) || (atitle != null);
-
-      // true if properties specified a journal item
-      boolean hasJournalSpec =
-          (date != null) || (volume != null) || (issue != null);
-
-      if ((hasJournalSpec && (volume != null || issue != null)) ||
-	  (hasArticleSpec && (spage != null || atitle != null))) {
-	from.append("," + BIB_ITEM_TABLE + " b");
-
-	where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-	where.append("b." + MD_ITEM_SEQ_COLUMN);
-      }
-
-      if (hasJournalSpec) {
-        // can specify an issue by a combination of date, volume and issue;
-        // how these combine varies, so do the most liberal match possible
-        // and filter based on multiple results
-        if (date != null) {
-          // enables query "2009" to match "2009-05-10" in database
-          where.append(" and m." + DATE_COLUMN);
-          where.append(" like ? escape '\\'");
-          args.add(date.replace("\\","\\\\").replace("%","\\%") + "%");
-        }
-        
-        if (volume != null) {
-          where.append(" and b." + VOLUME_COLUMN + " = ?");
-          args.add(volume);
-        }
-
-        if (issue != null) {
-          where.append(" and b." + ISSUE_COLUMN + " = ?");
-          args.add(issue);
-        }
-      }
-                  
-      // handle start page, author, and article title as
-      // equivalent ways to specify an article within an issue
-      if (hasArticleSpec) {
-        // accept any of the three
-        where.append(" and ( ");
-      
-        if (spage != null) {
-          where.append("b." + START_PAGE_COLUMN + " = ?");
-          args.add(spage);
-        }
-        if (atitle != null) {
-          if (spage != null) {
-            where.append(" or ");
-          }
-
-          from.append("," + MD_ITEM_NAME_TABLE + " name");
-
-          where.append("(m." + MD_ITEM_SEQ_COLUMN + " = ");
-          where.append("name." + MD_ITEM_SEQ_COLUMN + " and ");
-          where.append("upper(name." + NAME_COLUMN);
-          where.append(") like ? escape '\\')");
-
-          args.add(atitle.toUpperCase().replace("%","\\%") + "%");
-        }
-        if ( author != null) {
-          if ((spage != null) || (atitle != null)) {
-            where.append(" or ");
-          }
-
-          from.append("," + AUTHOR_TABLE + " aut");
-
-          // add the author query to the query
-          addAuthorQuery(author, where, args);
-        }
-        
-        where.append(")");
-      }
-
-      // select the 'Access' url
-      // (what if there is no access url?)
-      where.append(" and u." + FEATURE_COLUMN + " = ");
-      where.append("'Access'");
-
-
-      String url =
-	  resolveFromQuery(conn, query.toString() + " from " + from.toString()
-	      + " where " + where.toString(), args);
-      return OpenUrlInfo.newInstance(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
-
-    } catch (SQLException ex) {
-      log.error("Getting ISSNs:" + Arrays.toString(issns), ex);
-        
-    } finally {
-      SqlDbManager.safeRollbackAndClose(conn);
-    }
-    return resolved;
-  }
+//  private OpenUrlInfo resolveFromIssn(
+//      SqlDbManager dbMgr,
+//      String[] issns, String date, String volume, String issue, 
+//      String spage, String author, String atitle) {
+//          
+//    Connection conn = null;
+//    OpenUrlInfo resolved = noOpenUrlInfo;
+//    try {
+//      conn = dbMgr.getConnection();
+//
+//      StringBuilder query = new StringBuilder();
+//      StringBuilder from = new StringBuilder();
+//      StringBuilder where = new StringBuilder();
+//      ArrayList<String> args = new ArrayList<String>();
+//
+//      query.append("select distinct ");
+//      query.append("u." + URL_COLUMN);
+//      query.append(",");
+//      query.append("p." + PLUGIN_ID_COLUMN);
+//      query.append(",");
+//      query.append("a." + AU_KEY_COLUMN);
+//      
+//      from.append(URL_TABLE + " u");
+//      from.append("," + PLUGIN_TABLE + " p");
+//      from.append("," + AU_TABLE + " a");
+//      from.append("," + AU_MD_TABLE + " am");
+//      from.append("," + MD_ITEM_TABLE + " m");
+//      from.append("," + PUBLICATION_TABLE + " pu");
+//      from.append("," + ISSN_TABLE + " i");
+//
+//      where.append("p." + PLUGIN_SEQ_COLUMN + " = ");
+//      where.append("a." + PLUGIN_SEQ_COLUMN);
+//      where.append(" and a." + AU_SEQ_COLUMN + " = ");
+//      where.append("am." + AU_SEQ_COLUMN);
+//      where.append(" and am." + AU_MD_SEQ_COLUMN + " = ");
+//      where.append("m." + AU_MD_SEQ_COLUMN);
+//      where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
+//      where.append("u." + MD_ITEM_SEQ_COLUMN);
+//      where.append(" and m." + PARENT_SEQ_COLUMN + " = ");
+//      where.append("pu." + MD_ITEM_SEQ_COLUMN);
+//      where.append(" and pu." + MD_ITEM_SEQ_COLUMN + " = ");
+//      where.append("i." + MD_ITEM_SEQ_COLUMN);
+//
+//      where.append(" and i." + ISSN_COLUMN + " in (");
+//
+//      String plaheholder = "?";
+//      for (String issn : issns) {
+//        where.append(plaheholder);
+//        args.add(issn.replaceAll("-", "")); // strip punctuation
+//        plaheholder = ",?";
+//      }
+//      where.append(")");
+//
+//      // true if properties specify an article
+//      boolean hasArticleSpec = 
+//          (spage != null) || (author != null) || (atitle != null);
+//
+//      // true if properties specified a journal item
+//      boolean hasJournalSpec =
+//          (date != null) || (volume != null) || (issue != null);
+//
+//      if ((hasJournalSpec && (volume != null || issue != null)) ||
+//	  (hasArticleSpec && (spage != null || atitle != null))) {
+//	from.append("," + BIB_ITEM_TABLE + " b");
+//
+//	where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
+//	where.append("b." + MD_ITEM_SEQ_COLUMN);
+//      }
+//
+//      if (hasJournalSpec) {
+//        // can specify an issue by a combination of date, volume and issue;
+//        // how these combine varies, so do the most liberal match possible
+//        // and filter based on multiple results
+//        if (date != null) {
+//          // enables query "2009" to match "2009-05-10" in database
+//          where.append(" and m." + DATE_COLUMN);
+//          where.append(" like ? escape '\\'");
+//          args.add(date.replace("\\","\\\\").replace("%","\\%") + "%");
+//        }
+//        
+//        if (volume != null) {
+//          where.append(" and b." + VOLUME_COLUMN + " = ?");
+//          args.add(volume);
+//        }
+//
+//        if (issue != null) {
+//          where.append(" and b." + ISSUE_COLUMN + " = ?");
+//          args.add(issue);
+//        }
+//      }
+//                  
+//      // handle start page, author, and article title as
+//      // equivalent ways to specify an article within an issue
+//      if (hasArticleSpec) {
+//        // accept any of the three
+//        where.append(" and ( ");
+//      
+//        if (spage != null) {
+//          where.append("b." + START_PAGE_COLUMN + " = ?");
+//          args.add(spage);
+//        }
+//        if (atitle != null) {
+//          if (spage != null) {
+//            where.append(" or ");
+//          }
+//
+//          from.append("," + MD_ITEM_NAME_TABLE + " name");
+//
+//          where.append("(m." + MD_ITEM_SEQ_COLUMN + " = ");
+//          where.append("name." + MD_ITEM_SEQ_COLUMN + " and ");
+//          where.append("upper(name." + NAME_COLUMN);
+//          where.append(") like ? escape '\\')");
+//
+//          args.add(atitle.toUpperCase().replace("%","\\%") + "%");
+//        }
+//        if ( author != null) {
+//          if ((spage != null) || (atitle != null)) {
+//            where.append(" or ");
+//          }
+//
+//          from.append("," + AUTHOR_TABLE + " aut");
+//
+//          // add the author query to the query
+//          addAuthorQuery(author, where, args);
+//        }
+//        
+//        where.append(")");
+//      }
+//
+//      // select the 'Access' url
+//      // (what if there is no access url?)
+//      where.append(" and u." + FEATURE_COLUMN + " = ");
+//      where.append("'Access'");
+//
+//
+//      String url =
+//	  resolveFromQuery(conn, query.toString() + " from " + from.toString()
+//	      + " where " + where.toString(), args);
+//      return OpenUrlInfo.newInstance(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
+//
+//    } catch (SQLException ex) {
+//      log.error("Getting ISSNs:" + Arrays.toString(issns), ex);
+//        
+//    } finally {
+//      SqlDbManager.safeRollbackAndClose(conn);
+//    }
+//    return resolved;
+//  }
 
   /** 
    * Resolve query if a single URL matches.
