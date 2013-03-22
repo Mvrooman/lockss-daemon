@@ -12,6 +12,8 @@ import static org.lockss.db.SqlDbManager.DATE_COLUMN;
 import static org.lockss.db.SqlDbManager.DOI_COLUMN;
 import static org.lockss.db.SqlDbManager.DOI_TABLE;
 import static org.lockss.db.SqlDbManager.FEATURE_COLUMN;
+import static org.lockss.db.SqlDbManager.ISBN_COLUMN;
+import static org.lockss.db.SqlDbManager.ISBN_TABLE;
 import static org.lockss.db.SqlDbManager.ISSN_COLUMN;
 import static org.lockss.db.SqlDbManager.ISSN_TABLE;
 import static org.lockss.db.SqlDbManager.ISSUE_COLUMN;
@@ -314,5 +316,168 @@ public class SqlOpenUrlResolverDbManager implements OpenUrlResolverDbManager {
 			}
 		}
 		return url;
+	}
+
+	/**
+	 * Return the article URL from an ISBN, edition, start page, author, and
+	 * article title using the metadata database.
+	 * <p>
+	 * The algorithm matches the ISBN and optionally the edition, and either 
+	 * the start page, author, or article title. The reason for matching on any
+	 * of the three is that typos in author and article title are always 
+	 * possible so we want to be more forgiving in matching an article.
+	 * <p>
+	 * If none of the three are specified, the URL for the book table of contents 
+	 * is returned.
+	 * 
+	 * @param isbn the isbn
+	 * @param String date the date
+	 * @param String volumeName the volumeName
+	 * @param edition the edition
+	 * @param spage the start page
+	 * @param author the first author
+	 * @param atitle the chapter title
+	 * @return the url
+	 */
+	public OpenUrlInfo resolveFromIsbn(String isbn, String date, String volume,
+			String edition, String spage, String author, String atitle) {
+		final String DEBUG_HEADER = "resolveFromIsbn(): ";
+		OpenUrlInfo resolved = noOpenUrlInfo;
+		Connection conn = null;
+
+		try {
+			conn = sqlDbManager.getConnection();
+			// strip punctuation
+			isbn = isbn.replaceAll("[- ]", "");
+
+			StringBuilder query = new StringBuilder();
+			StringBuilder from = new StringBuilder();
+			StringBuilder where = new StringBuilder();
+			ArrayList<String> args = new ArrayList<String>();
+
+			query.append("select distinct ");
+			query.append("u." + URL_COLUMN);
+			query.append(",");
+			query.append("p." + PLUGIN_ID_COLUMN);
+			query.append(",");
+			query.append("a." + AU_KEY_COLUMN);
+
+			from.append(URL_TABLE + " u");
+			from.append("," + PLUGIN_TABLE + " p");
+			from.append("," + AU_TABLE + " a");
+			from.append("," + AU_MD_TABLE + " am");
+			from.append("," + MD_ITEM_TABLE + " m");
+			from.append("," + PUBLICATION_TABLE + " pu");
+			from.append("," + ISBN_TABLE + " i");
+
+			where.append("p." + PLUGIN_SEQ_COLUMN + " = ");
+			where.append("a." + PLUGIN_SEQ_COLUMN);
+			where.append(" and a." + AU_SEQ_COLUMN + " = ");
+			where.append("am." + AU_SEQ_COLUMN);
+			where.append(" and am." + AU_MD_SEQ_COLUMN + " = ");
+			where.append("m." + AU_MD_SEQ_COLUMN);
+			where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
+			where.append("u." + MD_ITEM_SEQ_COLUMN);
+			where.append(" and m." + PARENT_SEQ_COLUMN + " = ");
+			where.append("pu." + MD_ITEM_SEQ_COLUMN);
+			where.append(" and pu." + MD_ITEM_SEQ_COLUMN + " = ");
+			where.append("i." + MD_ITEM_SEQ_COLUMN);
+			where.append(" and i." + ISBN_COLUMN + " = ?");
+
+			String strippedIsbn = isbn.replaceAll("-", "");
+			args.add(strippedIsbn); // strip punctuation
+
+			boolean hasBookSpec = (date != null) || (volume != null)
+					|| (edition != null);
+
+			boolean hasArticleSpec = (spage != null) || (author != null)
+					|| (atitle != null);
+
+			if ((hasBookSpec && (volume != null || edition != null))
+					|| (hasArticleSpec && (spage != null || atitle != null))) {
+				from.append("," + BIB_ITEM_TABLE + " b");
+
+				where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
+				where.append("b." + MD_ITEM_SEQ_COLUMN);
+			}
+
+			if (hasBookSpec) {
+				// can specify an issue by a combination of date, volume and
+				// issue;
+				// how these combine varies, so do the most liberal match
+				// possible
+				// and filter based on multiple results
+				if (date != null) {
+					// enables query "2009" to match "2009-05-10" in database
+					where.append(" and m." + DATE_COLUMN);
+					where.append(" like ? escape '\\'");
+					args.add(date.replace("\\", "\\\\").replace("%", "\\%")
+							+ "%");
+				}
+
+				if (volume != null) {
+					where.append(" and b." + VOLUME_COLUMN + " = ?");
+					args.add(volume);
+				}
+
+				if (edition != null) {
+					where.append(" and b." + ISSUE_COLUMN + " = ?");
+					args.add(edition);
+				}
+			}
+
+			// handle start page, author, and article title as
+			// equivalent ways to specify an article within an issue
+			if (hasArticleSpec) {
+				// accept any of the three
+				where.append(" and ( ");
+
+				if (spage != null) {
+					where.append("b." + START_PAGE_COLUMN + " = ?");
+					args.add(spage);
+				}
+
+				if (atitle != null) {
+					if (spage != null) {
+						where.append(" or ");
+					}
+
+					from.append("," + MD_ITEM_NAME_TABLE + " name");
+
+					where.append("(m." + MD_ITEM_SEQ_COLUMN + " = ");
+					where.append("name." + MD_ITEM_SEQ_COLUMN + " and ");
+					where.append("upper(name." + NAME_COLUMN);
+					where.append(") like ? escape '\\')");
+
+					args.add(atitle.toUpperCase().replace("%", "\\%") + "%");
+				}
+
+				if (author != null) {
+					if ((spage != null) || (atitle != null)) {
+						where.append(" or ");
+					}
+
+					from.append("," + AUTHOR_TABLE + " aut");
+
+					// add the author query to the query
+					addAuthorQuery(author, where, args);
+				}
+
+				where.append(")");
+			}
+
+			String url = resolveFromQuery(conn, query.toString() + " from "
+					+ from.toString() + " where " + where.toString(), args);
+			log.debug3(DEBUG_HEADER + "url = " + url);
+			resolved = OpenUrlInfo.newInstance(url, null,
+					OpenUrlInfo.ResolvedTo.CHAPTER);
+
+		} catch (SQLException ex) {
+			log.error("Getting ISBN:" + isbn, ex);
+
+		} finally {
+			SqlDbManager.safeRollbackAndClose(conn);
+		}
+		return resolved;
 	}
 }

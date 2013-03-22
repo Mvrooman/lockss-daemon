@@ -10,4 +10,7 @@ public interface OpenUrlResolverDbManager {
 			String[] issn, String date, String volume, String issue, 
 		    String spage, String author, String atitle);
 
+	OpenUrlInfo resolveFromIsbn(String isbn, String date, String volume,
+			String edition, String spage, String author, String atitle);
+
 }
