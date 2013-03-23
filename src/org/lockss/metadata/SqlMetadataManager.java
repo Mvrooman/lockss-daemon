@@ -31,20 +31,6 @@
  */
 package org.lockss.metadata;
 
-import static java.sql.Types.*;
-import static org.lockss.db.SqlDbManager.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
 import org.lockss.daemon.LockssRunnable;
@@ -59,9 +45,15 @@ import org.lockss.plugin.Plugin;
 import org.lockss.plugin.Plugin.Feature;
 import org.lockss.plugin.PluginManager;
 import org.lockss.scheduler.Schedule;
+import org.lockss.util.PatternIntMap;
 import org.lockss.util.StringUtil;
 import org.lockss.util.TimeBase;
-import org.lockss.util.PatternIntMap;
+
+import java.sql.*;
+import java.util.*;
+
+import static java.sql.Types.BIGINT;
+import static org.lockss.db.SqlDbManager.*;
 
 /**
  * This class implements a metadata manager that is responsible for managing an
@@ -1539,8 +1531,7 @@ public class SqlMetadataManager extends MetadataManager {
   public Long findOrCreateAu(Connection conn, Long pluginSeq, String auKey)
       throws SQLException {
     final String DEBUG_HEADER = "findOrCreateAu(): ";
-    Connection connection = sqlDbManager.getConnection();
-    Long auSeq = findAu(connection, pluginSeq, auKey);
+    Long auSeq = findAu(conn, pluginSeq, auKey);
     log.debug3(DEBUG_HEADER + "auSeq = " + auSeq);
 
     // Check whether it is a new AU.

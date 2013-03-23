@@ -275,7 +275,7 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
 
       // Add the AU.
       Long auSeq =
-	  sqlMetadataManager.findOrCreateAu(conn, pluginSeq, "auKey");
+	  sqlMetadataManager.findOrCreateAu(pluginSeq, "auKey");
 
       // Add the AU metadata.
       Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);

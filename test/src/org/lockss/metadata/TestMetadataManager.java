@@ -39,6 +39,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
+
 import org.lockss.config.*;
 import org.lockss.daemon.PluginException;
 import org.lockss.db.SqlDbManager;
@@ -163,7 +164,6 @@ public class TestMetadataManager extends LockssTestCase {
     theDaemon.setMetadataManager(sqlMetadataManager);
     sqlMetadataManager.initService(theDaemon);
     sqlMetadataManager.startService();
-//    sqlMetadataManager.setDbManager(sqlDbManager);
     theDaemon.setAusStarted(true);
     
     int expectedAuCount = 5;

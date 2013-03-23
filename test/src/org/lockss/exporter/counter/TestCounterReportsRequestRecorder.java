@@ -151,7 +151,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 	      "fullPlatform");
 
       // Add the AU.
-      Long auSeq = sqlMetadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
+      Long auSeq = sqlMetadataManager.findOrCreateAu(pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
       Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
