@@ -1539,7 +1539,8 @@ public class SqlMetadataManager extends MetadataManager {
   public Long findOrCreateAu(Connection conn, Long pluginSeq, String auKey)
       throws SQLException {
     final String DEBUG_HEADER = "findOrCreateAu(): ";
-    Long auSeq = findAu(conn, pluginSeq, auKey);
+    Connection connection = sqlDbManager.getConnection();
+    Long auSeq = findAu(connection, pluginSeq, auKey);
     log.debug3(DEBUG_HEADER + "auSeq = " + auSeq);
 
     // Check whether it is a new AU.
@@ -1564,11 +1565,11 @@ public class SqlMetadataManager extends MetadataManager {
    * @throws SQLException
    *           if any problem occurred accessing the database.
    */
-//  @Override
-//  public Long findOrCreateAu(Long pluginSeq, String auKey) throws SQLException {
-//	  Connection conn = sqlDbManager.getConnection();
-//	  return findOrCreateAu(conn, pluginSeq, auKey);
-//  }
+  @Override
+  public Long findOrCreateAu(Long pluginSeq, String auKey) throws SQLException {
+	  Connection conn = sqlDbManager.getConnection();
+	  return findOrCreateAu(conn, pluginSeq, auKey);
+  }
 
   /**
    * Provides the identifier of an Archival Unit.
@@ -3941,5 +3942,9 @@ public class SqlMetadataManager extends MetadataManager {
    */
   SqlDbManager getDbManager() {
     return sqlDbManager;
+  }
+
+  public void setDbManager(SqlDbManager sqlDbManager) {
+	  this.sqlDbManager = sqlDbManager;
   }
 }

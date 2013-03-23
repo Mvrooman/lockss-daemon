@@ -163,7 +163,7 @@ public class TestMetadataManager extends LockssTestCase {
     theDaemon.setMetadataManager(sqlMetadataManager);
     sqlMetadataManager.initService(theDaemon);
     sqlMetadataManager.startService();
-
+//    sqlMetadataManager.setDbManager(sqlDbManager);
     theDaemon.setAusStarted(true);
     
     int expectedAuCount = 5;

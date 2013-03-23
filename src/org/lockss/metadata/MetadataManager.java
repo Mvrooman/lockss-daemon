@@ -25,6 +25,6 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
-//	abstract Long findOrCreateAu(Long pluginSeq, String auKey) throws Exception;
+	abstract Long findOrCreateAu(Long pluginSeq, String auKey) throws Exception;
 
 }
