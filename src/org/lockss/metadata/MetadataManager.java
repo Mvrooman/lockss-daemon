@@ -1,8 +1,6 @@
 package org.lockss.metadata;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
@@ -106,11 +104,27 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 * @param platform
 	 *            A String with the publishing platform.
 	 * @return a Long with the identifier of the plugin.
-	 * @throws SQLException
+	 * @throws Exception
 	 *             if any problem occurred accessing the database.
 	 */
 	abstract Long findOrCreatePlugin(String pluginId, String platform) throws Exception;
-	
+
+	/**
+	 * Adds an Archival Unit metadata to the database.
+	 * 
+	 * @param auSeq
+	 *            A Long with the identifier of the Archival Unit.
+	 * @param version
+	 *            An int with the metadata version.
+	 * @param extractTime
+	 *            A long with the extraction time of the metadata.
+	 * @return a Long with the identifier of the Archival Unit metadata just
+	 *         added.
+	 * @throws Exception
+	 *             if any problem occurred accessing the database.
+	 */
+	abstract Long addAuMd(Long auSeq, int version, long extractTime)
+			throws Exception;
 	
 
 
@@ -119,7 +133,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	//	   * Provides the number of enabled pending AUs.
 	//	   * 
 	//	   * @return a long with the number of enabled pending AUs.
-	//	   * @throws SQLException
+	//	   * @throws Exception
 	//	   *           if any problem occurred accessing the database.
 	//	   */
 	//	

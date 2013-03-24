@@ -1751,6 +1751,7 @@ public class SqlMetadataManager extends MetadataManager {
    * @throws SQLException
    *           if any problem occurred accessing the database.
    */
+  
   public Long addAuMd(Connection conn, Long auSeq, int version,
       long extractTime) throws SQLException {
     final String DEBUG_HEADER = "addAuMd(): ";
@@ -1783,6 +1784,29 @@ public class SqlMetadataManager extends MetadataManager {
     return auMdSeq;
   }
 
+  
+	/**
+	 * Adds an Archival Unit metadata to the database.
+	 * 
+	 * @param auSeq
+	 *            A Long with the identifier of the Archival Unit.
+	 * @param version
+	 *            An int with the metadata version.
+	 * @param extractTime
+	 *            A long with the extraction time of the metadata.
+	 * @return a Long with the identifier of the Archival Unit metadata just
+	 *         added.
+	 * @throws SQLException
+	 *             if any problem occurred accessing the database.
+	 */
+	@Override
+	public Long addAuMd(Long auSeq, int version, long extractTime)
+			throws SQLException {
+
+		Connection conn = sqlDbManager.getConnection();
+		return addAuMd(auSeq, version, extractTime);
+  }
+  
   /**
    * Updates the timestamp of the last extraction of an Archival Unit metadata.
    * 

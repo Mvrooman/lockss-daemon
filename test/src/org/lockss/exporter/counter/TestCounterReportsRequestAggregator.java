@@ -387,7 +387,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 	  sqlMetadataManager.findOrCreateAu(pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
 	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
@@ -447,7 +447,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 	  sqlMetadataManager.findOrCreateAu(pluginSeq, "secAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
 	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
@@ -675,7 +675,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       Long auSeq = sqlMetadataManager.findOrCreateAu(pluginSeq, "auKey");
 
       // Add the AU metadata.
-      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
 	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);

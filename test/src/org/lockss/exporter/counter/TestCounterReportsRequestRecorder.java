@@ -154,7 +154,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
       Long auSeq = sqlMetadataManager.findOrCreateAu(pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = sqlMetadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
 	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
