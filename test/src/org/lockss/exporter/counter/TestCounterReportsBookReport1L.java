@@ -270,7 +270,7 @@ public class TestCounterReportsBookReport1L extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  sqlMetadataManager.findOrCreatePlugin(conn, "fullPluginId",
+	  sqlMetadataManager.findOrCreatePlugin("fullPluginId",
 	      "fullPlatform");
 
       // Add the AU.
@@ -332,7 +332,7 @@ public class TestCounterReportsBookReport1L extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  sqlMetadataManager.findOrCreatePlugin(conn, "secPluginId",
+	  sqlMetadataManager.findOrCreatePlugin("secPluginId",
 	      "secPlatform");
 
       // Add the AU.

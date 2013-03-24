@@ -147,7 +147,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  sqlMetadataManager.findOrCreatePlugin(conn, "fullPluginId",
+	  sqlMetadataManager.findOrCreatePlugin("fullPluginId",
 	      "fullPlatform");
 
       // Add the AU.

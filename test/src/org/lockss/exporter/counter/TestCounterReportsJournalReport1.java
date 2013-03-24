@@ -271,7 +271,7 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  sqlMetadataManager.findOrCreatePlugin(conn, "pluginId", "platform");
+	  sqlMetadataManager.findOrCreatePlugin("pluginId", "platform");
 
       // Add the AU.
       Long auSeq =

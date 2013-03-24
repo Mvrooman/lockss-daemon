@@ -97,6 +97,22 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 */
 	abstract boolean isIndexingEnabled();
 
+	/**
+	 * Provides the identifier of a plugin if existing or after creating it
+	 * otherwise.
+	 * 
+	 * @param pluginId
+	 *            A String with the plugin identifier.
+	 * @param platform
+	 *            A String with the publishing platform.
+	 * @return a Long with the identifier of the plugin.
+	 * @throws SQLException
+	 *             if any problem occurred accessing the database.
+	 */
+	abstract Long findOrCreatePlugin(String pluginId, String platform) throws Exception;
+	
+	
+
 
 
 	//	  /**

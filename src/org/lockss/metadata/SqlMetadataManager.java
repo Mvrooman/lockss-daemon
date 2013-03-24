@@ -1456,7 +1456,6 @@ public class SqlMetadataManager extends MetadataManager {
    * @throws SQLException
    *           if any problem occurred accessing the database.
    */
- 
   public Long findOrCreatePlugin(Connection conn, String pluginId,
       String platform) throws SQLException {
     final String DEBUG_HEADER = "findOrCreatePlugin(): ";
@@ -1473,6 +1472,25 @@ public class SqlMetadataManager extends MetadataManager {
 
     return pluginSeq;
   }
+
+  /**
+   * Provides the identifier of a plugin if existing or after creating it
+   * otherwise.
+   * @param pluginId
+   *          A String with the plugin identifier.
+   * @param platform
+   *          A String with the publishing platform.
+   * @return a Long with the identifier of the plugin.
+   * @throws SQLException
+   *           if any problem occurred accessing the database.
+   */  
+	@Override
+	public Long findOrCreatePlugin(String pluginId, String platform)
+			throws SQLException {
+		Connection conn = sqlDbManager.getConnection();
+		return findOrCreatePlugin(conn, pluginId, platform);
+
+	}
 
   /**
    * Provides the identifier of a plugin.
