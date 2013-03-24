@@ -230,7 +230,7 @@ public class TestMetadataManager extends LockssTestCase {
     
     assertEquals(0, sqlMetadataManager.activeReindexingTasks.size());
     assertEquals(0, sqlMetadataManager.
-                 getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
+                 getPrioritizedAuIdsToReindex(Integer.MAX_VALUE).size());
 
     // check distinct access URLs
     String query =           
@@ -331,7 +331,7 @@ public class TestMetadataManager extends LockssTestCase {
     
     assertEquals(0, sqlMetadataManager.activeReindexingTasks.size());
     assertEquals(0, sqlMetadataManager
-                 .getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
+                 .getPrioritizedAuIdsToReindex(Integer.MAX_VALUE).size());
 
     con.rollback();
     con.commit();

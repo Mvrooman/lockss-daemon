@@ -646,7 +646,20 @@ public class SqlMetadataManager extends MetadataManager {
     log.debug3(DEBUG_HEADER + "rowCount = " + rowCount);
     return rowCount;
   }
-
+  
+//  /** TODO -- CLEAN UP  to see if we need it....
+//   * Provides the number of enabled pending AUs.
+//   * 
+//   * @return a long with the number of enabled pending AUs.
+//   * @throws SQLException
+//   *           if any problem occurred accessing the database.
+//   */
+//  @Override
+//  public long getEnabledPendingAusCount() throws SQLException {
+//	  Connection conn = sqlDbManager.getConnection();
+//	  return getEnabledPendingAusCount(conn);
+//	  
+//  }
   /**
    * Provides the number of articles in the metadata database.
    * 
@@ -1001,8 +1014,8 @@ public class SqlMetadataManager extends MetadataManager {
    * @return a List<String> with the list of AuIds that require reindexing
    *         sorted by priority.
    */
-  @Override
-  public List<String> getPrioritizedAuIdsToReindex(Connection conn,
+  
+  private List<String> getPrioritizedAuIdsToReindex(Connection conn,
                                                    int maxAuIds) {
     final String DEBUG_HEADER = "getPrioritizedAuIdsToReindex(): ";
     ArrayList<String> auIds = new ArrayList<String>();
@@ -1044,6 +1057,22 @@ public class SqlMetadataManager extends MetadataManager {
 
     auIds.trimToSize();
     return auIds;
+  }
+  
+  /**
+   * Provides a list of AuIds that require reindexing sorted by priority.
+   * 
+   * @param maxAuIds
+   *          An int with the maximum number of AuIds to return.
+   * @return a List<String> with the list of AuIds that require reindexing
+   *         sorted by priority.
+   */
+  @Override
+  public List<String> getPrioritizedAuIdsToReindex(int maxAuIds) throws SQLException
+  {
+	  Connection conn = sqlDbManager.getConnection();
+	  return getPrioritizedAuIdsToReindex(conn, maxAuIds);
+	  
   }
 
   /**
@@ -1305,12 +1334,14 @@ public class SqlMetadataManager extends MetadataManager {
    * <p>
    * This method is only used for testing.
    */
+  @Override
   public void restartService() {
     stopReindexing();
 
     // Start the service
     startService();
   }
+  
 
   /**
    * Provides an indication of whether an Archival Unit is eligible for
@@ -1344,6 +1375,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a long with the number of active reindexing tasks.
    */
+  @Override
   public long getActiveReindexingCount() {
     return activeReindexingTasks.size();
   }
@@ -1353,6 +1385,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a long with the number of successful reindexing operations.
    */
+  @Override
   public long getSuccessfulReindexingCount() {
     return this.successfulReindexingCount;
   }
@@ -1362,6 +1395,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a long the number of unsuccessful reindexing operations.
    */
+  @Override
   public long getFailedReindexingCount() {
     return this.failedReindexingCount;
   }
@@ -1371,6 +1405,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a List<ReindexingTask> with the reindexing tasks.
    */
+  @Override
   public List<ReindexingTask> getReindexingTasks() {
     return new ArrayList<ReindexingTask>(reindexingTaskHistory);
   }
@@ -1381,6 +1416,7 @@ public class SqlMetadataManager extends MetadataManager {
    * @return a long with the number of distinct articles in the metadata
    *         database.
    */
+  @Override
   public long getArticleCount() {
     return metadataArticleCount;
   }
@@ -1391,6 +1427,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a long with the number of AUs pending to be reindexed.
    */
+  @Override
   public long getPendingAusCount() {
     return pendingAusCount;
   }
@@ -1400,6 +1437,7 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @return a boolean with the indexing enabled state of this manager.
    */
+  @Override
   public boolean isIndexingEnabled() {
     return reindexingEnabled;
   }
@@ -1418,6 +1456,7 @@ public class SqlMetadataManager extends MetadataManager {
    * @throws SQLException
    *           if any problem occurred accessing the database.
    */
+ 
   public Long findOrCreatePlugin(Connection conn, String pluginId,
       String platform) throws SQLException {
     final String DEBUG_HEADER = "findOrCreatePlugin(): ";

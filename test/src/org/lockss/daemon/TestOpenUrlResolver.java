@@ -282,7 +282,7 @@ public class TestOpenUrlResolver extends LockssTestCase {
     assertEquals(expectedAuCount, ausCount);
     
     assertEquals(0, sqlMetadataManager.getActiveReindexingCount());
-    assertEquals(0, sqlMetadataManager.getPrioritizedAuIdsToReindex(con, Integer.MAX_VALUE).size());
+    assertEquals(0, sqlMetadataManager.getPrioritizedAuIdsToReindex(Integer.MAX_VALUE).size());
 
     String query = "select " + URL_COLUMN + " from " + URL_TABLE; 
     PreparedStatement stmt = sqlDbManager.prepareStatement(con, query);
