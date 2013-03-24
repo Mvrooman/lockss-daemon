@@ -1,6 +1,7 @@
 package org.lockss.metadata;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
@@ -125,7 +126,20 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 */
 	abstract Long addAuMd(Long auSeq, int version, long extractTime)
 			throws Exception;
-	
+
+	/**
+	 * Provides the identifier of a publisher if existing or after creating it
+	 * otherwise.
+	 * 
+	 * @param conn
+	 *            A Connection with the database connection to be used.
+	 * @param publisher
+	 *            A String with the publisher name.
+	 * @return a Long with the identifier of the publisher.
+	 * @throws Exception
+	 *             if any problem occurred accessing the database.
+	 */
+	abstract Long findOrCreatePublisher(String publisher) throws Exception;
 
 
 

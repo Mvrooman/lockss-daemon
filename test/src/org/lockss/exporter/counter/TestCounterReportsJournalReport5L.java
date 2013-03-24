@@ -318,7 +318,7 @@ public class TestCounterReportsJournalReport5L extends LockssTestCase {
 
       // Add the publisher.
       Long publisherSeq =
-	  sqlMetadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher("publisher");
 
       // The publication date is a couple of years ago.
       String publicationDate = (year-2) + "-01-01";

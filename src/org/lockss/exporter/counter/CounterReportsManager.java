@@ -183,7 +183,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 	  + "aggregation of all title requests";
 
       Long publisherSeq =
-	  sqlMetadataManager.findOrCreatePublisher(conn, ALL_PUBLISHERS_NAME);
+	  sqlMetadataManager.findOrCreatePublisher(ALL_PUBLISHERS_NAME);
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
       if (publisherSeq == null) {

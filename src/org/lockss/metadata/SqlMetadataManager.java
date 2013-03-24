@@ -1865,6 +1865,26 @@ public class SqlMetadataManager extends MetadataManager {
 
     return publisherSeq;
   }
+  
+	/**
+	 * Provides the identifier of a publisher if existing or after creating it
+	 * otherwise.
+	 * 
+	 * @param conn
+	 *            A Connection with the database connection to be used.
+	 * @param publisher
+	 *            A String with the publisher name.
+	 * @return a Long with the identifier of the publisher.
+	 * @throws SQLException
+	 *             if any problem occurred accessing the database.
+	 */
+	@Override
+	public Long findOrCreatePublisher(String publisher) throws SQLException {
+
+		Connection conn = sqlDbManager.getConnection();
+		return findOrCreatePublisher(conn, publisher);
+
+	}
 
   /**
    * Provides the identifier of a publisher.
