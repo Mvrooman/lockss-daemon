@@ -372,7 +372,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, null, null, "FULLPISBN",
+	  sqlMetadataManager.findOrCreatePublication(null, null, "FULLPISBN",
 						  "FULLEISBN", publisherSeq,
 						  "Full Name", "2010-01-01",
 						  null, null);
@@ -431,7 +431,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(null, null,
 	                                          "SECTIONPISBN",
 	                                          "SECTIONEISBN", publisherSeq,
 						  "Section Name", "2010-01-01",
@@ -662,7 +662,7 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, "PISSN", "EISSN",
+	  sqlMetadataManager.findOrCreatePublication("PISSN", "EISSN",
 						  null, null, publisherSeq,
 						  "JOURNAL", "2009-01-01", null,
 						  null);

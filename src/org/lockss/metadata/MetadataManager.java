@@ -141,6 +141,36 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 */
 	abstract Long findOrCreatePublisher(String publisher) throws Exception;
 
+	/**
+	 * Provides the identifier of a publication if existing or after creating it
+	 * otherwise.
+	 * 
+	 * @param pIssn
+	 *            A String with the print ISSN of the publication.
+	 * @param eIssn
+	 *            A String with the electronic ISSN of the publication.
+	 * @param pIsbn
+	 *            A String with the print ISBN of the publication.
+	 * @param eIsbn
+	 *            A String with the electronic ISBN of the publication.
+	 * @param publisherSeq
+	 *            A Long with the publisher identifier.
+	 * @param name
+	 *            A String with the name of the publication.
+	 * @param date
+	 *            A String with the publication date of the publication.
+	 * @param proprietaryId
+	 *            A String with the proprietary identifier of the publication.
+	 * @param volume
+	 *            A String with the bibliographic volume.
+	 * @return a Long with the identifier of the publication.
+	 * @throws Exception
+	 *             if any problem occurred accessing the database.
+	 */
+	abstract Long findOrCreatePublication(String pIssn, String eIssn,
+			String pIsbn, String eIsbn, Long publisherSeq, String name,
+			String date, String proprietaryId, String volume) throws Exception;
+
 
 
 	//	  /**

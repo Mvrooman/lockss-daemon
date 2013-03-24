@@ -261,7 +261,7 @@ public class TestCounterReportsBookReport1 extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(null, null,
 						  "9876543210987",
 						  "9876543210123", publisherSeq,
 						  "The Full Book", "2010-01-01",
@@ -323,7 +323,7 @@ public class TestCounterReportsBookReport1 extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(null, null,
 						  "9876543210234",
 						  "9876543210345", publisherSeq,
 						  "The Book In Sections",

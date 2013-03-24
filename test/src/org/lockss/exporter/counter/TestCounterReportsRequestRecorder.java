@@ -139,7 +139,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
       // Add the publication.
       Long publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(null, null,
 						  "9876543210987",
 						  "9876543210123", publisherSeq,
 						  "The Full Book", "2009-01-01",

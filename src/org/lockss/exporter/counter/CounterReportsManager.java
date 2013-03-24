@@ -197,7 +197,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       // Get the identifier of the dummy publication used for the aggregation of
       // all book requests.
       allBooksPublicationSeq = sqlMetadataManager
-	  .findOrCreatePublication(conn, null, null, "CRBPISBN", "CRBEISBN",
+	  .findOrCreatePublication(null, null, "CRBPISBN", "CRBEISBN",
 	                           publisherSeq, ALL_BOOKS_NAME, null, null,
 	                           null);
       log.debug2(DEBUG_HEADER + "allBooksPublicationSeq = "
@@ -214,7 +214,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       // Get the identifier of the dummy publication used for the aggregation of
       // all journal requests.
       allJournalsPublicationSeq = sqlMetadataManager
-	  .findOrCreatePublication(conn, "CRJPISSN", "CRJEISSN", null,null,
+	  .findOrCreatePublication("CRJPISSN", "CRJEISSN", null,null,
 	                           publisherSeq, ALL_JOURNALS_NAME, null, null,
 	                           null);
       log.debug2(DEBUG_HEADER + "allJournalsPublicationSeq = "

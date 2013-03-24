@@ -264,7 +264,7 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
 
       // Add the publication.
       publicationSeq =
-	  sqlMetadataManager.findOrCreatePublication(conn, "12345678", "98765432",
+	  sqlMetadataManager.findOrCreatePublication("12345678", "98765432",
 						  null, null, publisherSeq,
 						  "JOURNAL", "2010-01-01", null,
 						  null);
