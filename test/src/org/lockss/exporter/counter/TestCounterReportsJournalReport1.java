@@ -289,22 +289,22 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
 	  sqlMetadataManager.findMetadataItemType(
 	                                       MD_ITEM_TYPE_JOURNAL_ARTICLE);
 
-      Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "htmlArticle",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "htmlArticle",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    HTML_URL);
 
-      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "pdfArticle",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "pdfArticle",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    PDF_URL);
     } finally {
       conn.commit();

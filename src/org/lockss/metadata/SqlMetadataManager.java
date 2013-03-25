@@ -3234,6 +3234,30 @@ public class SqlMetadataManager extends MetadataManager {
     return mdItemSeq;
   }
 
+    /**
+     * Adds a metadata item to the database.
+     *
+     * @param parentSeq
+     *          A Long with the metadata item parent identifier.
+     * @param auMdSeq
+     *          A Long with the identifier of the Archival Unit metadata.
+     * @param mdItemTypeSeq
+     *          A Long with the identifier of the type of metadata item.
+     * @param date
+     *          A String with the publication date of the metadata item.
+     * @param coverage
+     *          A String with the metadata item coverage.
+     * @return a Long with the identifier of the metadata item just added.
+     * @throws SQLException
+     *           if any problem occurred accessing the database.
+     */
+    public Long addMdItem(Long parentSeq,
+                          Long mdItemTypeSeq, Long auMdSeq, String date,
+                          String coverage) throws SQLException {
+        Connection conn = sqlDbManager.getConnection();
+        return addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq, date, coverage);
+    }
+
   /**
    * Provides the names of a metadata item.
    * 
@@ -3312,6 +3336,24 @@ public class SqlMetadataManager extends MetadataManager {
     }
   }
 
+    /**
+     * Adds a metadata item name to the database.
+     *
+     * @param mdItemSeq
+     *          A Long with the metadata item identifier.
+     * @param name
+     *          A String with the name of the metadata item.
+     * @param type
+     *          A String with the type of name of the metadata item.
+     * @throws Exception
+     *           if any problem occurred accessing the database.
+     */
+    public void addMdItemName(Long mdItemSeq, String name,
+                                String type) throws SQLException{
+        Connection conn = sqlDbManager.getConnection();
+        addMdItemName(conn,mdItemSeq,name,type);
+    }
+
   /**
    * Adds to the database a metadata item URL.
    * 
@@ -3346,6 +3388,20 @@ public class SqlMetadataManager extends MetadataManager {
       SqlDbManager.safeCloseStatement(insertMdItemUrl);
     }
   }
+
+    /**
+     * Adds to the database a metadata item URL.
+     *
+     * @param mdItemSeq A Long with the metadata item identifier.
+     * @param feature   A String with the feature of the metadata item URL.
+     * @param url       A String with the metadata item URL.
+     * @throws SQLException if any problem occurred accessing the database.
+     */
+    public void addMdItemUrl(Long mdItemSeq, String feature,
+                             String url) throws SQLException {
+        Connection conn = sqlDbManager.getConnection();
+        addMdItemUrl(conn, mdItemSeq, feature, url);
+    }
 
   /**
    * Adds to the database a metadata item DOI.

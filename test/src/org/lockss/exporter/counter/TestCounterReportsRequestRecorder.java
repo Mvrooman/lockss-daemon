@@ -164,20 +164,20 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
       Long mdItemTypeSeq =
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
-      Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                                  auMdSeq, "2009-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, "", IGNORABLE_URL);
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, "", IGNORABLE_URL);
 
-      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "The Full Book",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    RECORDABLE_URL);
     } finally {
       conn.commit();

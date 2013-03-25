@@ -288,13 +288,13 @@ public class TestCounterReportsBookReport1 extends LockssTestCase {
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
       Long mdItemSeq =
-	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
+	  sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq, auMdSeq,
 				    "2010-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "The Full Book",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    FULL_URL);
     } finally {
       conn.commit();
@@ -348,13 +348,13 @@ public class TestCounterReportsBookReport1 extends LockssTestCase {
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK_CHAPTER);
 
       Long mdItemSeq =
-	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
+	  sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq, auMdSeq,
 				    "2010-02-02", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "Chapter Name",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "Chapter Name",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    SECTION_URL);
     } finally {
       conn.commit();

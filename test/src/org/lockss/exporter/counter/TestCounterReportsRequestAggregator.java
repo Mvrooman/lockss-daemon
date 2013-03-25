@@ -396,13 +396,13 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
       Long mdItemSeq =
-	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
+	  sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq, auMdSeq,
 	                            "2010-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "Full Name",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "Full Name",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    FULL_URL);
     } finally {
       conn.commit();
@@ -456,13 +456,13 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK_CHAPTER);
 
       Long mdItemSeq =
-	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
+	  sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq, auMdSeq,
 	                            "2010-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "Chapter Name",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "Chapter Name",
 					PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    SECTION_URL);
     } finally {
       conn.commit();
@@ -683,20 +683,20 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       Long mdItemTypeSeq = sqlMetadataManager
 	  .findMetadataItemType(MD_ITEM_TYPE_JOURNAL_ARTICLE);
 
-      Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "html", PRIMARY_NAME_TYPE);
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "html", PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    HTML_URL);
 
-      mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
 
-	  sqlMetadataManager.addMdItemName(conn, mdItemSeq, "pdf", PRIMARY_NAME_TYPE);
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "pdf", PRIMARY_NAME_TYPE);
 
-      sqlMetadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    PDF_URL);
     } finally {
       conn.commit();

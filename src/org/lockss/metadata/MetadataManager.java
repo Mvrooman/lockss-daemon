@@ -168,6 +168,57 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      */
     abstract Long findMetadataItemType(String typeName) throws Exception;
 
+    /**
+     * Adds a metadata item to the database.
+     *
+     * @param parentSeq
+     *          A Long with the metadata item parent identifier.
+     * @param auMdSeq
+     *          A Long with the identifier of the Archival Unit metadata.
+     * @param mdItemTypeSeq
+     *          A Long with the identifier of the type of metadata item.
+     * @param date
+     *          A String with the publication date of the metadata item.
+     * @param coverage
+     *          A String with the metadata item coverage.
+     * @return a Long with the identifier of the metadata item just added.
+     * @throws Exception
+     *           if any problem occurred accessing the database.
+     */
+    abstract Long addMdItem(Long parentSeq,
+                          Long mdItemTypeSeq, Long auMdSeq, String date,
+                          String coverage) throws Exception;
+
+    /**
+     * Adds a metadata item name to the database.
+     *
+     * @param mdItemSeq
+     *          A Long with the metadata item identifier.
+     * @param name
+     *          A String with the name of the metadata item.
+     * @param type
+     *          A String with the type of name of the metadata item.
+     * @throws Exception
+     *           if any problem occurred accessing the database.
+     */
+    abstract void addMdItemName(Long mdItemSeq, String name,
+                              String type) throws Exception;
+
+    /**
+     * Adds to the database a metadata item URL.
+     *
+     * @param mdItemSeq
+     *          A Long with the metadata item identifier.
+     * @param feature
+     *          A String with the feature of the metadata item URL.
+     * @param url
+     *          A String with the metadata item URL.
+     * @throws Exception
+     *           if any problem occurred accessing the database.
+     */
+    abstract void addMdItemUrl(Long mdItemSeq, String feature,
+                             String url) throws Exception;
+
 
     //	  /**
     //	   * Provides the number of enabled pending AUs.
