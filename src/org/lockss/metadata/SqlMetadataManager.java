@@ -3440,17 +3440,19 @@ public class SqlMetadataManager extends MetadataManager {
     }
   }
 
-  /**
-   * Adds an AU to the list of AUs to be reindexed.
-   * Does incremental reindexing if possible.
-   * 
-   * @param au
-   *          An ArchivalUnit with the AU to be reindexed.
-   * @return <code>true</code> if au was added for reindexing
-   */
-  public boolean addAuToReindex(ArchivalUnit au) {
-    return addAuToReindex(au, false, false);
-  }
+    /**
+     * Adds to the database a metadata item DOI.
+     *
+     * @param mdItemSeq A Long with the metadata item identifier.
+     * @param doi       A String with the DOI of the metadata item.
+     * @throws SQLException if any problem occurred accessing the database.
+     */
+    @Override
+    public void addMdItemDoi(Long mdItemSeq, String doi)
+            throws SQLException {
+        Connection conn = sqlDbManager.getConnection();
+        addMdItemDoi(mdItemSeq, doi);
+    }
 
   /**
    * Adds an AU to the list of AUs to be reindexed.
@@ -3458,28 +3460,43 @@ public class SqlMetadataManager extends MetadataManager {
    * 
    * @param au
    *          An ArchivalUnit with the AU to be reindexed.
-   * @param inBatch
-   *          A boolean indicating whether the reindexing of this AU should be
-   *          performed as part of a batch.
    * @return <code>true</code> if au was added for reindexing
    */
+  @Override
+  public boolean addAuToReindex(ArchivalUnit au) {
+    return addAuToReindex(au, false, false);
+  }
+
+  /**
+     * Adds an AU to the list of AUs to be reindexed.
+     * Does incremental reindexing if possible.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU to be reindexed.
+     * @param inBatch
+     *          A boolean indicating whether the reindexing of this AU should be
+     *          performed as part of a batch.
+     * @return <code>true</code> if au was added for reindexing
+     */
+  @Override
   public boolean addAuToReindex(ArchivalUnit au, boolean inBatch) {
     return addAuToReindex(au, inBatch, false);
   }
   
   /**
-   * Adds an AU to the list of AUs to be reindexed. Optionally causes
-   * full reindexing by removing the AU from the database.
-   * 
-   * @param au
-   *          An ArchivalUnit with the AU to be reindexed.
-   * @param inBatch
-   *          A boolean indicating whether the reindexing of this AU should be
-   *          performed as part of a batch.
-   * @param fullReindex
-   *          Causes a full reindex by removing that AU from the database. 
-   * @return <code>true</code> if au was added for reindexing
-   */
+     * Adds an AU to the list of AUs to be reindexed. Optionally causes
+     * full reindexing by removing the AU from the database.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU to be reindexed.
+     * @param inBatch
+     *          A boolean indicating whether the reindexing of this AU should be
+     *          performed as part of a batch.
+     * @param fullReindex
+     *          Causes a full reindex by removing that AU from the database.
+     * @return <code>true</code> if au was added for reindexing
+     */
+  @Override
   public boolean addAuToReindex(
       ArchivalUnit au, boolean inBatch, boolean fullReindex) {
     final String DEBUG_HEADER = "addAuToReindex(): ";
@@ -3610,6 +3627,7 @@ public class SqlMetadataManager extends MetadataManager {
    * @return <code>true</code> if au was added for reindexing,
    *         <code>false</code> otherwise.
    */
+  @Override
   public boolean disableAuIndexing(ArchivalUnit au) {
     final String DEBUG_HEADER = "disableAuIndexing(): ";
 
@@ -4159,7 +4177,5 @@ public class SqlMetadataManager extends MetadataManager {
     return sqlDbManager;
   }
 
-  public void setDbManager(SqlDbManager sqlDbManager) {
-	  this.sqlDbManager = sqlDbManager;
-  }
+
 }

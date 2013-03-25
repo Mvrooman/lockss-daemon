@@ -159,7 +159,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
       Long parentSeq =
 	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
-      sqlMetadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
+      sqlMetadataManager.addMdItemDoi(parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
 	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);

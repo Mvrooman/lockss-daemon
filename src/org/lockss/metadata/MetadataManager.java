@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
+import org.lockss.plugin.ArchivalUnit;
 import org.lockss.util.Logger;
 
 public abstract class MetadataManager extends BaseLockssDaemonManager implements ConfigurableManager {
@@ -171,53 +172,101 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
     /**
      * Adds a metadata item to the database.
      *
-     * @param parentSeq
-     *          A Long with the metadata item parent identifier.
-     * @param auMdSeq
-     *          A Long with the identifier of the Archival Unit metadata.
-     * @param mdItemTypeSeq
-     *          A Long with the identifier of the type of metadata item.
-     * @param date
-     *          A String with the publication date of the metadata item.
-     * @param coverage
-     *          A String with the metadata item coverage.
+     * @param parentSeq     A Long with the metadata item parent identifier.
+     * @param auMdSeq       A Long with the identifier of the Archival Unit metadata.
+     * @param mdItemTypeSeq A Long with the identifier of the type of metadata item.
+     * @param date          A String with the publication date of the metadata item.
+     * @param coverage      A String with the metadata item coverage.
      * @return a Long with the identifier of the metadata item just added.
-     * @throws Exception
-     *           if any problem occurred accessing the database.
+     * @throws Exception if any problem occurred accessing the database.
      */
     abstract Long addMdItem(Long parentSeq,
-                          Long mdItemTypeSeq, Long auMdSeq, String date,
-                          String coverage) throws Exception;
+                            Long mdItemTypeSeq, Long auMdSeq, String date,
+                            String coverage) throws Exception;
 
     /**
      * Adds a metadata item name to the database.
      *
-     * @param mdItemSeq
-     *          A Long with the metadata item identifier.
-     * @param name
-     *          A String with the name of the metadata item.
-     * @param type
-     *          A String with the type of name of the metadata item.
-     * @throws Exception
-     *           if any problem occurred accessing the database.
+     * @param mdItemSeq A Long with the metadata item identifier.
+     * @param name      A String with the name of the metadata item.
+     * @param type      A String with the type of name of the metadata item.
+     * @throws Exception if any problem occurred accessing the database.
      */
     abstract void addMdItemName(Long mdItemSeq, String name,
-                              String type) throws Exception;
+                                String type) throws Exception;
 
     /**
      * Adds to the database a metadata item URL.
      *
+     * @param mdItemSeq A Long with the metadata item identifier.
+     * @param feature   A String with the feature of the metadata item URL.
+     * @param url       A String with the metadata item URL.
+     * @throws Exception if any problem occurred accessing the database.
+     */
+    abstract void addMdItemUrl(Long mdItemSeq, String feature,
+                               String url) throws Exception;
+
+    /**
+     * Adds to the database a metadata item DOI.
+     *
      * @param mdItemSeq
      *          A Long with the metadata item identifier.
-     * @param feature
-     *          A String with the feature of the metadata item URL.
-     * @param url
-     *          A String with the metadata item URL.
+     * @param doi
+     *          A String with the DOI of the metadata item.
      * @throws Exception
      *           if any problem occurred accessing the database.
      */
-    abstract void addMdItemUrl(Long mdItemSeq, String feature,
-                             String url) throws Exception;
+    abstract void addMdItemDoi(Long mdItemSeq, String doi)
+            throws Exception;
+
+    /**
+     * Adds an AU to the list of AUs to be reindexed.
+     * Does incremental reindexing if possible.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU to be reindexed.
+     * @return <code>true</code> if au was added for reindexing
+     */
+    abstract boolean addAuToReindex(ArchivalUnit au);
+
+    /**
+     * Adds an AU to the list of AUs to be reindexed.
+     * Does incremental reindexing if possible.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU to be reindexed.
+     * @param inBatch
+     *          A boolean indicating whether the reindexing of this AU should be
+     *          performed as part of a batch.
+     * @return <code>true</code> if au was added for reindexing
+     */
+    abstract boolean addAuToReindex(ArchivalUnit au, boolean inBatch);
+
+    /**
+     * Adds an AU to the list of AUs to be reindexed. Optionally causes
+     * full reindexing by removing the AU from the database.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU to be reindexed.
+     * @param inBatch
+     *          A boolean indicating whether the reindexing of this AU should be
+     *          performed as part of a batch.
+     * @param fullReindex
+     *          Causes a full reindex by removing that AU from the database.
+     * @return <code>true</code> if au was added for reindexing
+     */
+    abstract boolean addAuToReindex(
+            ArchivalUnit au, boolean inBatch, boolean fullReindex);
+
+    /**
+     * Disables the indexing of an AU.
+     *
+     * @param au
+     *          An ArchivalUnit with the AU for which indexing is to be disabled.
+     * @return <code>true</code> if au was added for reindexing,
+     *         <code>false</code> otherwise.
+     */
+    abstract boolean disableAuIndexing(ArchivalUnit au);
 
 
     //	  /**
