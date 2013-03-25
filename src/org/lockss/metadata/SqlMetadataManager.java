@@ -2588,6 +2588,20 @@ public class SqlMetadataManager extends MetadataManager {
     return mdItemSeq;
   }
 
+    /**
+     * Provides the identifier of the metadata item of a publication.
+     *
+     * @param publicationSeq A Long with the identifier of the publication.
+     * @return a Long with the identifier of the metadata item of the publication.
+     * @throws SQLException if any problem occurred accessing the database.
+     */
+    @Override
+    public Long findPublicationMetadataItem(Long publicationSeq) throws SQLException {
+        Connection conn = sqlDbManager.getConnection();
+        return findPublicationMetadataItem(conn, publicationSeq);
+    }
+
+
   /**
    * Adds to the database the ISSNs of a metadata item.
    * 
@@ -3138,6 +3152,21 @@ public class SqlMetadataManager extends MetadataManager {
     log.debug3(DEBUG_HEADER + "mdItemTypeSeq = " + mdItemTypeSeq);
     return mdItemTypeSeq;
   }
+
+    /**
+     * Provides the identifier of a metadata item type by its name.
+     *
+     * @param typeName
+     *          A String with the name of the metadata item type.
+     * @return a Long with the identifier of the metadata item type.
+     * @throws SQLException
+     *           if any problem occurred accessing the database.
+     */
+    @Override
+    public Long findMetadataItemType(String typeName) throws SQLException{
+        Connection conn = sqlDbManager.getConnection();
+        return findMetadataItemType(conn,typeName);
+    }
 
   /**
    * Adds a metadata item to the database.

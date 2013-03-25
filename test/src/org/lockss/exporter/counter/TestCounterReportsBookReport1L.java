@@ -281,12 +281,12 @@ public class TestCounterReportsBookReport1L extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       sqlMetadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
+	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
       Long mdItemSeq =
 	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
@@ -343,10 +343,10 @@ public class TestCounterReportsBookReport1L extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       Long mdItemTypeSeq =
-	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK_CHAPTER);
+	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK_CHAPTER);
 
       Long mdItemSeq =
 	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,

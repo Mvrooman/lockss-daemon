@@ -342,12 +342,12 @@ public class TestCounterReportsJournalReport5 extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       sqlMetadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  sqlMetadataManager.findMetadataItemType(conn,
+	  sqlMetadataManager.findMetadataItemType(
 	                                       MD_ITEM_TYPE_JOURNAL_ARTICLE);
 
       Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,

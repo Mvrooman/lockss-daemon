@@ -390,10 +390,10 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       Long mdItemTypeSeq =
-	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
+	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
       Long mdItemSeq =
 	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
@@ -450,10 +450,10 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       Long mdItemTypeSeq =
-	  sqlMetadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK_CHAPTER);
+	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK_CHAPTER);
 
       Long mdItemSeq =
 	  sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq, auMdSeq,
@@ -678,10 +678,10 @@ public class TestCounterReportsRequestAggregator extends LockssTestCase {
       Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  sqlMetadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
       Long mdItemTypeSeq = sqlMetadataManager
-	  .findMetadataItemType(conn, MD_ITEM_TYPE_JOURNAL_ARTICLE);
+	  .findMetadataItemType(MD_ITEM_TYPE_JOURNAL_ARTICLE);
 
       Long mdItemSeq = sqlMetadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
