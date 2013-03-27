@@ -798,7 +798,7 @@ public class ReindexingTask extends StepTask {
 	    if (mditr.hasNext()) {
 
 	      // Yes: Write the AU metadata to the database.
-	      new AuMetadataRecorder((ReindexingTask) task, mdManager, au)
+	      new SqlAuMetadataRecorder((ReindexingTask) task, mdManager, au)
 		  .recordMetadata(conn, mditr);
 
 	    }

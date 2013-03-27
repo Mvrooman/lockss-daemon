@@ -239,7 +239,7 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
      * @throws SQLException if any problem occurred accessing the database.
      */
     public void recordMetadata(Iterator<ArticleMetadataInfo> mditr) throws SQLException {
-        Connection conn = mdManager.getConnection();
+        Connection conn = sqlDbManager.getConnection();
         recordMetadata(conn, mditr);
     }
 
