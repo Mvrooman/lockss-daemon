@@ -68,9 +68,9 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
     /**
      * Provides the list of reindexing tasks.
      *
-     * @return a List<ReindexingTask> with the reindexing tasks.
+     * @return a List<SqlReindexingTask> with the reindexing tasks.
      */
-    abstract List<ReindexingTask> getReindexingTasks();
+    abstract List<SqlReindexingTask> getReindexingTasks();
 
     /**
      * Provides the number of distinct articles in the metadata database.

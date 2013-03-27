@@ -164,7 +164,7 @@ public class MetadataManagerStatusAccessor implements StatusAccessor {
   private List<Map<String,Object>> getRows() {
     List<Map<String,Object>> rows = new ArrayList<Map<String,Object>>();
     int rowNum = 0;
-    for (ReindexingTask task : metadataMgr.getReindexingTasks()) {
+    for (SqlReindexingTask task : metadataMgr.getReindexingTasks()) {
       String auName = task.getAuName();
       String auId = task.getAuId();
       boolean auNoSubstance = task.hasNoAuSubstance();

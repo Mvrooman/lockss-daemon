@@ -151,7 +151,7 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
       + " where " + MD_ITEM_SEQ_COLUMN + " = ?";
 
   // The calling task.
-  private final ReindexingTask task;
+  private final SqlReindexingTask task;
 
   // The metadata manager.
   private final SqlMetadataManager mdManager;
@@ -182,7 +182,7 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
    * @param mdManager A SqlMetadataManager with the metadata manager.
    * @param au An ArchivalUnit with the archival unit.
    */
-  public SqlAuMetadataRecorder(ReindexingTask task, SqlMetadataManager mdManager,
+  public SqlAuMetadataRecorder(SqlReindexingTask task, SqlMetadataManager mdManager,
                                ArchivalUnit au) {
     super(task,mdManager,au);
     this.task = task;

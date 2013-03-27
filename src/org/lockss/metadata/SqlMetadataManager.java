@@ -493,14 +493,14 @@ public class SqlMetadataManager extends MetadataManager {
   /**
    * Map of running reindexing tasks keyed by their AuIds
    */
-  final Map<String, ReindexingTask> activeReindexingTasks =
-      new HashMap<String, ReindexingTask>();
+  final Map<String, SqlReindexingTask> activeReindexingTasks =
+      new HashMap<String, SqlReindexingTask>();
 
   /**
    * List of reindexing tasks in order from most recent (0) to least recent.
    */
-  final List<ReindexingTask> reindexingTaskHistory =
-      new ArrayList<ReindexingTask>();
+  final List<SqlReindexingTask> reindexingTaskHistory =
+      new ArrayList<SqlReindexingTask>();
 
   /**
    * Metadata manager indexing enabled flag.  Initial value should always
@@ -822,7 +822,7 @@ public class SqlMetadataManager extends MetadataManager {
     List<ArchivalUnit> abortAus = new ArrayList<ArchivalUnit>();
 
     synchronized (activeReindexingTasks) {
-      for (ReindexingTask task : activeReindexingTasks.values()) {
+      for (SqlReindexingTask task : activeReindexingTasks.values()) {
 	ArchivalUnit au = task.getAu();
 
 	if (indexPriorityAuidMap.getMatch(au.getAuId()) <
@@ -873,7 +873,7 @@ public class SqlMetadataManager extends MetadataManager {
 
     // Quit any running reindexing tasks.
     synchronized (activeReindexingTasks) {
-      for (ReindexingTask task : activeReindexingTasks.values()) {
+      for (SqlReindexingTask task : activeReindexingTasks.values()) {
         task.cancel();
       }
 
@@ -891,7 +891,7 @@ public class SqlMetadataManager extends MetadataManager {
    */
   private boolean cancelAuTask(String auId) {
     final String DEBUG_HEADER = "cancelAuTask(): ";
-    ReindexingTask task = activeReindexingTasks.get(auId);
+    SqlReindexingTask task = activeReindexingTasks.get(auId);
 
     if (task != null) {
       // task cancellation will remove task and schedule next one
@@ -982,7 +982,7 @@ public class SqlMetadataManager extends MetadataManager {
               // No: Schedule the pending AU.
 	      log.debug3(DEBUG_HEADER + "Creating the reindexing task for AU: "
 		  + au.getName());
-              ReindexingTask task = new ReindexingTask(au, ae);
+              SqlReindexingTask task = new SqlReindexingTask(au, ae);
               activeReindexingTasks.put(au.getAuId(), task);
 
               // Add the reindexing task to the history; limit history list
@@ -1177,9 +1177,9 @@ public class SqlMetadataManager extends MetadataManager {
    * Adds a task to the history.
    * 
    * @param task
-   *          A ReindexingTask with the task.
+   *          A SqlReindexingTask with the task.
    */
-  private void addToHistory(ReindexingTask task) {
+  private void addToHistory(SqlReindexingTask task) {
     synchronized (reindexingTaskHistory) {
       reindexingTaskHistory.add(0, task);
       setMaxHistory(maxReindexingTaskHistory);
@@ -1192,9 +1192,9 @@ public class SqlMetadataManager extends MetadataManager {
    * Temporary implementation runs as a LockssRunnable in a thread rather than
    * using the SchedService.
    * 
-   * @param task A ReindexingTask with the reindexing task.
+   * @param task A SqlReindexingTask with the reindexing task.
    */
-  private void runReindexingTask(final ReindexingTask task) {
+  private void runReindexingTask(final SqlReindexingTask task) {
     /*
      * Temporarily running task in its own thread rather than using SchedService
      * 
@@ -1230,9 +1230,9 @@ public class SqlMetadataManager extends MetadataManager {
 
     synchronized (reindexingTaskHistory) {
       // Remove tasks with this auid from task history list.
-      for (Iterator<ReindexingTask> itr = reindexingTaskHistory.iterator();
+      for (Iterator<SqlReindexingTask> itr = reindexingTaskHistory.iterator();
 	  itr.hasNext();) {
-        ReindexingTask task = itr.next();
+        SqlReindexingTask task = itr.next();
 
         if (auId.equals(task.getAu().getAuId())) {
           itr.remove();
@@ -1403,11 +1403,11 @@ public class SqlMetadataManager extends MetadataManager {
   /**
    * Provides the list of reindexing tasks.
    * 
-   * @return a List<ReindexingTask> with the reindexing tasks.
+   * @return a List<SqlReindexingTask> with the reindexing tasks.
    */
   @Override
-  public List<ReindexingTask> getReindexingTasks() {
-    return new ArrayList<ReindexingTask>(reindexingTaskHistory);
+  public List<SqlReindexingTask> getReindexingTasks() {
+    return new ArrayList<SqlReindexingTask>(reindexingTaskHistory);
   }
 
   /**
@@ -3606,7 +3606,7 @@ public class SqlMetadataManager extends MetadataManager {
    */
   private boolean rescheduleAuTask(String auId) {
     final String DEBUG_HEADER = "rescheduleAuTask(): ";
-    ReindexingTask task = activeReindexingTasks.get(auId);
+    SqlReindexingTask task = activeReindexingTasks.get(auId);
 
     if (task != null) {
       log.debug2(DEBUG_HEADER
@@ -3648,7 +3648,7 @@ public class SqlMetadataManager extends MetadataManager {
         log.debug2(DEBUG_HEADER + "auId " + auId);
 
         if (activeReindexingTasks.containsKey(auId)) {
-          ReindexingTask task = activeReindexingTasks.get(auId);
+          SqlReindexingTask task = activeReindexingTasks.get(auId);
           task.cancel();
           activeReindexingTasks.remove(task);
         }

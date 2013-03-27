@@ -18,7 +18,7 @@ public abstract class AuMetadataRecorder {
      * @param mdManager A MetadataManager with the metadata manager.
      * @param au An ArchivalUnit with the archival unit.
      */
-    public AuMetadataRecorder(ReindexingTask task, MetadataManager mdManager,
+    public AuMetadataRecorder(SqlReindexingTask task, MetadataManager mdManager,
                               ArchivalUnit au)
     {
 
