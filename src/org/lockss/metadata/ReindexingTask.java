@@ -56,7 +56,7 @@ public abstract class ReindexingTask extends StepTask {
 	protected final SqlDbManager sqlDbManager;
 
 	// The metadata manager.
-	protected final SqlMetadataManager mdManager;
+	protected MetadataManager mdManager;
 
 	protected final Emitter emitter;
 
@@ -96,7 +96,7 @@ public abstract class ReindexingTask extends StepTask {
 		this.auName = au.getName();
 		this.auId = au.getAuId();
 		this.auNoSubstance = AuUtil.getAuState(au).hasNoSubstance();
-		sqlDbManager = LockssDaemon.getLockssDaemon().getDbManager();
+		sqlDbManager = (SqlDbManager) LockssDaemon.getLockssDaemon().getDbManager();
 		mdManager = LockssDaemon.getLockssDaemon().getMetadataManager();
 
 		// The accumulator of article metadata.

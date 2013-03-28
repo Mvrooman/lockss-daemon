@@ -350,7 +350,7 @@ final public class MetadataDatabaseUtil {
     ResultSet resultSet = null;
     
     try {
-      sqlDbManager = getDaemon().getDbManager();
+      sqlDbManager = (SqlDbManager) getDaemon().getDbManager();
       conn = sqlDbManager.getConnection();
       statement = sqlDbManager.prepareStatement(conn, bibliographicItemsQuery);
       resultSet = sqlDbManager.executeQuery(statement);

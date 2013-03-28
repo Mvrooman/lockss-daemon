@@ -293,7 +293,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
 
     try {
       // Get the journals to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -304,7 +304,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the journals to be included in the report.
       while (resultSet.next()) {
@@ -427,7 +427,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
 
     try {
       // Get the request counts for all the rows to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -438,7 +438,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the request counts to be included in the report.
       while (resultSet.next()) {

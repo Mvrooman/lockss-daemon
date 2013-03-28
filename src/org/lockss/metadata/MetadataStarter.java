@@ -34,7 +34,6 @@ package org.lockss.metadata;
 import static org.lockss.db.SqlDbManager.*;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import org.lockss.app.LockssDaemon;

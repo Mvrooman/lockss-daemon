@@ -573,7 +573,7 @@ public class SqlMetadataManager extends MetadataManager {
     log.debug(DEBUG_HEADER + "Starting SqlMetadataManager");
 
     pluginMgr = getDaemon().getPluginManager();
-    sqlDbManager = getDaemon().getDbManager();
+    sqlDbManager = (SqlDbManager) getDaemon().getDbManager();
 
     // Get a connection to the database.
     Connection conn;
@@ -1804,7 +1804,7 @@ public class SqlMetadataManager extends MetadataManager {
 			throws SQLException {
 
 		Connection conn = sqlDbManager.getConnection();
-		return addAuMd(auSeq, version, extractTime);
+		return addAuMd(conn, auSeq, version, extractTime);
   }
   
   /**
@@ -3451,7 +3451,7 @@ public class SqlMetadataManager extends MetadataManager {
     public void addMdItemDoi(Long mdItemSeq, String doi)
             throws SQLException {
         Connection conn = sqlDbManager.getConnection();
-        addMdItemDoi(mdItemSeq, doi);
+        addMdItemDoi(conn, mdItemSeq, doi);
     }
 
   /**

@@ -154,7 +154,7 @@ public class CounterReportsRequestRecorder {
     PreparedStatement getUrlMdItemId = null;
     ResultSet results = null;
     Long mdItemId = null;
-    SqlDbManager sqlDbManager = LockssDaemon.getLockssDaemon().getDbManager();
+    SqlDbManager sqlDbManager = (SqlDbManager) LockssDaemon.getLockssDaemon().getDbManager();
 
     try {
       // Get the database connection.

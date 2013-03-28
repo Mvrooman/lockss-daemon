@@ -1,9 +1,6 @@
 package org.lockss.metadata;
 
 import org.lockss.plugin.ArchivalUnit;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Iterator;
 
 /**

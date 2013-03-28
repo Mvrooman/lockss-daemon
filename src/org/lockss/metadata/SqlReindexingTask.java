@@ -70,7 +70,7 @@ public class SqlReindexingTask extends ReindexingTask {
 	private volatile long endUserTime = 0;
 
 	private static ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
-
+	private final SqlMetadataManager sqlMetadataManager;
 	static {
 		log.debug3("current thread CPU time supported? "
 				+ tmxb.isCurrentThreadCpuTimeSupported());
@@ -92,6 +92,7 @@ public class SqlReindexingTask extends ReindexingTask {
 	public SqlReindexingTask(ArchivalUnit theAu, ArticleMetadataExtractor theAe) {
 		// NOTE: estimated window time interval duration not currently used.
 		super(theAu, theAe);
+		this.sqlMetadataManager = (SqlMetadataManager)this.mdManager;
 		callback = new ReindexingEventHandler();
 	}
 
@@ -190,7 +191,7 @@ public class SqlReindexingTask extends ReindexingTask {
 					message = "Cannot determine whther the metadata for AU = "
 							+ auSeq + " was extracted with an obsolete plugin";
 
-					needsIncrementalExtraction = !mdManager
+					needsIncrementalExtraction = !sqlMetadataManager
 							.isAuMetadataForObsoletePlugin(conn, au);
 					log.debug2(DEBUG_HEADER + "needsIncrementalExtraction = "
 							+ needsIncrementalExtraction);
@@ -201,7 +202,7 @@ public class SqlReindexingTask extends ReindexingTask {
 						message = "Cannot find the last extraction time for AU = "
 								+ auSeq + " in the database";
 
-						lastExtractionTime = mdManager.getAuExtractionTime(
+						lastExtractionTime = sqlMetadataManager.getAuExtractionTime(
 								conn, auSeq);
 						log.debug2(DEBUG_HEADER + "lastExtractionTime = "
 								+ lastExtractionTime);
@@ -238,7 +239,7 @@ public class SqlReindexingTask extends ReindexingTask {
 
 			try {
 				articleMetadataInfoBuffer = new ArticleMetadataBuffer();
-				mdManager.notifyStartReindexingAu(au);
+				sqlMetadataManager.notifyStartReindexingAu(au);
 			} catch (IOException ioe) {
 				log.error("Failed to set up pending AU '" + au.getName()
 						+ "' for re-indexing", ioe);
@@ -287,9 +288,9 @@ public class SqlReindexingTask extends ReindexingTask {
 					// metadata
 					// stored in the database is older than the current plugin
 					// version.
-					if (mdManager.isAuMetadataForObsoletePlugin(conn, au)) {
+					if (sqlMetadataManager.isAuMetadataForObsoletePlugin(conn, au)) {
 						// Yes: Remove old AU metadata before adding new.
-						removedArticleCount = mdManager.removeAuMetadataItems(
+						removedArticleCount = sqlMetadataManager.removeAuMetadataItems(
 								conn, auId);
 						log.debug3(DEBUG_HEADER + "removedArticleCount = "
 								+ removedArticleCount);
@@ -303,23 +304,23 @@ public class SqlReindexingTask extends ReindexingTask {
 
 						// Yes: Write the AU metadata to the database.
 						new SqlAuMetadataRecorder((SqlReindexingTask) task,
-								mdManager, au).recordMetadata(conn, mditr);
+								sqlMetadataManager, au).recordMetadata(conn, mditr);
 
 					}
 
 					// Remove the AU just re-indexed from the list of AUs
 					// pending to be
 					// re-indexed.
-					mdManager.removeFromPendingAus(conn, auId);
+					sqlMetadataManager.removeFromPendingAus(conn, auId);
 
 					// Complete the database transaction.
 					conn.commit();
 
 					// Update the successful re-indexing count.
-					mdManager.incrementSuccessfulReindexingCount();
+					sqlMetadataManager.incrementSuccessfulReindexingCount();
 
 					// Update the total article count.
-					mdManager.addToMetadataArticleCount(updatedArticleCount
+					sqlMetadataManager.addToMetadataArticleCount(updatedArticleCount
 							- removedArticleCount);
 
 					break;
@@ -335,7 +336,7 @@ public class SqlReindexingTask extends ReindexingTask {
 			case Failed:
 			case Rescheduled:
 
-				mdManager.incrementFailedReindexingCount();
+				sqlMetadataManager.incrementFailedReindexingCount();
 
 				// Reindexing not successful, so try again later.
 				// if status indicates the operation should be rescheduled
@@ -347,13 +348,13 @@ public class SqlReindexingTask extends ReindexingTask {
 					conn = sqlDbManager.getConnection();
 
 					// Attempt to move failed AU to end of pending list.
-					mdManager.removeFromPendingAus(conn, au.getAuId());
+					sqlMetadataManager.removeFromPendingAus(conn, au.getAuId());
 
 					if (status == ReindexingStatus.Rescheduled) {
 						log.debug2(DEBUG_HEADER
 								+ "Rescheduling reindexing task au "
 								+ au.getName());
-						mdManager.addToPendingAus(conn,
+						sqlMetadataManager.addToPendingAus(conn,
 								Collections.singleton(au));
 					}
 
@@ -394,16 +395,16 @@ public class SqlReindexingTask extends ReindexingTask {
 			articleMetadataInfoBuffer.close();
 			articleMetadataInfoBuffer = null;
 
-			synchronized (mdManager.activeReindexingTasks) {
-				mdManager.activeReindexingTasks.remove(au.getAuId());
-				mdManager.notifyFinishReindexingAu(au, status);
+			synchronized (sqlMetadataManager.activeReindexingTasks) {
+				sqlMetadataManager.activeReindexingTasks.remove(au.getAuId());
+				sqlMetadataManager.notifyFinishReindexingAu(au, status);
 
 				try {
 					// Get a connection to the database.
 					conn = sqlDbManager.getConnection();
 
 					// Schedule another task if available.
-					mdManager.startReindexing(conn);
+					sqlMetadataManager.startReindexing(conn);
 
 					// Complete the database transaction.
 					conn.commit();
@@ -430,7 +431,7 @@ public class SqlReindexingTask extends ReindexingTask {
 			Long auSeq = null;
 
 			// Find the plugin.
-			Long pluginSeq = mdManager.findPlugin(conn,
+			Long pluginSeq = sqlMetadataManager.findPlugin(conn,
 					PluginManager.pluginIdFromAuId(auId));
 
 			// Check whether the plugin exists.
@@ -438,7 +439,7 @@ public class SqlReindexingTask extends ReindexingTask {
 				// Yes: Get the database identifier of the AU.
 				String auKey = PluginManager.auKeyFromAuId(auId);
 
-				auSeq = mdManager.findAu(conn, pluginSeq, auKey);
+				auSeq = sqlMetadataManager.findAu(conn, pluginSeq, auKey);
 				log.debug2(DEBUG_HEADER + "auSeq = " + auSeq);
 			}
 

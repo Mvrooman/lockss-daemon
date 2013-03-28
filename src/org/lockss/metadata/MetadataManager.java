@@ -1,8 +1,6 @@
 package org.lockss.metadata;
 
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
@@ -128,7 +126,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      * @return a Long with the identifier of the publisher.
      * @throws Exception if any problem occurred accessing the database.
      */
-    abstract Long findOrCreatePublisher(String publisher) throws Exception;
+    public abstract Long findOrCreatePublisher(String publisher) throws Exception;
 
     /**
      * Provides the identifier of a publication if existing or after creating it
@@ -146,7 +144,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      * @return a Long with the identifier of the publication.
      * @throws Exception if any problem occurred accessing the database.
      */
-    abstract Long findOrCreatePublication(String pIssn, String eIssn,
+    public abstract Long findOrCreatePublication(String pIssn, String eIssn,
                                           String pIsbn, String eIsbn, Long publisherSeq, String name,
                                           String date, String proprietaryId, String volume) throws Exception;
 
@@ -227,7 +225,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      *          An ArchivalUnit with the AU to be reindexed.
      * @return <code>true</code> if au was added for reindexing
      */
-    abstract boolean addAuToReindex(ArchivalUnit au);
+    public abstract boolean addAuToReindex(ArchivalUnit au);
 
     /**
      * Adds an AU to the list of AUs to be reindexed.
@@ -240,7 +238,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      *          performed as part of a batch.
      * @return <code>true</code> if au was added for reindexing
      */
-    abstract boolean addAuToReindex(ArchivalUnit au, boolean inBatch);
+    public abstract boolean addAuToReindex(ArchivalUnit au, boolean inBatch);
 
     /**
      * Adds an AU to the list of AUs to be reindexed. Optionally causes
@@ -255,7 +253,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      *          Causes a full reindex by removing that AU from the database.
      * @return <code>true</code> if au was added for reindexing
      */
-    abstract boolean addAuToReindex(
+    public abstract boolean addAuToReindex(
             ArchivalUnit au, boolean inBatch, boolean fullReindex);
 
     /**
@@ -266,7 +264,7 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      * @return <code>true</code> if au was added for reindexing,
      *         <code>false</code> otherwise.
      */
-    abstract boolean disableAuIndexing(ArchivalUnit au);
+    public abstract boolean disableAuIndexing(ArchivalUnit au);
 
 
     //	  /**

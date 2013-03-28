@@ -435,7 +435,7 @@ public class CounterReportsRequestAggregator {
    */
   public CounterReportsRequestAggregator(LockssDaemon daemon) {
     this.daemon = daemon;
-    sqlDbManager = daemon.getDbManager();
+    sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
   }
 
   /**
@@ -508,7 +508,7 @@ public class CounterReportsRequestAggregator {
     final String DEBUG_HEADER = "markRequestsToAggregate: ";
     log.debug2(DEBUG_HEADER + "Starting...");
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
     PreparedStatement markRequests = null;
     boolean success = false;
@@ -556,7 +556,7 @@ public class CounterReportsRequestAggregator {
     final String DEBUG_HEADER = "getYearMonthsWithRequests(): ";
     log.debug2(DEBUG_HEADER + "Starting...");
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
     PreparedStatement statement = null;
     ResultSet resultSet = null;
@@ -673,7 +673,7 @@ public class CounterReportsRequestAggregator {
       return;
     }
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
     Map<String, Integer> previousAggregate = null;
     int previousFullCount = 0;
@@ -809,7 +809,7 @@ public class CounterReportsRequestAggregator {
     log.debug2(DEBUG_HEADER + "month = " + month);
     log.debug2(DEBUG_HEADER + "publisherInvolved = " + publisherInvolved);
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager = (SqlDbManager)  ((SqlDbManager)daemon.getDbManager());
     PreparedStatement statement = null;
     ResultSet resultSet = null;
     Connection conn = null;
@@ -1398,7 +1398,7 @@ public class CounterReportsRequestAggregator {
       return;
     }
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
     Map<String, Integer> previousAggregate = null;
     int previousTotalCount = 0;
@@ -1593,7 +1593,7 @@ public class CounterReportsRequestAggregator {
     log.debug2(DEBUG_HEADER + "month = " + month);
     log.debug2(DEBUG_HEADER + "publisherInvolved = " + publisherInvolved);
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager =  ((SqlDbManager)daemon.getDbManager());
     PreparedStatement statement = null;
     ResultSet resultSet = null;
     Connection conn = null;

@@ -233,7 +233,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
 
     try {
       // Get the journals to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -244,7 +244,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the journals to be included in the report.
       while (resultSet.next()) {
@@ -392,7 +392,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       // Each result will correspond to an item (month) in the report.
       // They will be sorted by journal in exactly the same order as the
       // journals are when using the rowIterator to walk the rows.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -403,7 +403,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the request count items to be included in the report.
       // There will be possibly multiple items for a journal. Once all the

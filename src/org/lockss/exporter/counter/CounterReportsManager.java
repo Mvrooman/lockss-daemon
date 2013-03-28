@@ -53,6 +53,7 @@ import org.lockss.config.ConfigManager;
 import org.lockss.config.Configuration;
 import org.lockss.daemon.Cron;
 import org.lockss.db.SqlDbManager;
+import org.lockss.metadata.MetadataManager;
 import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.util.FileUtil;
 import org.lockss.util.Logger;
@@ -146,7 +147,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
   private SqlDbManager sqlDbManager = null;
 
   /** The metadata manager */
-  private SqlMetadataManager sqlMetadataManager = null;
+  private MetadataManager metadataManager = null;
 
   /**
    * Starts the CounterReportsManager service.
@@ -161,7 +162,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       return;
     }
 
-    sqlDbManager = getDaemon().getDbManager();
+    sqlDbManager = (SqlDbManager) getDaemon().getDbManager();
     Connection conn;
 
     try {
@@ -171,7 +172,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       return;
     }
 
-    sqlMetadataManager = getDaemon().getMetadataManager();
+    metadataManager = getDaemon().getMetadataManager();
     String errorMessage = null;
     boolean success = false;
 
@@ -183,7 +184,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 	  + "aggregation of all title requests";
 
       Long publisherSeq =
-	  sqlMetadataManager.findOrCreatePublisher(ALL_PUBLISHERS_NAME);
+	  metadataManager.findOrCreatePublisher(ALL_PUBLISHERS_NAME);
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
       if (publisherSeq == null) {
@@ -196,7 +197,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
       // Get the identifier of the dummy publication used for the aggregation of
       // all book requests.
-      allBooksPublicationSeq = sqlMetadataManager
+      allBooksPublicationSeq = metadataManager
 	  .findOrCreatePublication(null, null, "CRBPISBN", "CRBEISBN",
 	                           publisherSeq, ALL_BOOKS_NAME, null, null,
 	                           null);
@@ -213,7 +214,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
       // Get the identifier of the dummy publication used for the aggregation of
       // all journal requests.
-      allJournalsPublicationSeq = sqlMetadataManager
+      allJournalsPublicationSeq = metadataManager
 	  .findOrCreatePublication("CRJPISSN", "CRJEISSN", null,null,
 	                           publisherSeq, ALL_JOURNALS_NAME, null, null,
 	                           null);
@@ -226,12 +227,14 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       }
 
       success = true;
-    } catch (SQLException sqle) {
-      log.error(errorMessage, sqle);
+    } catch (Exception exception) {
+      log.error(errorMessage, exception);
     } finally {
       if (success) {
 	try {
 	  conn.commit();
+	  
+	  //TODO: Fix Me -- Static calls to SQLDBMAnager should be replaced with abstract calls to the specific type of manager...
 	  SqlDbManager.safeCloseConnection(conn);
 	} catch (SQLException sqle) {
 	  log.error("Exception caught committing the connection", sqle);

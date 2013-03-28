@@ -37,6 +37,7 @@ import java.io.*;
 import org.mortbay.html.*;
 import org.lockss.app.*;
 import org.lockss.util.*;
+import org.lockss.metadata.MetadataManager;
 import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.poller.*;
 import org.lockss.crawler.*;
@@ -101,7 +102,7 @@ public class DebugPanel extends LockssServlet {
   private PollManager pollManager;
   private CrawlManager crawlMgr;
   private ConfigManager cfgMgr;
-  private SqlMetadataManager metadataMgr;
+  private MetadataManager metadataMgr;
   private RemoteApi rmtApi;
 
   boolean showResult;

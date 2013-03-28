@@ -36,11 +36,13 @@ import org.apache.commons.lang.SystemUtils;
 import org.lockss.util.*;
 import org.lockss.alert.*;
 import org.lockss.daemon.*;
+import org.lockss.db.DbManager;
 import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.account.*;
 import org.lockss.hasher.*;
 import org.lockss.scheduler.*;
+import org.lockss.metadata.MetadataManager;
 import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.plugin.*;
 import org.lockss.truezip.*;
@@ -455,8 +457,8 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
    * @return the SqlMetadataManager
    * @throws IllegalArgumentException if the manager is not available.
    */
-  public SqlMetadataManager getMetadataManager() {
-    return (SqlMetadataManager) getManager(METADATA_MANAGER);
+  public MetadataManager getMetadataManager() {
+    return (MetadataManager) getManager(METADATA_MANAGER);
   }
 
   /**
@@ -551,8 +553,8 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
    * @throws IllegalArgumentException
    *           if the manager is not available.
    */
-  public SqlDbManager getDbManager() {
-    return (SqlDbManager) getManager(DB_MANAGER);
+  public DbManager getDbManager() {
+    return (DbManager) getManager(DB_MANAGER);
   }
 
   /**

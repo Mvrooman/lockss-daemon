@@ -310,7 +310,7 @@ public abstract class BaseCounterReport implements CounterReport {
   private void compileReportData() throws SQLException, CounterReportsException {
     final String DEBUG_HEADER = "compileReportData(): ";
 
-    SqlDbManager sqlDbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager = ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
 
     try {
