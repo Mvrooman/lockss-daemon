@@ -1,5 +1,5 @@
 /*
- * $Id: TestDbManager.java,v 1.2 2012/12/07 07:27:05 fergaloy-sf Exp $
+ * $Id: TestSqlDbManager.java,v 1.2 2012/12/07 07:27:05 fergaloy-sf Exp $
  */
 
 /*
@@ -49,7 +49,7 @@ import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
 import org.lockss.util.Logger;
 
-public class TestDbManager extends LockssTestCase {
+public class TestSqlDbManager extends LockssTestCase {
   private static String TABLE_CREATE_SQL =
       "create table testtable (id bigint NOT NULL, name varchar(512))";
 
@@ -98,7 +98,7 @@ public class TestDbManager extends LockssTestCase {
     props
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     props.setProperty(SqlDbManager.PARAM_DATASOURCE_DATABASENAME,
-		      new File(tempDirPath, "db/TestDbManager")
+		      new File(tempDirPath, "db/TestSqlDbManager")
 			  .getCanonicalPath());
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
