@@ -4,43 +4,41 @@ import java.net.UnknownHostException;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
-import org.lockss.app.BaseLockssDaemonManager;
-import org.lockss.app.ConfigurableManager;
 import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
 import org.lockss.util.Logger;
 
 
 
-public class MongoDbManager extends BaseLockssDaemonManager implements ConfigurableManager, DbManager {
-	
+public class MongoDbManager extends DbManager {
+
 	private static final Logger log = Logger.getLogger(MongoDbManager.class);
 	private boolean ready = false;
 	//The mongo database
 	private DB mongoDatabase;
-	
-	  /**
-	* Starts the DbManager service.
-	*/
-	  @Override
-	  public void startService() {
-	      log.info("Starting mongoDB manager");
-	      ready = ready && mongoDatabase != null;
-	      if (ready) {
-	          return;
-	      }
-	      MongoClient mongoClient = null;
-	      try {
-	          mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
-	          mongoDatabase = mongoClient.getDB("lockss");
 
-	      } catch (UnknownHostException e) {
-	          log.error(e.getMessage());
-	          //TODO: Add logging/handling here
-	      }
-	      ready = true;
-	  }
-	      
+	/**
+	 * Starts the DbManager service.
+	 */
+	@Override
+	public void startService() {
+		log.info("Starting mongoDB manager");
+		ready = ready && mongoDatabase != null;
+		if (ready) {
+			return;
+		}
+		MongoClient mongoClient = null;
+		try {
+			mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
+			mongoDatabase = mongoClient.getDB("lockss");
+
+		} catch (UnknownHostException e) {
+			log.error(e.getMessage());
+			//TODO: Add logging/handling here
+		}
+		ready = true;
+	}
+
 
 	@Override
 	public OpenUrlResolverDbManager getOpenUrlResolverDbManager() {
@@ -58,7 +56,7 @@ public class MongoDbManager extends BaseLockssDaemonManager implements Configura
 	public void setConfig(Configuration newConfig, Configuration prevConfig,
 			Differences changedKeys) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

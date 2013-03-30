@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.lockss.db.DbManager;
 import org.lockss.db.SqlDbManager;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
@@ -57,7 +58,7 @@ import org.lockss.util.StringUtil;
  * Writes to the database metadata related to an archival unit.
  */
 public class SqlAuMetadataRecorder extends AuMetadataRecorder {
-  private static Logger log = Logger.getLogger(SqlAuMetadataRecorder.class);
+  
 
   private static final String ACCESS_URL_FEATURE = "Access";
 
@@ -149,24 +150,11 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
       + "," + ITEM_NO_COLUMN + " = ?"
       + " where " + MD_ITEM_SEQ_COLUMN + " = ?";
 
-  // The calling task.
-  private final SqlReindexingTask task;
-
   // The metadata manager.
   private final SqlMetadataManager mdManager;
 
   // The database manager.
   private final SqlDbManager sqlDbManager;
-
-  // The archival unit.
-  private final ArchivalUnit au;
-
-  // AU-related properties independent of the database.
-  private final Plugin plugin;
-  private final String platform;
-  private final int pluginVersion;
-  private final String auId;
-  private final String auKey;
 
   // Database identifiers related to the AU. 
   private Long publisherSeq = null;
@@ -184,16 +172,8 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
   public SqlAuMetadataRecorder(SqlReindexingTask task, SqlMetadataManager mdManager,
                                ArchivalUnit au) {
     super(task,mdManager,au);
-    this.task = task;
     this.mdManager = mdManager;
     sqlDbManager = mdManager.getDbManager();
-    this.au = au;
-
-    plugin = au.getPlugin();
-    platform = plugin.getPublishingPlatform();
-    pluginVersion = mdManager.getPluginMetadataVersionNumber(plugin);
-    auId = au.getAuId();
-    auKey = PluginManager.auKeyFromAuId(auId);
   }
 
   /**
@@ -237,252 +217,12 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
      * @param mditr An Iterator<ArticleMetadataInfo> with the metadata.
      * @throws SQLException if any problem occurred accessing the database.
      */
+  	@Override
     public void recordMetadata(Iterator<ArticleMetadataInfo> mditr) throws SQLException {
         Connection conn = sqlDbManager.getConnection();
         recordMetadata(conn, mditr);
     }
 
-
-  /**
-   * Normalizes metadata info fields.
-   * 
-   * @param mdinfo
-   *          the ArticleMetadataInfo
-   * @return an ArticleMetadataInfo with the normalized properties.
-   */
-  private ArticleMetadataInfo normalizeMetadata(ArticleMetadataInfo mdinfo) {
-    final String DEBUG_HEADER = "normalizeMetadata(): ";
-    if (mdinfo.accessUrl != null) {
-      if (mdinfo.accessUrl.length() > MAX_URL_COLUMN) {
-	log.warning("accessUrl too long '" + mdinfo.accessUrl
-	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
-	    + mdinfo.publisher + "'");
-	mdinfo.accessUrl =
-	    SqlDbManager.truncateVarchar(mdinfo.accessUrl, MAX_URL_COLUMN);
-      }
-    }
-
-    if (mdinfo.isbn != null) {
-      String isbn = mdinfo.isbn.replaceAll("-", "");
-      log.debug3(DEBUG_HEADER + "isbn = '" + isbn + "'.");
-
-      if (isbn.length() > MAX_ISBN_COLUMN) {
-	log.warning("isbn too long '" + mdinfo.isbn + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.isbn = SqlDbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
-      } else {
-	mdinfo.isbn = isbn;
-      }
-    }
-
-    if (mdinfo.eisbn != null) {
-      String isbn = mdinfo.eisbn.replaceAll("-", "");
-      log.debug3(DEBUG_HEADER + "isbn = '" + isbn + "'.");
-
-      if (isbn.length() > MAX_ISBN_COLUMN) {
-	log.warning("eisbn too long '" + mdinfo.eisbn + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.eisbn = SqlDbManager.truncateVarchar(isbn, MAX_ISBN_COLUMN);
-      } else {
-	mdinfo.eisbn = isbn;
-      }
-    }
-
-    if (mdinfo.issn != null) {
-      String issn = mdinfo.issn.replaceAll("-", "");
-      log.debug3(DEBUG_HEADER + "issn = '" + issn + "'.");
-
-      if (issn.length() > MAX_ISSN_COLUMN) {
-	log.warning("issn too long '" + mdinfo.issn + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.issn = SqlDbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
-      } else {
-	mdinfo.issn = issn;
-      }
-    }
-
-    if (mdinfo.eissn != null) {
-      String issn = mdinfo.eissn.replaceAll("-", "");
-      log.debug3(DEBUG_HEADER + "issn = '" + issn + "'.");
-
-      if (issn.length() > MAX_ISSN_COLUMN) {
-	log.warning("issn too long '" + mdinfo.eissn + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.eissn = SqlDbManager.truncateVarchar(issn, MAX_ISSN_COLUMN);
-      } else {
-	mdinfo.eissn = issn;
-      }
-    }
-
-    if (mdinfo.doi != null) {
-      String doi = mdinfo.doi;
-      if (StringUtil.startsWithIgnoreCase(doi, "doi:")) {
-	doi = doi.substring("doi:".length());
-	log.debug3("doi = '" + doi + "'.");
-      }
-
-      if (doi.length() > MAX_DOI_COLUMN) {
-	log.warning("doi too long '" + mdinfo.doi + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.doi = SqlDbManager.truncateVarchar(doi, MAX_DOI_COLUMN);
-      } else {
-	mdinfo.doi = doi;
-      }
-    }
-
-    if (mdinfo.pubDate != null) {
-      if (mdinfo.pubDate.length() > MAX_DATE_COLUMN) {
-	log.warning("pubDate too long '" + mdinfo.pubDate + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.pubDate =
-	    SqlDbManager.truncateVarchar(mdinfo.pubDate, MAX_DATE_COLUMN);
-      }
-    }
-
-    if (mdinfo.volume != null) {
-      if (mdinfo.volume.length() > MAX_VOLUME_COLUMN) {
-	log.warning("volume too long '" + mdinfo.pubDate + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.volume =
-	    SqlDbManager.truncateVarchar(mdinfo.volume, MAX_VOLUME_COLUMN);
-      }
-    }
-
-    if (mdinfo.issue != null) {
-      if (mdinfo.issue.length() > MAX_ISSUE_COLUMN) {
-	log.warning("issue too long '" + mdinfo.issue + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.issue =
-	    SqlDbManager.truncateVarchar(mdinfo.issue, MAX_ISSUE_COLUMN);
-      }
-    }
-
-    if (mdinfo.startPage != null) {
-      if (mdinfo.startPage.length() > MAX_START_PAGE_COLUMN) {
-	log.warning("startPage too long '" + mdinfo.startPage
-	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
-	    + mdinfo.publisher + "'");
-	mdinfo.startPage =
-	    SqlDbManager.truncateVarchar(mdinfo.startPage, MAX_START_PAGE_COLUMN);
-      }
-    }
-
-    if (mdinfo.articleTitle != null) {
-      if (mdinfo.articleTitle.length() > MAX_NAME_COLUMN) {
-	log.warning("article title too long '" + mdinfo.articleTitle
-	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
-	    + mdinfo.publisher + "'");
-	mdinfo.articleTitle =
-	    SqlDbManager.truncateVarchar(mdinfo.articleTitle, MAX_NAME_COLUMN);
-      }
-    }
-
-    if (mdinfo.publisher != null) {
-      if (mdinfo.publisher.length() > MAX_NAME_COLUMN) {
-	log.warning("publisher too long '" + mdinfo.publisher
-	    + "' for title: '" + mdinfo.journalTitle + "'");
-	mdinfo.publisher =
-	    SqlDbManager.truncateVarchar(mdinfo.publisher, MAX_NAME_COLUMN);
-      }
-    }
-
-    if (mdinfo.journalTitle != null) {
-      if (mdinfo.journalTitle.length() > MAX_NAME_COLUMN) {
-	log.warning("journal title too long '" + mdinfo.journalTitle
-	    + "' for publisher: " + mdinfo.publisher + "'");
-	mdinfo.journalTitle =
-	    SqlDbManager.truncateVarchar(mdinfo.journalTitle, MAX_NAME_COLUMN);
-      }
-    }
-
-    if (mdinfo.authorSet != null) {
-      Set<String> authors = new HashSet<String>();
-      for (String author : mdinfo.authorSet) {
-	if (author.length() > MAX_AUTHOR_COLUMN) {
-	  log.warning("author too long '" + author + "' for title: '"
-	      + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	  authors.add(SqlDbManager.truncateVarchar(author, MAX_AUTHOR_COLUMN));
-	} else {
-	  authors.add(author);
-	}
-      }
-      mdinfo.authorSet = authors;
-    }
-
-    if (mdinfo.keywordSet != null) {
-      Set<String> keywords = new HashSet<String>();
-      for (String keyword : mdinfo.keywordSet) {
-	if (keyword.length() > MAX_KEYWORD_COLUMN) {
-	  log.warning("keyword too long '" + keyword + "' for title: '"
-	      + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	  keywords.add(SqlDbManager.truncateVarchar(keyword, MAX_KEYWORD_COLUMN));
-	} else {
-	  keywords.add(keyword);
-	}
-      }
-      mdinfo.keywordSet = keywords;
-    }
-
-    if (mdinfo.featuredUrlMap != null) {
-      Map<String, String> featuredUrls = new HashMap<String, String>();
-      for (String key : mdinfo.featuredUrlMap.keySet()) {
-	if (mdinfo.featuredUrlMap.get(key).length() > MAX_URL_COLUMN) {
-	  log.warning("URL too long '" + mdinfo.featuredUrlMap.get(key)
-	      + "' for title: '" + mdinfo.journalTitle + "' publisher: "
-	      + mdinfo.publisher + "'");
-	  featuredUrls.put(key,
-	                   SqlDbManager.truncateVarchar(mdinfo.featuredUrlMap.
-	                                             get(key), MAX_URL_COLUMN));
-	} else {
-	  featuredUrls.put(key, mdinfo.featuredUrlMap.get(key));
-	}
-      }
-      mdinfo.featuredUrlMap = featuredUrls;
-    }
-
-    if (mdinfo.endPage != null) {
-      if (mdinfo.endPage.length() > MAX_END_PAGE_COLUMN) {
-	log.warning("endPage too long '" + mdinfo.endPage + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.endPage =
-	    SqlDbManager.truncateVarchar(mdinfo.endPage, MAX_END_PAGE_COLUMN);
-      }
-    }
-
-    if (mdinfo.coverage != null) {
-      if (mdinfo.coverage.length() > MAX_COVERAGE_COLUMN) {
-	log.warning("coverage too long '" + mdinfo.coverage + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.coverage =
-	    SqlDbManager.truncateVarchar(mdinfo.coverage, MAX_COVERAGE_COLUMN);
-      }
-    } else {
-	mdinfo.coverage = "fulltext";
-    }
-
-    if (mdinfo.itemNumber != null) {
-      if (mdinfo.itemNumber.length() > MAX_ITEM_NO_COLUMN) {
-	log.warning("itemNumber too long '" + mdinfo.itemNumber
-	    + "' for title: '" + mdinfo.journalTitle + "' publisher: "
-	    + mdinfo.publisher + "'");
-	mdinfo.itemNumber =
-	    SqlDbManager.truncateVarchar(mdinfo.itemNumber, MAX_ITEM_NO_COLUMN);
-      }
-    }
-
-    if (mdinfo.proprietaryIdentifier != null) {
-      if (mdinfo.proprietaryIdentifier.length() > MAX_PUBLICATION_ID_COLUMN) {
-	log.warning("proprietaryIdentifier too long '"
-	    + mdinfo.proprietaryIdentifier + "' for title: '"
-	    + mdinfo.journalTitle + "' publisher: " + mdinfo.publisher + "'");
-	mdinfo.proprietaryIdentifier =
-	    SqlDbManager.truncateVarchar(mdinfo.proprietaryIdentifier,
-				      MAX_PUBLICATION_ID_COLUMN);
-      }
-    }
-
-    return mdinfo;
-  }
 
   /**
    * Stores in the database metadata for the Archival Unit.

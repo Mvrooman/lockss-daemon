@@ -56,8 +56,7 @@ import org.lockss.app.*;
 import org.lockss.config.*;
 import org.lockss.util.*;
 
-public class SqlDbManager extends BaseLockssDaemonManager
-  implements ConfigurableManager, DbManager {
+public class SqlDbManager extends DbManager {
 
   private static final Logger log = Logger.getLogger(SqlDbManager.class);
 
@@ -2965,28 +2964,6 @@ public class SqlDbManager extends BaseLockssDaemonManager
 
     // Create the functions.
     executeBatchBeforeReady(conn, VERSION_1_FUNCTION_CREATE_QUERIES);
-  }
-
-  /**
-   * Provides a version of a text truncated to a maximum length, if necessary,
-   * including an indication of the truncation.
-   * 
-   * @param original
-   *          A String with the original text to be truncated, if necessary.
-   * @param maxLength
-   *          An int with the maximum length of the truncated text to be
-   *          provided.
-   * @return a String with the original text if it is not longer than the
-   *         maximum length allowed or the truncated text including an
-   *         indication of the truncation.
-   */
-  public static String truncateVarchar(String original, int maxLength) {
-    if (original.length() <= maxLength) {
-      return original;
-    }
-
-    return original.substring(0, maxLength - TRUNCATION_INDICATOR.length())
-	+ TRUNCATION_INDICATOR;
   }
 
   /**

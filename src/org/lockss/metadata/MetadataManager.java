@@ -1,12 +1,18 @@
 package org.lockss.metadata;
 
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
+import org.lockss.db.DbManager;
 import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.Plugin;
+import org.lockss.plugin.Plugin.Feature;
 import org.lockss.util.Logger;
+import org.lockss.util.StringUtil;
 
 public abstract class MetadataManager extends BaseLockssDaemonManager implements ConfigurableManager {
 
@@ -266,6 +272,75 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
      */
     public abstract boolean disableAuIndexing(ArchivalUnit au);
 
+    
+    /**
+     * Something
+     * @return
+     */
+    public abstract DbManager getDbManager();
+
+    /**
+     * Provides the metadata version of a plugin.
+     * 
+     * @param plugin
+     *          A Plugin with the plugin.
+     * @return an int with the plugin metadata version.
+     */
+    int getPluginMetadataVersionNumber(Plugin plugin) {
+      final String DEBUG_HEADER = "getPluginMetadataVersionNumber(): ";
+    
+      int version = 1;
+      String pluginVersion = plugin.getFeatureVersion(Feature.Metadata);
+      if (log.isDebug3()) {
+        log.debug3(DEBUG_HEADER + "Metadata Featrure version: " +pluginVersion
+  		 + " for " + plugin.getPluginName());
+      }
+      if (StringUtil.isNullString(pluginVersion)) {
+        log.debug2("Plugin version not found: Using " + version);
+        return version;
+      }
+
+      String prefix = Feature.Metadata + "_";
+
+      if (!pluginVersion.startsWith(prefix)) {
+        log.error("Plugin version '" + pluginVersion + "' does not start with '"
+  	  + prefix + "': Using " + version);
+        return version;
+      }
+
+      try {
+        version = Integer.valueOf(pluginVersion.substring(prefix.length()));
+      } catch (NumberFormatException nfe) {
+        log.error("Plugin version '" + pluginVersion + "' does not end with a "
+  	  + "number after '" + prefix + "': Using " + version);
+      }
+      
+      log.debug3(DEBUG_HEADER + "version = " + version);
+      return version;
+    }
+    
+    /**
+     * Provides the identifier of an Archival Unit metadata.
+     * 
+     * @param conn
+     *          A Connection with the database connection to be used.
+     * @param auSeq
+     *          A Long with the identifier of the Archival Unit.
+     * @return a Long with the identifier of the Archival Unit metadata.
+     * @throws Exception
+     *           if any problem occurred accessing the database.
+     */
+    abstract Long findAuMd(Long auSeq) throws Exception;
+
+	/**
+	 * Updates the timestamp of the last extraction of an Archival Unit metadata.
+	 * 
+	 * @param auMdSeq
+	 *          A Long with the identifier of the Archival Unit metadata.
+	 * @throws Exception
+	 *           if any problem occurred accessing the database.
+	 */
+	public abstract void updateAuLastExtractionTime(Long auMdSeq) throws Exception;
 
     //	  /**
     //	   * Provides the number of enabled pending AUs.
