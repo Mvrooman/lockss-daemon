@@ -1,12 +1,7 @@
 package org.lockss.db;
 
-import java.io.File;
-
-import org.lockss.metadata.MongoDbManager;
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
-
-import com.mongodb.MongoClient;
 
 public class TestMongoDbManager extends LockssTestCase{
 

@@ -1,23 +1,13 @@
-package org.lockss.metadata;
+package org.lockss.db;
 
 import java.net.UnknownHostException;
 
-import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
-import org.bson.BSONEncoder;
-import org.bson.BSONObject;
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
-import org.lockss.db.DbManager;
-import org.lockss.db.OpenUrlResolverDbManager;
-import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 
 
