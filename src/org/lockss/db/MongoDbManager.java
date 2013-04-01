@@ -8,15 +8,17 @@ import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
 import org.lockss.util.Logger;
 
-
-
 public class MongoDbManager extends DbManager {
 
 	private static final Logger log = Logger.getLogger(MongoDbManager.class);
+	
+	public static final String PUBLISHERS_COLLECTION = "publishers";
+
 	private boolean ready = false;
+	
 	//The mongo database
 	private DB mongoDatabase;
-
+	
 	/**
 	 * Starts the DbManager service.
 	 */
@@ -27,16 +29,27 @@ public class MongoDbManager extends DbManager {
 		if (ready) {
 			return;
 		}
+
 		MongoClient mongoClient = null;
+
 		try {
 			mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
 			mongoDatabase = mongoClient.getDB("lockss");
-
+			initializeCollections();
 		} catch (UnknownHostException e) {
 			log.error(e.getMessage());
 			//TODO: Add logging/handling here
 		}
+		
 		ready = true;
+	}
+
+	/**
+	 * 
+	 */
+	private void initializeCollections() {
+		if (!mongoDatabase.collectionExists(PUBLISHERS_COLLECTION))
+			mongoDatabase.createCollection(PUBLISHERS_COLLECTION, null);
 	}
 
 
@@ -57,6 +70,14 @@ public class MongoDbManager extends DbManager {
 			Differences changedKeys) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	/**
+	 * 
+	 * @return The current Mongo database
+	 */
+	public DB getDb(){
+		return mongoDatabase;
 	}
 
 }

@@ -14,8 +14,6 @@ public class TestMongoDbManager extends LockssTestCase{
 	    
 	    mongoDbManager = new MongoDbManager();
 	    mongoDbManager.startService();
-	   
-
 	  }
 	  
 	  //test the connection
@@ -28,6 +26,5 @@ public class TestMongoDbManager extends LockssTestCase{
 			
 		}
 	  }
-	
 
 }

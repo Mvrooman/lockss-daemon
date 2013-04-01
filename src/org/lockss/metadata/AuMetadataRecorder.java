@@ -1,20 +1,6 @@
 package org.lockss.metadata;
 
-import static org.lockss.db.SqlDbManager.MAX_AUTHOR_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_COVERAGE_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_DATE_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_DOI_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_END_PAGE_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_ISBN_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_ISSN_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_ISSUE_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_ITEM_NO_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_KEYWORD_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_NAME_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_PUBLICATION_ID_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_START_PAGE_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_URL_COLUMN;
-import static org.lockss.db.SqlDbManager.MAX_VOLUME_COLUMN;
+import static org.lockss.db.DbManager.*;
 
 import org.lockss.db.DbManager;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;

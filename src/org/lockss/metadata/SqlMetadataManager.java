@@ -149,12 +149,6 @@ public class SqlMetadataManager extends MetadataManager {
   private static final int UNKNOWN_VERSION = -1;
 
   /**
-   * The initial value of the metadata extraction time for an AU whose metadata
-   * has not been extracted yet.
-   */
-  public static final long NEVER_EXTRACTED_EXTRACTION_TIME = 0L;
-
-  /**
    * The standard type of a name that is primary.
    */
   public static final String PRIMARY_NAME_TYPE = "primary";

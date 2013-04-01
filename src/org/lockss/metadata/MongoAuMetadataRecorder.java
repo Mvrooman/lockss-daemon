@@ -1,21 +1,11 @@
 package org.lockss.metadata;
 
-import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK;
-import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK_CHAPTER;
-import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_JOURNAL;
-import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_JOURNAL_ARTICLE;
-import static org.lockss.metadata.SqlMetadataManager.NEVER_EXTRACTED_EXTRACTION_TIME;
-import static org.lockss.metadata.SqlMetadataManager.PRIMARY_NAME_TYPE;
-
+import static org.lockss.metadata.MetadataManager.NEVER_EXTRACTED_EXTRACTION_TIME;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.lockss.db.MongoDbManager;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.PluginManager;
-import org.lockss.util.StringUtil;
 
 public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 
