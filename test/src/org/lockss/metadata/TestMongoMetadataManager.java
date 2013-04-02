@@ -20,12 +20,13 @@ public class TestMongoMetadataManager extends LockssTestCase {
 	    theDaemon = getMockLockssDaemon();
 	    
 	    mongoDbManager = new MongoDbManager();
-//	    theDaemon.setDbManager(mongoDbManager);
+	    theDaemon.setDbManager(mongoDbManager);
 	    mongoDbManager.initService(theDaemon);
 	    mongoDbManager.startService();
 	    
 	    mongoMetadataManager = new MongoMetadataManager();
 	    mongoMetadataManager.startService();
 	  }
+	  
 
 }

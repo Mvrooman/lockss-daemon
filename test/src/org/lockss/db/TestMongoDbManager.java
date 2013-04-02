@@ -1,7 +1,12 @@
 package org.lockss.db;
 
+import static org.lockss.db.MongoDbManager.*;
+
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public class TestMongoDbManager extends LockssTestCase{
 
@@ -17,14 +22,18 @@ public class TestMongoDbManager extends LockssTestCase{
 	  }
 	  
 	  //test the connection
-	  public void testConnection()
-	  {
+	  public void testConnection() {
 		  try {
 			assertTrue(mongoDbManager.isConnectionReady());
 		} catch (Exception e) {
 			fail(e.toString());
 			
 		}
+	  }
+	  
+	  public void testCollectionInitialization() {
+		  DB db = mongoDbManager.getDb();
+		  assertTrue(db.collectionExists(PUBLISHERS_COLLECTION));
 	  }
 
 }
