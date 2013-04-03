@@ -47,6 +47,7 @@ import org.lockss.db.DbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.hasher.HashService;
 import org.lockss.mail.MailService;
+import org.lockss.metadata.MetadataManager;
 import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.plugin.*;
 import org.lockss.truezip.*;
@@ -88,7 +89,7 @@ public class MockLockssDaemon extends LockssDaemon {
   RepositoryManager repositoryManager = null;
   NodeManagerManager nodeManagerManager = null;
   PluginManager pluginManager = null;
-  SqlMetadataManager sqlMetadataManager = null;
+  MetadataManager sqlMetadataManager = null;
   IdentityManager identityManager = null;
   TrueZipManager tzipManager = null;
   StatusService statusService = null;
@@ -477,9 +478,9 @@ public class MockLockssDaemon extends LockssDaemon {
    * return the metadata manager instance
    * @return the SqlMetadataManager
    */
-  public SqlMetadataManager getMetadataManager() {
+  public MetadataManager getMetadataManager() {
     if (sqlMetadataManager == null) {
-      sqlMetadataManager = (SqlMetadataManager)newManager(LockssDaemon.METADATA_MANAGER);
+      sqlMetadataManager = (MetadataManager) newManager(LockssDaemon.METADATA_MANAGER);
       managerMap.put(LockssDaemon.METADATA_MANAGER, sqlMetadataManager);
     }
     return sqlMetadataManager;
@@ -729,7 +730,7 @@ public class MockLockssDaemon extends LockssDaemon {
    * Set the SqlMetadataManager
    * @param metadataMan the new manager
    */
-  public void setMetadataManager(SqlMetadataManager metadataMan) {
+  public void setMetadataManager(MetadataManager metadataMan) {
     sqlMetadataManager = metadataMan;
     managerMap.put(LockssDaemon.METADATA_MANAGER, sqlMetadataManager);
   }

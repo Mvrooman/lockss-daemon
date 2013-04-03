@@ -21,6 +21,16 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	 * has not been extracted yet.
 	 */
 	public static final long NEVER_EXTRACTED_EXTRACTION_TIME = 0L;
+	
+	/**
+	 * The standard type of a name that is primary.
+	 */
+	public static final String PRIMARY_NAME_TYPE = "primary";
+
+	/**
+	 * The standard type of a name that is not primary.
+	 */
+	public static final String NOT_PRIMARY_NAME_TYPE = "not_primary";
 
 	protected static Logger log = Logger.getLogger(MetadataManager.class);
 

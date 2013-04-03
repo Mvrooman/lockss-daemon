@@ -148,15 +148,6 @@ public class SqlMetadataManager extends MetadataManager {
 
   private static final int UNKNOWN_VERSION = -1;
 
-  /**
-   * The standard type of a name that is primary.
-   */
-  public static final String PRIMARY_NAME_TYPE = "primary";
-
-  /**
-   * The standard type of a name that is not primary.
-   */
-  public static final String NOT_PRIMARY_NAME_TYPE = "not_primary";
 
   /**
    * The standard types of ISBNs and ISSNs.
@@ -2108,7 +2099,7 @@ public class SqlMetadataManager extends MetadataManager {
    * @return <code>true</code> if the metadata set corresponds to a book series,
    *         <code>false</code> otherwise.
    */
-  private boolean isBookSeries(String pIssn, String eIssn, String pIsbn,
+  protected boolean isBookSeries(String pIssn, String eIssn, String pIsbn,
       String eIsbn, String volume) {
     final String DEBUG_HEADER = "isBook(): ";
 

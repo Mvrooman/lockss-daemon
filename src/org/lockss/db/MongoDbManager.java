@@ -13,6 +13,8 @@ public class MongoDbManager extends DbManager {
 	private static final Logger log = Logger.getLogger(MongoDbManager.class);
 	
 	public static final String PUBLISHERS_COLLECTION = "publishers";
+	
+	public static final String PLUGIN_COLLECTION = "plugins";
 
 	private boolean ready = false;
 	

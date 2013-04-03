@@ -2,9 +2,12 @@ package org.lockss.db;
 
 import static org.lockss.db.MongoDbManager.*;
 
+import java.util.Date;
+
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
@@ -31,9 +34,19 @@ public class TestMongoDbManager extends LockssTestCase{
 		}
 	  }
 	  
-	  public void testCollectionInitialization() {
-		  DB db = mongoDbManager.getDb();
-		  assertTrue(db.collectionExists(PUBLISHERS_COLLECTION));
-	  }
+	  
+	public void testCollectionInitialization() {
+		DB db = mongoDbManager.getDb();
+
+		DBCollection table = db.getCollection(PUBLISHERS_COLLECTION);
+		BasicDBObject document = new BasicDBObject();
+		document.put("name", "Test Publisher");
+		document.put("createdDate", new Date());
+		table.insert(document);
+
+		assertTrue(db.collectionExists(PUBLISHERS_COLLECTION));
+		
+		
+	}
 
 }
