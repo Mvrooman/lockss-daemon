@@ -72,5 +72,13 @@ public class TestMongoMetadataManager extends LockssTestCase {
 		  assertEquals(createID, findID);
 		  
 	  }
+	  
+	  public void testCreateAndFindPublication()throws Exception
+	  {
+		  long createID =  mongoMetadataManager.findOrCreatePublication("pIssn", "eIssn", "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "volume");
+		  assertNotNull(createID);
+		  
+	  }
+	  
 
 }

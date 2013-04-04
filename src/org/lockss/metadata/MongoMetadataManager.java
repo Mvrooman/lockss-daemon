@@ -1,8 +1,7 @@
 package org.lockss.metadata;
 
 import static org.lockss.db.DbManager.MAX_NAME_COLUMN;
-import static org.lockss.db.MongoDbManager.PLUGIN_COLLECTION;
-import static org.lockss.db.MongoDbManager.PUBLISHERS_COLLECTION;
+import static org.lockss.db.MongoDbManager.*;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK_SERIES;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_JOURNAL;
@@ -194,32 +193,68 @@ public class MongoMetadataManager extends MetadataManager {
 	      title = name.substring(0, Math.min(name.length(), MAX_NAME_COLUMN));
 	    }
 	    log.debug3(DEBUG_HEADER + "title = " + title);
+	    
+	    publicationSeq =  addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq, name, date, proprietaryId, volume);
 
-	    // Check whether it is a book series.
-	    if (isBookSeries(pIssn, eIssn, pIsbn, eIsbn, volume)) {
-	      // Yes: Find or create the book series.
-	      log.debug3(DEBUG_HEADER + "is book series.");
-	      publicationSeq =
-		  findOrCreateBookInBookSeries(pIssn, eIssn, pIsbn, eIsbn,
-		                                publisherSeq, name, date, proprietaryId,
-		                                volume);
-	      // No: Check whether it is a book.
-	    } else if (isBook(pIsbn, eIsbn)) {
-	      // Yes: Find or create the book.
-	      log.debug3(DEBUG_HEADER + "is book.");
-	      publicationSeq =
-		  findOrCreateBook(pIsbn, eIsbn, publisherSeq, title, null, date,
-		                   proprietaryId);
-	    } else {
-	      // No, it is a journal article: Find or create the journal.
-	      log.debug3(DEBUG_HEADER + "is journal.");
-	      publicationSeq =
-		  findOrCreateJournal(pIssn, eIssn, publisherSeq, title, date,
-		                      proprietaryId);
-	    }
+//	    // Check whether it is a book series.
+//	    if (isBookSeries(pIssn, eIssn, pIsbn, eIsbn, volume)) {
+//	      // Yes: Find or create the book series.
+//	      log.debug3(DEBUG_HEADER + "is book series.");
+//	      publicationSeq =
+//		  findOrCreateBookInBookSeries(pIssn, eIssn, pIsbn, eIsbn,
+//		                                publisherSeq, name, date, proprietaryId,
+//		                                volume);
+//	      // No: Check whether it is a book.
+//	    } else if (isBook(pIsbn, eIsbn)) {
+//	      // Yes: Find or create the book.
+//	      log.debug3(DEBUG_HEADER + "is book.");
+//	      publicationSeq =
+//		  findOrCreateBook(pIsbn, eIsbn, publisherSeq, title, null, date,
+//		                   proprietaryId);
+//	    } else {
+//	      // No, it is a journal article: Find or create the journal.
+//	      log.debug3(DEBUG_HEADER + "is journal.");
+//	      publicationSeq =
+//		  findOrCreateJournal(pIssn, eIssn, publisherSeq, title, date,
+//		                      proprietaryId);
+//	    }
 
+	    
 	    return publicationSeq;
 	}
+	
+	/**
+	 * Creates a publication based on the given parameters
+	 * @param pIssn
+	 * @param eIssn
+	 * @param pIsbn
+	 * @param eIsbn
+	 * @param publisherSeq
+	 * @param name
+	 * @param date
+	 * @param proprietaryId
+	 * @param volume
+	 * @return
+	 */
+	private Long addPublication(String pIssn, String eIssn, String pIsbn,
+			String eIsbn, Long publisherSeq, String name, String date,
+			String proprietaryId, String volume) {
+
+		DBCollection collection = mongoDatabase
+				.getCollection(PUBLICATIONS_COLLECTION);
+		BasicDBObject publisherDocument = new BasicDBObject("pIssn", pIssn)
+				.append("eIssn", eIssn).append("pIsbn", pIsbn)
+				.append("eIsbn", eIsbn).append("publisherSeq", publisherSeq)
+				.append("name", name).append("date", date)
+				.append("proprietaryId", proprietaryId)
+				.append("volume", volume);
+		
+		collection.insert(publisherDocument);
+		
+
+		return mongoDbManager.createLongId(publisherDocument, collection);
+	}
+	
 
 	@Override
 	Long findPublicationMetadataItem(Long publicationSeq) throws Exception {
@@ -583,49 +618,53 @@ public class MongoMetadataManager extends MetadataManager {
 	   * @return a Long with the identifier of the publication.
 	   * @throws Exception
 	   *           if any problem occurred accessing the database.
-	   */
+	   *
+	   *///
+	   
+	   //TODO: CMU --CHANGED IT TO NULL --> CHANGE IT BACK LATER after demo ...
 	  private Long findPublication(String title, Long publisherSeq,
 	      String pIssn, String eIssn, String pIsbn, String eIsbn, String mdItemType)
 		  throws Exception {
-	    final String DEBUG_HEADER = "findPublication(): ";
-	    Long publicationSeq = null;
-	    boolean hasIssns = pIssn != null || eIssn != null;
-	    log.debug3(DEBUG_HEADER + "hasIssns = " + hasIssns);
-	    boolean hasIsbns = pIsbn != null || eIsbn != null;
-	    log.debug3(DEBUG_HEADER + "hasIsbns = " + hasIsbns);
-	    boolean hasName = !StringUtil.isNullString(title);
-	    log.debug3(DEBUG_HEADER + "hasName = " + hasName);
-
-	    if (!hasIssns && !hasIsbns && !hasName) {
-	      log.debug3(DEBUG_HEADER + "Cannot find publication with no name, ISSNs"
-		  + " or ISBNs.");
-	      return null;
-	    }
-
-	    if (hasIssns && hasIsbns && hasName) {
-	      publicationSeq =
-		  findPublicationByIssnsOrIsbnsOrName(title, publisherSeq, pIssn,
-						      eIssn, pIsbn, eIsbn, mdItemType);
-	    } else if (hasIssns && hasName) {
-	      publicationSeq =
-		  findPublicationByIssnsOrName(title, publisherSeq, pIssn, eIssn,
-					       mdItemType);
-	    } else if (hasIsbns && hasName) {
-	      publicationSeq =
-		  findPublicationByIsbnsOrName(title, publisherSeq, pIsbn, eIsbn,
-					       mdItemType);
-	    } else if (hasIssns) {
-	      publicationSeq =
-		  findPublicationByIssns(publisherSeq, pIssn, eIssn, mdItemType);
-	    } else if (hasIsbns) {
-	      publicationSeq =
-		  findPublicationByIsbns(publisherSeq, pIsbn, eIsbn, mdItemType);
-	    } else if (hasName) {
-	      publicationSeq =
-		  findPublicationByName(title, publisherSeq, mdItemType);
-	    }
-
-	    return publicationSeq;
+		  return null;
+//	    final String DEBUG_HEADER = "findPublication(): ";
+//	    Long publicationSeq = null;
+//	    boolean hasIssns = pIssn != null || eIssn != null;
+//	    log.debug3(DEBUG_HEADER + "hasIssns = " + hasIssns);
+//	    boolean hasIsbns = pIsbn != null || eIsbn != null;
+//	    log.debug3(DEBUG_HEADER + "hasIsbns = " + hasIsbns);
+//	    boolean hasName = !StringUtil.isNullString(title);
+//	    log.debug3(DEBUG_HEADER + "hasName = " + hasName);
+//
+//	    if (!hasIssns && !hasIsbns && !hasName) {
+//	      log.debug3(DEBUG_HEADER + "Cannot find publication with no name, ISSNs"
+//		  + " or ISBNs.");
+//	      return null;
+//	    }
+//
+//	    if (hasIssns && hasIsbns && hasName) {
+//	      publicationSeq =
+//		  findPublicationByIssnsOrIsbnsOrName(title, publisherSeq, pIssn,
+//						      eIssn, pIsbn, eIsbn, mdItemType);
+//	    } else if (hasIssns && hasName) {
+//	      publicationSeq =
+//		  findPublicationByIssnsOrName(title, publisherSeq, pIssn, eIssn,
+//					       mdItemType);
+//	    } else if (hasIsbns && hasName) {
+//	      publicationSeq =
+//		  findPublicationByIsbnsOrName(title, publisherSeq, pIsbn, eIsbn,
+//					       mdItemType);
+//	    } else if (hasIssns) {
+//	      publicationSeq =
+//		  findPublicationByIssns(publisherSeq, pIssn, eIssn, mdItemType);
+//	    } else if (hasIsbns) {
+//	      publicationSeq =
+//		  findPublicationByIsbns(publisherSeq, pIsbn, eIsbn, mdItemType);
+//	    } else if (hasName) {
+//	      publicationSeq =
+//		  findPublicationByName(title, publisherSeq, mdItemType);
+//	    }
+//
+//	    return publicationSeq;
 	  }
 
 	  /**

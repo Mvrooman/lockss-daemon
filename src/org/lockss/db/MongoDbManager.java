@@ -2,8 +2,12 @@ package org.lockss.db;
 
 import java.net.UnknownHostException;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+
+import org.bson.types.ObjectId;
 import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
 import org.lockss.util.Logger;
@@ -15,6 +19,8 @@ public class MongoDbManager extends DbManager {
 	public static final String PUBLISHERS_COLLECTION = "publishers";
 	
 	public static final String PLUGIN_COLLECTION = "plugins";
+	
+	public static final String PUBLICATIONS_COLLECTION = "publications";
 
 	private boolean ready = false;
 	
@@ -80,6 +86,25 @@ public class MongoDbManager extends DbManager {
 	 */
 	public DB getDb(){
 		return mongoDatabase;
+	}
+	
+	/**
+	 * Creates the Mongo long ID based on the _id
+	 * @param dbObject
+	 * @param collection
+	 * @return
+	 */
+	public Long createLongId(BasicDBObject dbObject, DBCollection collection)
+	{
+		ObjectId id = (ObjectId) dbObject.get("_id");
+		Long longId = MongoHelper.objectIdToLongId(id);
+
+		dbObject.append("longId", longId);
+		BasicDBObject query = new BasicDBObject("_id", id);
+		collection.update(query, dbObject);
+
+		
+		return longId;
 	}
 
 }
