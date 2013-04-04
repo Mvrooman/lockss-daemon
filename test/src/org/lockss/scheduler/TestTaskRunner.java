@@ -796,7 +796,12 @@ public class TestTaskRunner extends LockssTestCase {
     // behavior here for simplicity.
     void notify(SchedulableTask task, Schedule.EventType eventType) {
       if (doImmediateNotify) {
-	task.callback.taskEvent(task, eventType);
+	try {
+		task.callback.taskEvent(task, eventType);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       } else {
 	super.notify(task, eventType);
       }

@@ -310,7 +310,12 @@ public abstract class ReindexingTask extends StepTask {
 	 * @param evt
 	 */
 	protected void handleEvent(Schedule.EventType evt) {
-		callback.taskEvent(this, evt);
+		try {
+			callback.taskEvent(this, evt);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

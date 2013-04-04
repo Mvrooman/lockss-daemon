@@ -187,7 +187,7 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
    *           if any problem occurred accessing the database.
    */
   public void recordMetadata(Connection conn,
-      Iterator<ArticleMetadataInfo> mditr) throws SQLException {
+      Iterator<ArticleMetadataInfo> mditr) throws Exception {
     final String DEBUG_HEADER = "recordMetadata(): ";
     // Loop through the metadata for each article.
     while (mditr.hasNext()) {
@@ -218,7 +218,7 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
      * @throws SQLException if any problem occurred accessing the database.
      */
   	@Override
-    public void recordMetadata(Iterator<ArticleMetadataInfo> mditr) throws SQLException {
+    public void recordMetadata(Iterator<ArticleMetadataInfo> mditr) throws Exception {
         Connection conn = sqlDbManager.getConnection();
         recordMetadata(conn, mditr);
     }
@@ -235,8 +235,13 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
    *           if any problem occurred accessing the database.
    */
   private void storeMetadata(Connection conn, ArticleMetadataInfo mdinfo)
-      throws SQLException {
+      throws Exception {
     final String DEBUG_HEADER = "storeMetadata(): ";
+    
+    MongoMetadataManager mongoMetaMango = new MongoMetadataManager();
+    
+    mongoMetaMango.startFakeService();
+    
     if (log.isDebug3()) {
       log.debug3(DEBUG_HEADER + "Starting: auId = " + auId);
       log.debug3(DEBUG_HEADER + "auKey = " + auKey);
@@ -252,6 +257,9 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
 
       // Find the publisher or create it.
       publisherSeq = mdManager.findOrCreatePublisher(conn, publisher);
+      
+      //CMU
+      mongoMetaMango.findOrCreatePublisher(publisher);
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
     }
 
@@ -286,6 +294,11 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
 	mdManager.findOrCreatePublication(conn, pIssn, eIssn, pIsbn, eIsbn,
 					  publisherSeq, mdinfo.journalTitle,
 					  date, proprietaryId, volume);
+    
+    //CMU
+    mongoMetaMango.findOrCreatePublication(pIssn, eIssn, pIsbn, eIsbn,
+			  publisherSeq, mdinfo.journalTitle,
+			  date, proprietaryId, volume);
     log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
 
     // Skip it if the publication could not be found or created.
@@ -302,6 +315,10 @@ public class SqlAuMetadataRecorder extends AuMetadataRecorder {
 
       // Find the plugin or create it.
       pluginSeq = mdManager.findOrCreatePlugin(conn, pluginId, platform);
+      
+      //CMU
+      mongoMetaMango.findOrCreatePlugin(pluginId, platform);
+      
       log.debug3(DEBUG_HEADER + "pluginSeq = " + pluginSeq);
 
       // Skip it if the plugin could not be found or created.

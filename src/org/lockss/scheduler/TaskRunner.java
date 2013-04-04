@@ -1077,7 +1077,12 @@ class TaskRunner {
     void doNotify() {
       if (task.callback != null) {
 	try {
-	  task.callback.taskEvent(task, eventType);
+	  try {
+		task.callback.taskEvent(task, eventType);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	} finally {
 	  if (eventType == Schedule.EventType.FINISH) {
 	    // task will stay on history list for a while; don't hold on to

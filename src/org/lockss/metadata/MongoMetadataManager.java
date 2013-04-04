@@ -45,6 +45,17 @@ public class MongoMetadataManager extends MetadataManager {
 	    mongoDbManager = (MongoDbManager) getDaemon().getDbManager();
 	    mongoDatabase = mongoDbManager.getDb();
 	}
+	
+	public void startFakeService()
+	{
+
+		mongoDbManager = new MongoDbManager();
+		mongoDbManager.startService();
+		mongoDatabase = mongoDbManager.getDb();
+		
+		
+	}
+	
 
 	@Override
 	public void setConfig(Configuration newConfig, Configuration prevConfig,

@@ -45,7 +45,8 @@ public interface TaskCallback {
    * @param task the task
    * @param type one of {@link Schedule.EventType#START}, {@link
    * Schedule.EventType#FINISH}
+ * @throws Exception 
    */
-  public void taskEvent(SchedulableTask task, Schedule.EventType type);
+  public void taskEvent(SchedulableTask task, Schedule.EventType type) throws Exception;
 }
 

@@ -110,9 +110,10 @@ public class SqlReindexingTask extends ReindexingTask {
 		 *            A SchedulableTask with the task that has changed state.
 		 * @param type
 		 *            A Schedule.EventType indicating the type of event.
+		 * @throws Exception 
 		 */
 		@Override
-		public void taskEvent(SchedulableTask task, Schedule.EventType type) {
+		public void taskEvent(SchedulableTask task, Schedule.EventType type) throws Exception {
 			long threadCpuTime = 0;
 			long threadUserTime = 0;
 			long currentClockTime = TimeBase.nowMs();
@@ -261,9 +262,10 @@ public class SqlReindexingTask extends ReindexingTask {
 		 *            A long with the thread user time.
 		 * @param currentClockTime
 		 *            A long with the current clock time.
+		 * @throws Exception 
 		 */
 		private void handleFinishEvent(SchedulableTask task,
-				long threadCpuTime, long threadUserTime, long currentClockTime) {
+				long threadCpuTime, long threadUserTime, long currentClockTime) throws Exception {
 			final String DEBUG_HEADER = "handleFinishEvent(): ";
 			log.debug3(DEBUG_HEADER + "Finishing reindexing (" + status
 					+ ") for AU: " + auName);
