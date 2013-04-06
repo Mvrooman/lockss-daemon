@@ -1,5 +1,7 @@
 package org.lockss.metadata;
 
+import static org.lockss.db.MongoDbManager.PUBLISHERS_COLLECTION;
+
 import java.io.File;
 import java.util.Properties;
 
@@ -11,6 +13,9 @@ import org.lockss.plugin.simulated.SimulatedArchivalUnit;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public class TestMongoMetadataManager extends LockssTestCase {
 	
@@ -53,17 +58,30 @@ public class TestMongoMetadataManager extends LockssTestCase {
 	    mongoMetadataManager = new MongoMetadataManager();
 	    mongoMetadataManager.initService(theDaemon);
 	    mongoMetadataManager.startService();
+	    
+	    DB mongoDatabase = mongoDbManager.getDb();
+	    mongoDatabase.dropDatabase();
 	  }
 	  
 	  
-	  public void testCreateAndFindPublisher() throws Exception{
+	  public void testUniqueLongID() throws Exception{
+		  
+		  long createID =  mongoMetadataManager.findOrCreatePublisher("TestLongID");
+		  long createID2 =  mongoMetadataManager.findOrCreatePublisher("TestLongID2");
+		  
+		  assertNotEquals(createID, createID2);
+	
+		 
+	  }
+	  
+	  public void testCreateAndFindPublisher2() throws Exception{
 		  
 		  long createID =  mongoMetadataManager.findOrCreatePublisher("Create And Find");
 		  long findID = mongoMetadataManager.findOrCreatePublisher("Create And Find");
 		  assertEquals(createID, findID);
 		  
 	  }
-	  
+	  	  
 	  
 	  public void testCreateAndFindPlugin() throws Exception{
 		  
