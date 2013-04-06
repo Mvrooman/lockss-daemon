@@ -2231,26 +2231,6 @@ public class SqlMetadataManager extends MetadataManager {
     return bookSeq;
   }
 
-  /**
-   * Provides an indication of whether a metadata set corresponds to a book.
-   * 
-   * @param pIsbn
-   *          A String with the print ISBN in the metadata.
-   * @param eIsbn
-   *          A String with the electronic ISBN in the metadata.
-   * @return <code>true</code> if the metadata set corresponds to a book,
-   *         <code>false</code> otherwise.
-   */
-  private boolean isBook(String pIsbn, String eIsbn) {
-    final String DEBUG_HEADER = "isBook(): ";
-
-    // If there are ISBN values in the metadata, it is a book or a book series.
-    boolean isBook =
-	!StringUtil.isNullString(pIsbn) || !StringUtil.isNullString(eIsbn);
-    log.debug3(DEBUG_HEADER + "isBook = " + isBook);
-
-    return isBook;
-  }
 
   /**
    * Provides the identifier of a book existing or after creating it otherwise.

@@ -194,31 +194,35 @@ public class MongoMetadataManager extends MetadataManager {
 	    }
 	    log.debug3(DEBUG_HEADER + "title = " + title);
 	    
-	    publicationSeq =  addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq, name, date, proprietaryId, volume);
+	    
 
-//	    // Check whether it is a book series.
-//	    if (isBookSeries(pIssn, eIssn, pIsbn, eIsbn, volume)) {
-//	      // Yes: Find or create the book series.
-//	      log.debug3(DEBUG_HEADER + "is book series.");
-//	      publicationSeq =
-//		  findOrCreateBookInBookSeries(pIssn, eIssn, pIsbn, eIsbn,
-//		                                publisherSeq, name, date, proprietaryId,
-//		                                volume);
-//	      // No: Check whether it is a book.
-//	    } else if (isBook(pIsbn, eIsbn)) {
-//	      // Yes: Find or create the book.
-//	      log.debug3(DEBUG_HEADER + "is book.");
-//	      publicationSeq =
-//		  findOrCreateBook(pIsbn, eIsbn, publisherSeq, title, null, date,
-//		                   proprietaryId);
-//	    } else {
-//	      // No, it is a journal article: Find or create the journal.
-//	      log.debug3(DEBUG_HEADER + "is journal.");
-//	      publicationSeq =
-//		  findOrCreateJournal(pIssn, eIssn, publisherSeq, title, date,
-//		                      proprietaryId);
-//	    }
+	    // Check whether it is a book series.
+	    if (isBookSeries(pIssn, eIssn, pIsbn, eIsbn, volume)) {
+	      // Yes: Find or create the book series.
+	      log.debug3(DEBUG_HEADER + "is book series.");
+	      publicationSeq =
+		  findOrCreateBookInBookSeries(pIssn, eIssn, pIsbn, eIsbn,
+		                                publisherSeq, name, date, proprietaryId,
+		                                volume);
+	      // No: Check whether it is a book.
+	    } else if (isBook(pIsbn, eIsbn)) {
+	      // Yes: Find or create the book.
+	      log.debug3(DEBUG_HEADER + "is book.");
+	      publicationSeq =
+		  findOrCreateBook(pIsbn, eIsbn, publisherSeq, title, null, date,
+		                   proprietaryId);
+	    } else {
+	      // No, it is a journal article: Find or create the journal.
+	      log.debug3(DEBUG_HEADER + "is journal.");
+	      publicationSeq =
+		  findOrCreateJournal(pIssn, eIssn, publisherSeq, title, date,
+		                      proprietaryId);
+	    }
 
+	    
+	    publicationSeq =  addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq, name, date, proprietaryId, volume,
+	    		null, //TODO:  CMU --- THIS SHOULD BE THE ParentSEQ, which is a bookseries
+	    		title, proprietaryId);
 	    
 	    return publicationSeq;
 	}
@@ -238,7 +242,8 @@ public class MongoMetadataManager extends MetadataManager {
 	 */
 	private Long addPublication(String pIssn, String eIssn, String pIsbn,
 			String eIsbn, Long publisherSeq, String name, String date,
-			String proprietaryId, String volume) {
+			String proprietaryId, String volume, 
+			Long parentSeq, String mdItemType, String title) {
 
 		DBCollection collection = mongoDatabase
 				.getCollection(PUBLICATIONS_COLLECTION);
@@ -247,7 +252,10 @@ public class MongoMetadataManager extends MetadataManager {
 				.append("eIsbn", eIsbn).append("publisherSeq", publisherSeq)
 				.append("name", name).append("date", date)
 				.append("proprietaryId", proprietaryId)
-				.append("volume", volume);
+				.append("volume", volume)
+				.append("parentSeq", parentSeq)
+				.append("mdItemType", mdItemType)
+				.append("title", title);
 		
 		collection.insert(publisherDocument);
 		
@@ -461,27 +469,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	    return isBookSeries;
 	  }
-	  
-	  /**
-	   * Provides an indication of whether a metadata set corresponds to a book.
-	   * 
-	   * @param pIsbn
-	   *          A String with the print ISBN in the metadata.
-	   * @param eIsbn
-	   *          A String with the electronic ISBN in the metadata.
-	   * @return <code>true</code> if the metadata set corresponds to a book,
-	   *         <code>false</code> otherwise.
-	   */
-	  private boolean isBook(String pIsbn, String eIsbn) {
-	    final String DEBUG_HEADER = "isBook(): ";
 
-	    // If there are ISBN values in the metadata, it is a book or a book series.
-	    boolean isBook =
-		!StringUtil.isNullString(pIsbn) || !StringUtil.isNullString(eIsbn);
-	    log.debug3(DEBUG_HEADER + "isBook = " + isBook);
-
-	    return isBook;
-	  }
 	  
 	  /**
 	   * Provides the identifier of a book that belongs to a book series if existing
@@ -625,26 +613,26 @@ public class MongoMetadataManager extends MetadataManager {
 	  private Long findPublication(String title, Long publisherSeq,
 	      String pIssn, String eIssn, String pIsbn, String eIsbn, String mdItemType)
 		  throws Exception {
-		  return null;
-//	    final String DEBUG_HEADER = "findPublication(): ";
-//	    Long publicationSeq = null;
-//	    boolean hasIssns = pIssn != null || eIssn != null;
-//	    log.debug3(DEBUG_HEADER + "hasIssns = " + hasIssns);
-//	    boolean hasIsbns = pIsbn != null || eIsbn != null;
-//	    log.debug3(DEBUG_HEADER + "hasIsbns = " + hasIsbns);
-//	    boolean hasName = !StringUtil.isNullString(title);
-//	    log.debug3(DEBUG_HEADER + "hasName = " + hasName);
-//
-//	    if (!hasIssns && !hasIsbns && !hasName) {
-//	      log.debug3(DEBUG_HEADER + "Cannot find publication with no name, ISSNs"
-//		  + " or ISBNs.");
-//	      return null;
-//	    }
-//
-//	    if (hasIssns && hasIsbns && hasName) {
-//	      publicationSeq =
-//		  findPublicationByIssnsOrIsbnsOrName(title, publisherSeq, pIssn,
-//						      eIssn, pIsbn, eIsbn, mdItemType);
+		  
+	    final String DEBUG_HEADER = "findPublication(): ";
+	    Long publicationSeq = null;
+	    boolean hasIssns = pIssn != null || eIssn != null;
+        log.debug3(DEBUG_HEADER + "hasIssns = " + hasIssns);
+	    boolean hasIsbns = pIsbn != null || eIsbn != null;
+	    log.debug3(DEBUG_HEADER + "hasIsbns = " + hasIsbns);
+	    boolean hasName = !StringUtil.isNullString(title);
+	    log.debug3(DEBUG_HEADER + "hasName = " + hasName);
+
+	    if (!hasIssns && !hasIsbns && !hasName) {
+	      log.debug3(DEBUG_HEADER + "Cannot find publication with no name, ISSNs"
+		  + " or ISBNs.");
+	      return null;
+	    }
+
+	    if (hasIssns && hasIsbns && hasName) {
+	      publicationSeq =
+		  findPublicationByIssnsOrIsbnsOrName(title, publisherSeq, pIssn,
+						      eIssn, pIsbn, eIsbn, mdItemType);} 
 //	    } else if (hasIssns && hasName) {
 //	      publicationSeq =
 //		  findPublicationByIssnsOrName(title, publisherSeq, pIssn, eIssn,
@@ -665,6 +653,7 @@ public class MongoMetadataManager extends MetadataManager {
 //	    }
 //
 //	    return publicationSeq;
+	    return null;
 	  }
 
 	  /**
@@ -1173,6 +1162,15 @@ public class MongoMetadataManager extends MetadataManager {
 	    log.debug3(DEBUG_HEADER + "mdItemType = " + mdItemType);
 	    Long publicationSeq = null;
 	    
+	    
+	    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
+		BasicDBObject query = new BasicDBObject("publisherSeq", publisherSeq)
+												.append("pIssn", pIssn)
+												.append("eIssn", eIssn)
+												.append("mdItemType", mdItemType);
+		DBObject result = collection.findOne(query);
+		
+		
 	  //TODO: CMU mango thingy -- Start
 //	    ResultSet resultSet = null;
 //	    log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_ISSNS_QUERY
