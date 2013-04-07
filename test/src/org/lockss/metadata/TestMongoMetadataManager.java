@@ -102,44 +102,37 @@ public class TestMongoMetadataManager extends LockssTestCase {
 		  assertNotNull(createID);
 		  
 	  }
-	  
-	  public void testISBNSearch()throws Exception
-	  {
-		  	DB mongoDatabase = mongoDbManager.getDb();
-		    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
-		    
-		    long createPibsnID = mongoMetadataManager.findOrCreatePublication("abc", null, "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "2");
-	        long createEissnID = mongoMetadataManager.findOrCreatePublication(null, "123", "pIsbn2", "eIsbn2", 222222L, "name2", "date2", "proprietaryId", "2");
-		    
-			DBObject clause1 = new BasicDBObject("pissn", "abc");  
-			DBObject clause2 = new BasicDBObject("eissn", "abc");    
-			BasicDBList or = new BasicDBList();
-			or.add(clause1);
-			or.add(clause2);
-			DBObject query2 = new BasicDBObject("$or", or);
-			
 
-			
-			DBObject result = collection.findOne(query2);
-			assertNotNull(result);
-			long findID = MongoHelper.readLong(result, "longId");
-			
-			assertEquals(createPibsnID, findID);
-			
-			
-			
-			
-			clause1 = new BasicDBObject("pissn", "123");  
-			clause2 = new BasicDBObject("eissn", "123");    
-			BasicDBList or2 = new BasicDBList();
-			or2.add(clause1);
-			or2.add(clause2);
-			DBObject query3 = new BasicDBObject("$or", or2);
-			DBObject result2 = collection.findOne(query3);
-			findID = MongoHelper.readLong(result2, "longId");
-			assertEquals(createEissnID, findID);
+    public void testISBNSearch() throws Exception {
+        DB mongoDatabase = mongoDbManager.getDb();
+        DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
 
-	  }
-	  
+        long createPibsnID = mongoMetadataManager.findOrCreatePublication("abc", null, "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "2");
+        long createEissnID = mongoMetadataManager.findOrCreatePublication(null, "123", "pIsbn2", "eIsbn2", 222222L, "name2", "date2", "proprietaryId", "2");
+
+        //Check pIssn
+        DBObject clause1 = new BasicDBObject("pIssn", "abc");
+        DBObject clause2 = new BasicDBObject("eIssn", "abc");
+        BasicDBList or = new BasicDBList();
+        or.add(clause1);
+        or.add(clause2);
+        DBObject orQuery = new BasicDBObject("$or", or);
+        DBObject result = collection.findOne(orQuery);
+        assertNotNull(result);
+        long findID = MongoHelper.readLong(result, "longId");
+        assertEquals(createPibsnID, findID);
+
+        //Check eIssn
+        clause1 = new BasicDBObject("pIssn", "123");
+        clause2 = new BasicDBObject("eIssn", "123");
+        or = new BasicDBList();
+        or.add(clause1);
+        or.add(clause2);
+        orQuery = new BasicDBObject("$or", or);
+        result = collection.findOne(orQuery);
+        findID = MongoHelper.readLong(result, "longId");
+        assertEquals(createEissnID, findID);
+    }
+
 
 }
