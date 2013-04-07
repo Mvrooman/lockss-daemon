@@ -20,7 +20,9 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 
 public class TestMongoMetadataManager extends LockssTestCase {
 	
@@ -132,6 +134,34 @@ public class TestMongoMetadataManager extends LockssTestCase {
         result = collection.findOne(orQuery);
         findID = MongoHelper.readLong(result, "longId");
         assertEquals(createEissnID, findID);
+    }
+    
+    public void testSearchISSN2() throws Exception
+    {
+        DB mongoDatabase = mongoDbManager.getDb();
+        DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
+    	
+        long createPibsnID = mongoMetadataManager.findOrCreatePublication("abc", null, "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "2");
+        long createEissnID = mongoMetadataManager.findOrCreatePublication(null, "abc", "pIsbn2", "eIsbn2", 222222L, "name2", "date2", "proprietaryId", "2");
+        
+        long createEissnID2 = mongoMetadataManager.findOrCreatePublication(null, "123", "pIsbn2", "eIsbn2", 1111111L, "name2", "date2", "proprietaryId", "2");
+    	
+	    DBObject finalQuery = QueryBuilder.start().and(
+                QueryBuilder.start("publisherSeq").is(1111111L).get(),
+                QueryBuilder.start("proprietaryId").is("proprietaryId").get(),
+                QueryBuilder.start().or(
+                        QueryBuilder.start("pIssn").is("abc").get(),
+                        QueryBuilder.start("eIssn").is("abc").get()
+                ).get()
+        ).get();
+	    	    
+
+	   DBCursor result = collection.find(finalQuery);
+	   
+	   int i = result.count();
+	  
+	    
+	    assertEquals(1, i);
     }
 
 

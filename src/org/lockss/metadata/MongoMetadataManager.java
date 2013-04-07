@@ -21,10 +21,12 @@ import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.PluginManager;
 import org.lockss.util.StringUtil;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 
 public class MongoMetadataManager extends MetadataManager {
 	
@@ -194,8 +196,6 @@ public class MongoMetadataManager extends MetadataManager {
 	    }
 	    log.debug3(DEBUG_HEADER + "title = " + title);
 	    
-	    
-
 	    // Check whether it is a book series.
 	    if (isBookSeries(pIssn, eIssn, pIsbn, eIsbn, volume)) {
 	      // Yes: Find or create the book series.
@@ -609,7 +609,6 @@ public class MongoMetadataManager extends MetadataManager {
 	   *
 	   *///
 	   
-	   //TODO: CMU --CHANGED IT TO NULL --> CHANGE IT BACK LATER after demo ...
 	  private Long findPublication(String title, Long publisherSeq,
 	      String pIssn, String eIssn, String pIsbn, String eIsbn, String mdItemType)
 		  throws Exception {
@@ -632,28 +631,27 @@ public class MongoMetadataManager extends MetadataManager {
 	    if (hasIssns && hasIsbns && hasName) {
 	      publicationSeq =
 		  findPublicationByIssnsOrIsbnsOrName(title, publisherSeq, pIssn,
-						      eIssn, pIsbn, eIsbn, mdItemType);} 
-//	    } else if (hasIssns && hasName) {
-//	      publicationSeq =
-//		  findPublicationByIssnsOrName(title, publisherSeq, pIssn, eIssn,
-//					       mdItemType);
-//	    } else if (hasIsbns && hasName) {
-//	      publicationSeq =
-//		  findPublicationByIsbnsOrName(title, publisherSeq, pIsbn, eIsbn,
-//					       mdItemType);
-//	    } else if (hasIssns) {
-//	      publicationSeq =
-//		  findPublicationByIssns(publisherSeq, pIssn, eIssn, mdItemType);
-//	    } else if (hasIsbns) {
-//	      publicationSeq =
-//		  findPublicationByIsbns(publisherSeq, pIsbn, eIsbn, mdItemType);
-//	    } else if (hasName) {
-//	      publicationSeq =
-//		  findPublicationByName(title, publisherSeq, mdItemType);
-//	    }
-//
-//	    return publicationSeq;
-	    return null;
+						      eIssn, pIsbn, eIsbn, mdItemType); 
+	    } else if (hasIssns && hasName) {
+	      publicationSeq =
+		  findPublicationByIssnsOrName(title, publisherSeq, pIssn, eIssn,
+					       mdItemType);
+	    } else if (hasIsbns && hasName) {
+	      publicationSeq =
+		  findPublicationByIsbnsOrName(title, publisherSeq, pIsbn, eIsbn,
+					       mdItemType);
+	    } else if (hasIssns) {
+	      publicationSeq =
+		  findPublicationByIssns(publisherSeq, pIssn, eIssn, mdItemType);
+	    } else if (hasIsbns) {
+	      publicationSeq =
+		  findPublicationByIsbns(publisherSeq, pIsbn, eIsbn, mdItemType);
+	    } else if (hasName) {
+	      publicationSeq =
+		  findPublicationByName(title, publisherSeq, mdItemType);
+	    }
+
+	    return publicationSeq;
 	  }
 
 	  /**
@@ -1163,44 +1161,28 @@ public class MongoMetadataManager extends MetadataManager {
 	    Long publicationSeq = null;
 	    
 	    
-	    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
-		BasicDBObject query = new BasicDBObject("publisherSeq", publisherSeq)
-												.append("pIssn", pIssn)
-												.append("eIssn", eIssn)
-												.append("mdItemType", mdItemType);
-		DBObject result = collection.findOne(query);
-		
-		
-	  //TODO: CMU mango thingy -- Start
-//	    ResultSet resultSet = null;
-//	    log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_ISSNS_QUERY
-//		+ "'.");
-//	    PreparedStatement findPublicationByIssns =
-//		sqlDbManager.prepareStatement(FIND_PUBLICATION_BY_ISSNS_QUERY);
-//
-//	    try {
-//	      findPublicationByIssns.setLong(1, publisherSeq);
-//	      findPublicationByIssns.setString(2, pIssn);
-//	      findPublicationByIssns.setString(3, eIssn);
-//	      findPublicationByIssns.setString(4, mdItemType);
-//
-//	      resultSet = sqlDbManager.executeQuery(findPublicationByIssns);
-//	      if (resultSet.next()) {
-//		publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
-//		log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
-//	      }
-//	    } catch (Exception sqle) {
-//	      log.error("Cannot find publication", sqle);
-//	      log.error("publisherSeq = '" + publisherSeq + "'.");
-//	      log.error("pIssn = " + pIssn);
-//	      log.error("eIssn = " + eIssn);
-//	      log.error("SQL = '" + FIND_PUBLICATION_BY_ISSNS_QUERY + "'.");
-//	      throw sqle;
-//	    } finally {
-//	      SqlDbManager.safeCloseResultSet(resultSet);
-//	      SqlDbManager.safeCloseStatement(findPublicationByIssns);
-//	    }
-	  //TODO: CMU mango thingy -- End
+	    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);	    
+
+	    DBObject finalQuery = QueryBuilder.start().and(
+                QueryBuilder.start("publisherSeq").is(publisherSeq).get(),
+                QueryBuilder.start("mdItemType").is(mdItemType).get(),
+                QueryBuilder.start().or(
+                        QueryBuilder.start("pIssn").is("pIssn").get(),
+                        QueryBuilder.start("eIssn").is("eIssn").get()
+                ).get()
+        ).get();
+
+		try {
+			DBObject result = collection.findOne(finalQuery);
+			publicationSeq = MongoHelper.readLong(result, "longId");
+		} catch (Exception e) {
+
+			log.error("Cannot find publication", e);
+			log.error("publisherSeq = '" + publisherSeq + "'.");
+			log.error("pIssn = " + pIssn);
+			log.error("eIssn = " + eIssn);
+			throw e;
+		}
 	    return publicationSeq;
 	  }
 
@@ -1226,36 +1208,30 @@ public class MongoMetadataManager extends MetadataManager {
 	    final String DEBUG_HEADER = "findPublicationByIsbns(): ";
 	    Long publicationSeq = null;
 	    
-	  //TODO: CMU mango thingy -- Start
-//	    ResultSet resultSet = null;
-//	    log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_ISBNS_QUERY
-//		+ "'.");
-//	    PreparedStatement findPublicationByIsbns =
-//		sqlDbManager.prepareStatement(FIND_PUBLICATION_BY_ISBNS_QUERY);
-//
-//	    try {
-//	      findPublicationByIsbns.setLong(1, publisherSeq);
-//	      findPublicationByIsbns.setString(2, pIsbn);
-//	      findPublicationByIsbns.setString(3, eIsbn);
-//	      findPublicationByIsbns.setString(4, mdItemType);
-//
-//	      resultSet = sqlDbManager.executeQuery(findPublicationByIsbns);
-//	      if (resultSet.next()) {
-//		publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
-//		log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
-//	      }
-//	    } catch (Exception sqle) {
-//	      log.error("Cannot find publication", sqle);
-//	      log.error("publisherSeq = '" + publisherSeq + "'.");
-//	      log.error("pIsbn = " + pIsbn);
-//	      log.error("eIsbn = " + eIsbn);
-//	      log.error("SQL = '" + FIND_PUBLICATION_BY_ISBNS_QUERY + "'.");
-//	      throw sqle;
-//	    } finally {
-//	      SqlDbManager.safeCloseResultSet(resultSet);
-//	      SqlDbManager.safeCloseStatement(findPublicationByIsbns);
-//	    }
-	  //TODO: CMU mango thingy -- End
+	    
+	    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);	    
+
+	    DBObject finalQuery = QueryBuilder.start().and(
+                QueryBuilder.start("publisherSeq").is(publisherSeq).get(),
+                QueryBuilder.start("mdItemType").is(mdItemType).get(),
+                QueryBuilder.start().or(
+                        QueryBuilder.start("pIsbn").is(pIsbn).get(),
+                        QueryBuilder.start("eIsbn").is(eIsbn).get()
+                ).get()
+        ).get();
+
+		try {
+			DBObject result = collection.findOne(finalQuery);
+			publicationSeq = MongoHelper.readLong(result, "longId");
+		} catch (Exception e) {
+
+		      log.error("Cannot find publication", e);
+		      log.error("publisherSeq = '" + publisherSeq + "'.");
+		      log.error("pIsbn = " + pIsbn);
+		      log.error("eIsbn = " + eIsbn);
+		      
+			throw e;
+		}
 	    return publicationSeq;
 	  }	  
 	  
@@ -1347,34 +1323,24 @@ public class MongoMetadataManager extends MetadataManager {
 	    final String DEBUG_HEADER = "findPublicationByName(): ";
 	    Long publicationSeq = null;
 	    
-	  //TODO: CMU mango thingy -- Start
-//	    ResultSet resultSet = null;
-//	    log.debug3(DEBUG_HEADER + "SQL = '" + FIND_PUBLICATION_BY_NAME_QUERY
-//	    		+ "'.");
-//	    PreparedStatement findPublicationByName =
-//		sqlDbManager.prepareStatement(FIND_PUBLICATION_BY_NAME_QUERY);
-//
-//	    try {
-//	      findPublicationByName.setLong(1, publisherSeq);
-//	      findPublicationByName.setString(2, title);
-//	      findPublicationByName.setString(3, mdItemType);
-//
-//	      resultSet = sqlDbManager.executeQuery(findPublicationByName);
-//	      if (resultSet.next()) {
-//		publicationSeq = resultSet.getLong(PUBLICATION_SEQ_COLUMN);
-//		log.debug3(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
-//	      }
-//	    } catch (Exception sqle) {
-//	      log.error("Cannot find publication", sqle);
-//	      log.error("publisherSeq = '" + publisherSeq + "'.");
-//	      log.error("title = " + title);
-//	      log.error("SQL = '" + FIND_PUBLICATION_BY_NAME_QUERY + "'.");
-//	      throw sqle;
-//	    } finally {
-//	      SqlDbManager.safeCloseResultSet(resultSet);
-//	      SqlDbManager.safeCloseStatement(findPublicationByName);
-//	    }
-	  //TODO: CMU mango thingy -- End
+	    DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);	    
+
+	    DBObject finalQuery = QueryBuilder.start().and(
+                QueryBuilder.start("publisherSeq").is(publisherSeq).get(),
+                QueryBuilder.start("name").is(title).get() //NOTE SQL --> Search Name Colunm with Title.
+                ).get();
+
+		try {
+			DBObject result = collection.findOne(finalQuery);
+			publicationSeq = MongoHelper.readLong(result, "longId");
+		} catch (Exception e) {
+
+			log.error("Cannot find publication", e);
+			log.error("publisherSeq = '" + publisherSeq + "'.");
+			log.error("title = " + title);
+			
+			throw e;
+		}
 	    return publicationSeq;
 	  }
 	  /**
