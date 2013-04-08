@@ -155,13 +155,21 @@ public class TestMongoMetadataManager extends LockssTestCase {
                 ).get()
         ).get();
 	    	    
-
 	   DBCursor result = collection.find(finalQuery);
 	   
 	   int i = result.count();
-	  
-	    
 	    assertEquals(1, i);
+    }
+    
+    public void testCreateChildPublication()throws Exception
+    {
+    	
+    	 DB mongoDatabase = mongoDbManager.getDb();
+         DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
+     	
+         long createPibsnID = mongoMetadataManager.findOrCreatePublication("123", null, "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "2");
+         long createEissnID = mongoMetadataManager.findOrCreatePublication("123", null, "pIsbn2", "eIsbn2", 1111111L, "name2", "date2", "proprietaryId", "2");
+    	
     }
 
 

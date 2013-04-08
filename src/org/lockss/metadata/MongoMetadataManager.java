@@ -218,11 +218,6 @@ public class MongoMetadataManager extends MetadataManager {
 		  findOrCreateJournal(pIssn, eIssn, publisherSeq, title, date,
 		                      proprietaryId);
 	    }
-
-	    
-	    publicationSeq =  addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq, name, date, proprietaryId, volume,
-	    		null, //TODO:  CMU --- THIS SHOULD BE THE ParentSEQ, which is a bookseries
-	    		title, proprietaryId);
 	    
 	    return publicationSeq;
 	}
@@ -240,6 +235,7 @@ public class MongoMetadataManager extends MetadataManager {
 	 * @param volume
 	 * @return
 	 */
+	//TODO: CMU : ADD the publication TYPE as a parameter.
 	private Long addPublication(String pIssn, String eIssn, String pIsbn,
 			String eIsbn, Long publisherSeq, String name, String date,
 			String proprietaryId, String volume, 
@@ -499,89 +495,63 @@ public class MongoMetadataManager extends MetadataManager {
 	   * @throws Exception
 	   *           if any problem occurred accessing the database.
 	   */
-	  private Long findOrCreateBookInBookSeries(String pIssn,
-	      String eIssn, String pIsbn, String eIsbn, Long publisherSeq, String title,
-	      String date, String proprietaryId, String volume) throws Exception {
-	    final String DEBUG_HEADER = "findOrCreateBookInBookSeries(): ";
-	    Long bookSeq = null;
-	    Long bookSeriesSeq = null;
-	    Long mdItemSeq = null;
+	private Long findOrCreateBookInBookSeries(String pIssn, String eIssn,
+			String pIsbn, String eIsbn, Long publisherSeq, String title,
+			String date, String proprietaryId, String volume) throws Exception {
+		final String DEBUG_HEADER = "findOrCreateBookInBookSeries(): ";
+		Long bookSeq = null;
+		Long bookSeriesSeq = null;
+		Long mdItemSeq = null;
 
-	    // Construct a title for the book in the series.
-	    String bookTitle = title + " Volume " + volume;
-	    log.debug3(DEBUG_HEADER + "bookTitle = " + bookTitle);
+		// Construct a title for the book in the series.
+		String bookTitle = title + " Volume " + volume;
+		log.debug3(DEBUG_HEADER + "bookTitle = " + bookTitle);
 
-	    // Find the book series.
-	    bookSeriesSeq =
-		findPublication(title, publisherSeq, pIssn, eIssn, pIsbn, eIsbn,
-				MD_ITEM_TYPE_BOOK_SERIES);
-	    log.debug3(DEBUG_HEADER + "bookSeriesSeq = " + bookSeriesSeq);
+		// Find the book series.
+		bookSeriesSeq = findPublication(title, publisherSeq, pIssn, eIssn,
+				pIsbn, eIsbn, MD_ITEM_TYPE_BOOK_SERIES);
+		log.debug3(DEBUG_HEADER + "bookSeriesSeq = " + bookSeriesSeq);
 
-	    // Check whether it is a new book series.
-	    if (bookSeriesSeq == null) {
-	      // Yes: Add to the database the new book series.
-	      bookSeriesSeq =
-		  addPublication(null, MD_ITEM_TYPE_BOOK_SERIES, date, title,
-		                 proprietaryId, publisherSeq);
-	      log.debug3(DEBUG_HEADER + "new bookSeriesSeq = " + bookSeriesSeq);
+		// Check whether it is a new book series.
+		if (bookSeriesSeq == null) {
+			// Yes: Add to the database the new book series.
+			bookSeriesSeq = addPublication(pIssn, eIssn, pIsbn, eIsbn,
+					publisherSeq, title, // this is the name ... not sure if title == name??
+					date, proprietaryId, volume, null,
+					title, proprietaryId);
 
-	      // Skip it if the new book series could not be added.
-	      if (bookSeriesSeq == null) {
-		log.error("Title for new book series '" + title
-		    + "' could not be created.");
+			log.debug3(DEBUG_HEADER + "new bookSeriesSeq = " + bookSeriesSeq);
+
+			// Skip it if the new book series could not be added.
+			if (bookSeriesSeq == null) {
+				log.error("Title for new book series '" + title
+						+ "' could not be created.");
+				return bookSeq;
+			}
+
+			// Add to the database the new book.
+			bookSeq = addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq,
+					title, // this is the name ... not sure if title == name??
+					date, proprietaryId, volume, bookSeriesSeq, 
+					title, proprietaryId);
+			log.debug3(DEBUG_HEADER + "new bookSeq = " + bookSeq);
+
+			// Skip it if the new book could not be added.
+			if (bookSeq == null) {
+				log.error("Title for new book '" + bookTitle
+						+ "' could not be created.");
+				return bookSeq;
+			}
+
+		} else {
+
+			// Find or create the book.
+			bookSeq = findOrCreateBook(pIsbn, eIsbn, publisherSeq, bookTitle,
+					bookSeriesSeq, date, proprietaryId);
+		}
+
 		return bookSeq;
-	      }
-
-	      // Get the book series metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(bookSeriesSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the new book series ISSN values.
-	      addMdItemIssns(mdItemSeq, pIssn, eIssn);
-	      log.debug3(DEBUG_HEADER + "added title ISSNs.");
-
-	      // Add to the database the new book.
-	      bookSeq =
-		  addPublication(bookSeriesSeq, MD_ITEM_TYPE_BOOK, date,
-		                 bookTitle, proprietaryId, publisherSeq);
-	      log.debug3(DEBUG_HEADER + "new bookSeq = " + bookSeq);
-
-	      // Skip it if the new book could not be added.
-	      if (bookSeq == null) {
-		log.error("Title for new book '" + bookTitle
-		    + "' could not be created.");
-		return bookSeq;
-	      }
-
-	      // Get the book metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(bookSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the new book ISBN values.
-	      addMdItemIsbns(mdItemSeq, pIsbn, eIsbn);
-	      log.debug3(DEBUG_HEADER + "added title ISBNs.");
-	    } else {
-	      // No: Get the book series metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(bookSeriesSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the book series name in the metadata as an
-	      // alternate, if new.
-	      addNewMdItemName(mdItemSeq, title);
-	      log.debug3(DEBUG_HEADER + "added new title name.");
-
-	      // Add to the database the ISSN values in the metadata, if new.
-	      addNewMdItemIssns(mdItemSeq, pIssn, eIssn);
-	      log.debug3(DEBUG_HEADER + "added new title ISSNs.");
-
-	      // Find or create the book.
-	      bookSeq =
-		  findOrCreateBook(pIsbn, eIsbn, publisherSeq, bookTitle,
-				   bookSeriesSeq, date, proprietaryId);
-	    }
-
-	    return bookSeq;
-	  }
+	}
 	  
 	  /**
 	   * Provides the identifier of a publication by its title, publisher, ISSNs
@@ -695,9 +665,9 @@ public class MongoMetadataManager extends MetadataManager {
 	    // Check whether it is a new book.
 	    if (publicationSeq == null) {
 	      // Yes: Add to the database the new book.
-	      publicationSeq =
-		  addPublication(parentSeq, MD_ITEM_TYPE_BOOK, date, title,
-				 proprietaryId, publisherSeq);
+			publicationSeq = addPublication(null, null, pIsbn, eIsbn,
+					publisherSeq, title, date, proprietaryId, null, parentSeq,
+					title, proprietaryId);
 	      log.debug3(DEBUG_HEADER + "new publicationSeq = " + publicationSeq);
 
 	      // Skip it if the new book could not be added.
@@ -707,26 +677,22 @@ public class MongoMetadataManager extends MetadataManager {
 		return publicationSeq;
 	      }
 
-	      // Get the book metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the new book ISBN values.
-	      addMdItemIsbns(mdItemSeq, pIsbn, eIsbn);
-	      log.debug3(DEBUG_HEADER + "added title ISBNs.");
 	    } else {
-	      // No: Get the book metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the book name in the metadata as an alternate,
-	      // if new.
-	      addNewMdItemName(mdItemSeq, title);
-	      log.debug3(DEBUG_HEADER + "added new title name.");
-
-	      // Add to the database the ISBN values in the metadata, if new.
-	      addNewMdItemIsbns(mdItemSeq, pIsbn, eIsbn);
-	      log.debug3(DEBUG_HEADER + "added new title ISBNs.");
+	    	
+	    	//TODO: CMU to check if something isnt updating correctly ....
+	   //The SQL Version ADDS the metata if publication is found. 
+//	      // No: Get the book metadata item identifier.
+//	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
+//	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
+//
+//	      // Add to the database the book name in the metadata as an alternate,
+//	      // if new.
+//	      addNewMdItemName(mdItemSeq, title);
+//	      log.debug3(DEBUG_HEADER + "added new title name.");
+//
+//	      // Add to the database the ISBN values in the metadata, if new.
+//	      addNewMdItemIsbns(mdItemSeq, pIsbn, eIsbn);
+//	      log.debug3(DEBUG_HEADER + "added new title ISBNs.");
 	    }
 
 	    return publicationSeq;
@@ -777,6 +743,7 @@ public class MongoMetadataManager extends MetadataManager {
 	    }
 
 	    addMdItemName(mdItemSeq, title, PRIMARY_NAME_TYPE);
+	    
 
 	    //TODO: CMU Add the mango stuff --- start
 //	    ResultSet resultSet = null;
@@ -1060,8 +1027,12 @@ public class MongoMetadataManager extends MetadataManager {
 	    if (publicationSeq == null) {
 	      // Yes: Add to the database the new journal.
 	      publicationSeq =
-		  addPublication(parentSeq, MD_ITEM_TYPE_JOURNAL, date, title,
-				 proprietaryId, publisherSeq);
+	    		  		addPublication(pIssn, eIssn, null, null,
+						publisherSeq, title, // this is the name ... not sure if title == name??
+						date, proprietaryId, null, parentSeq,
+						title, proprietaryId);  //TODO: CMU add the publication type.
+		//  addPublication(parentSeq, MD_ITEM_TYPE_JOURNAL, date, title,
+		//		 proprietaryId, publisherSeq);
 	      log.debug3(DEBUG_HEADER + "new publicationSeq = " + publicationSeq);
 
 	      // Skip it if the new journal could not be added.
@@ -1071,26 +1042,21 @@ public class MongoMetadataManager extends MetadataManager {
 		return publicationSeq;
 	      }
 
-	      // Get the journal metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // Add to the database the new journal ISSN values.
-	      addMdItemIssns(mdItemSeq, pIssn, eIssn);
-	      log.debug3(DEBUG_HEADER + "added title ISSNs.");
 	    } else {
-	      // No: Get the journal metadata item identifier.
-	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
-	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
-
-	      // No: Add to the database the journal name in the metadata as an
-	      // alternate, if new.
-	      addNewMdItemName(mdItemSeq, title);
-	      log.debug3(DEBUG_HEADER + "added new title name.");
-
-	      // Add to the database the ISSN values in the metadata, if new.
-	      addNewMdItemIssns(mdItemSeq, pIssn, eIssn);
-	      log.debug3(DEBUG_HEADER + "added new title ISSNs.");
+	    	
+	    	//CMU : SQL Version add if the jornal is found
+//	      // No: Get the journal metadata item identifier.
+//	      mdItemSeq = findPublicationMetadataItem(publicationSeq);
+//	      log.debug3(DEBUG_HEADER + "mdItemSeq = " + mdItemSeq);
+//
+//	      // No: Add to the database the journal name in the metadata as an
+//	      // alternate, if new.
+//	      addNewMdItemName(mdItemSeq, title);
+//	      log.debug3(DEBUG_HEADER + "added new title name.");
+//
+//	      // Add to the database the ISSN values in the metadata, if new.
+//	      addNewMdItemIssns(mdItemSeq, pIssn, eIssn);
+//	      log.debug3(DEBUG_HEADER + "added new title ISSNs.");
 	    }
 
 	    return publicationSeq;
@@ -1174,6 +1140,10 @@ public class MongoMetadataManager extends MetadataManager {
 
 		try {
 			DBObject result = collection.findOne(finalQuery);
+			if(result == null)
+			{
+				return publicationSeq;
+			}
 			publicationSeq = MongoHelper.readLong(result, "longId");
 		} catch (Exception e) {
 
@@ -1222,6 +1192,10 @@ public class MongoMetadataManager extends MetadataManager {
 
 		try {
 			DBObject result = collection.findOne(finalQuery);
+			if(result == null)
+			{
+				return publicationSeq;
+			}
 			publicationSeq = MongoHelper.readLong(result, "longId");
 		} catch (Exception e) {
 
@@ -1332,6 +1306,10 @@ public class MongoMetadataManager extends MetadataManager {
 
 		try {
 			DBObject result = collection.findOne(finalQuery);
+			if(result == null)
+			{
+				return publicationSeq;
+			}
 			publicationSeq = MongoHelper.readLong(result, "longId");
 		} catch (Exception e) {
 
