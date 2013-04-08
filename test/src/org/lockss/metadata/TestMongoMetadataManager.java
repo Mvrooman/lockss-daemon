@@ -105,36 +105,7 @@ public class TestMongoMetadataManager extends LockssTestCase {
 		  
 	  }
 
-    public void testISBNSearch() throws Exception {
-        DB mongoDatabase = mongoDbManager.getDb();
-        DBCollection collection = mongoDatabase.getCollection(PUBLICATIONS_COLLECTION);
 
-        long createPibsnID = mongoMetadataManager.findOrCreatePublication("abc", null, "pIsbn", "eIsbn", 1111111L, "name", "date", "proprietaryId", "2");
-        long createEissnID = mongoMetadataManager.findOrCreatePublication(null, "123", "pIsbn2", "eIsbn2", 222222L, "name2", "date2", "proprietaryId", "2");
-
-        //Check pIssn
-        DBObject clause1 = new BasicDBObject("pIssn", "abc");
-        DBObject clause2 = new BasicDBObject("eIssn", "abc");
-        BasicDBList or = new BasicDBList();
-        or.add(clause1);
-        or.add(clause2);
-        DBObject orQuery = new BasicDBObject("$or", or);
-        DBObject result = collection.findOne(orQuery);
-        assertNotNull(result);
-        long findID = MongoHelper.readLong(result, "longId");
-        assertEquals(createPibsnID, findID);
-
-        //Check eIssn
-        clause1 = new BasicDBObject("pIssn", "123");
-        clause2 = new BasicDBObject("eIssn", "123");
-        or = new BasicDBList();
-        or.add(clause1);
-        or.add(clause2);
-        orQuery = new BasicDBObject("$or", or);
-        result = collection.findOne(orQuery);
-        findID = MongoHelper.readLong(result, "longId");
-        assertEquals(createEissnID, findID);
-    }
     
     public void testSearchISSN2() throws Exception
     {
@@ -158,7 +129,7 @@ public class TestMongoMetadataManager extends LockssTestCase {
 	   DBCursor result = collection.find(finalQuery);
 	   
 	   int i = result.count();
-	    assertEquals(1, i);
+	    assertEquals(2, i);
     }
     
     public void testCreateChildPublication()throws Exception
