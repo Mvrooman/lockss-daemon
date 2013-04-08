@@ -518,7 +518,7 @@ public class MongoMetadataManager extends MetadataManager {
 			bookSeriesSeq = addPublication(pIssn, eIssn, pIsbn, eIsbn,
 					publisherSeq, title, // this is the name ... not sure if title == name??
 					date, proprietaryId, volume, null,
-					title, proprietaryId);
+					MD_ITEM_TYPE_BOOK_SERIES, proprietaryId);
 
 			log.debug3(DEBUG_HEADER + "new bookSeriesSeq = " + bookSeriesSeq);
 
@@ -533,7 +533,7 @@ public class MongoMetadataManager extends MetadataManager {
 			bookSeq = addPublication(pIssn, eIssn, pIsbn, eIsbn, publisherSeq,
 					title, // this is the name ... not sure if title == name??
 					date, proprietaryId, volume, bookSeriesSeq, 
-					title, proprietaryId);
+					MD_ITEM_TYPE_BOOK, proprietaryId);
 			log.debug3(DEBUG_HEADER + "new bookSeq = " + bookSeq);
 
 			// Skip it if the new book could not be added.
@@ -667,7 +667,7 @@ public class MongoMetadataManager extends MetadataManager {
 	      // Yes: Add to the database the new book.
 			publicationSeq = addPublication(null, null, pIsbn, eIsbn,
 					publisherSeq, title, date, proprietaryId, null, parentSeq,
-					title, proprietaryId);
+					MD_ITEM_TYPE_BOOK, proprietaryId);
 	      log.debug3(DEBUG_HEADER + "new publicationSeq = " + publicationSeq);
 
 	      // Skip it if the new book could not be added.
@@ -1030,7 +1030,7 @@ public class MongoMetadataManager extends MetadataManager {
 	    		  		addPublication(pIssn, eIssn, null, null,
 						publisherSeq, title, // this is the name ... not sure if title == name??
 						date, proprietaryId, null, parentSeq,
-						title, proprietaryId);  //TODO: CMU add the publication type.
+						MD_ITEM_TYPE_JOURNAL, proprietaryId); 
 		//  addPublication(parentSeq, MD_ITEM_TYPE_JOURNAL, date, title,
 		//		 proprietaryId, publisherSeq);
 	      log.debug3(DEBUG_HEADER + "new publicationSeq = " + publicationSeq);
@@ -1133,8 +1133,8 @@ public class MongoMetadataManager extends MetadataManager {
                 QueryBuilder.start("publisherSeq").is(publisherSeq).get(),
                 QueryBuilder.start("mdItemType").is(mdItemType).get(),
                 QueryBuilder.start().or(
-                        QueryBuilder.start("pIssn").is("pIssn").get(),
-                        QueryBuilder.start("eIssn").is("eIssn").get()
+                        QueryBuilder.start("pIssn").is(pIssn).get(),
+                        QueryBuilder.start("eIssn").is(eIssn).get()
                 ).get()
         ).get();
 
