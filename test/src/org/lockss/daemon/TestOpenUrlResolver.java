@@ -31,7 +31,7 @@ in this Software without prior written authorization from Stanford University.
 */
 
 package org.lockss.daemon;
-
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import static org.lockss.db.SqlDbManager.*;
 import java.io.*;
 import java.sql.Connection;

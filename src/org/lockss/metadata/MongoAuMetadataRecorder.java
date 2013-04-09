@@ -10,7 +10,7 @@ import org.lockss.plugin.PluginManager;
 public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 
 	// The metadata manager.
-	private final MetadataManager mdManager; //TODO: Change to a Mongo DB Manager
+	private final MongoMetadataManager mdManager; //TODO: Change to a Mongo DB Manager
 
 	// The database manager.
 	private final MongoDbManager mongoDbManager;
@@ -24,7 +24,7 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 	public MongoAuMetadataRecorder(ReindexingTask task,
 			MetadataManager mdManager, ArchivalUnit au) {
 		super(task, mdManager, au);
-		this.mdManager = mdManager;
+		this.mdManager = (MongoMetadataManager) mdManager;
 		mongoDbManager = (MongoDbManager) mdManager.getDbManager();
 		// TODO Auto-generated constructor stub
 	}
@@ -152,38 +152,14 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 			}
 		}
 
-		// Check whether the Archival Unit metadata has not been located in the
-		// database.
-		if (auMdSeq == null) {
-			// Yes: Find the Archival Unit metadata in the database.
-			auMdSeq = mdManager.findAuMd(auSeq);
-			log.debug3(DEBUG_HEADER + "new auMdSeq = " + auMdSeq);
-		}
+		// Yes: Add to the database the new Archival Unit metadata.
+		auMdSeq = mdManager.addAuMd(auSeq, pluginVersion,
+				NEVER_EXTRACTED_EXTRACTION_TIME, publicationSeq, mdinfo);
+		log.debug3(DEBUG_HEADER + "new auSeq = " + auMdSeq);
 
-		boolean newAu = false;
-
-		// Check whether it is a new Archival Unit metadata.
-		if (auMdSeq == null) {
-			// Yes: Add to the database the new Archival Unit metadata.
-			auMdSeq = mdManager.addAuMd(auSeq, pluginVersion,
-					NEVER_EXTRACTED_EXTRACTION_TIME);
-			log.debug3(DEBUG_HEADER + "new auSeq = " + auMdSeq);
-
-			// Skip it if the new Archival Unit metadata could not be created.
-			if (auMdSeq == null) {
-				log.debug3(DEBUG_HEADER + "Done: auMdSeq is null.");
-				return;
-			}
-
-			newAu = true;
-		} else {
-			// No: Update the Archival Unit metadata ancillary data.
-			updateAuMd(auMdSeq, pluginVersion);
-			log.debug3(DEBUG_HEADER + "updated AU.");
-		}
-
+		
 		// Update or create the metadata item.
-		updateOrCreateMdItem(newAu, publicationSeq, mdinfo);
+		//updateOrCreateMdItem(newAu, publicationSeq, mdinfo);
 
 		log.debug3(DEBUG_HEADER + "Done.");
 	}

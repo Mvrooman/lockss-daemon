@@ -44,7 +44,6 @@ import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
-import org.lockss.metadata.SqlMetadataManager.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.PluginManager;
 import org.lockss.scheduler.SchedulableTask;
@@ -172,7 +171,7 @@ public class SqlReindexingTask extends ReindexingTask {
 			try {
 				// Get a connection to the database.
 				message = "Cannot obtain a database connection";
-				conn = sqlDbManager.getConnection();
+				conn = ((SqlDbManager)dbManager).getConnection();
 
 				// Get the AU database identifier, if any.
 				message = "Cannot find the AU identifier for AU = " + auId
@@ -282,7 +281,7 @@ public class SqlReindexingTask extends ReindexingTask {
 					long removedArticleCount = 0L;
 
 					// Get a connection to the database.
-					conn = sqlDbManager.getConnection();
+					conn =  ((SqlDbManager)dbManager).getConnection();
 
 					// Check whether the plugin version used to obtain the
 					// metadata
@@ -345,7 +344,7 @@ public class SqlReindexingTask extends ReindexingTask {
 
 				try {
 					// Get a connection to the database.
-					conn = sqlDbManager.getConnection();
+					conn =  ((SqlDbManager)dbManager).getConnection();
 
 					// Attempt to move failed AU to end of pending list.
 					sqlMetadataManager.removeFromPendingAus(conn, au.getAuId());
@@ -401,7 +400,7 @@ public class SqlReindexingTask extends ReindexingTask {
 
 				try {
 					// Get a connection to the database.
-					conn = sqlDbManager.getConnection();
+					conn =  ((SqlDbManager)dbManager).getConnection();
 
 					// Schedule another task if available.
 					sqlMetadataManager.startReindexing(conn);

@@ -21,6 +21,8 @@ public class MongoDbManager extends DbManager {
 	public static final String PLUGIN_COLLECTION = "plugins";
 	
 	public static final String PUBLICATIONS_COLLECTION = "publications";
+	
+	public static final String AUS_COLLECTION = "aus";
 
 	private boolean ready = false;
 	

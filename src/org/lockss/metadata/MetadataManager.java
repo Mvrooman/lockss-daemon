@@ -8,6 +8,8 @@ import java.util.List;
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.db.DbManager;
+import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.Plugin;
 import org.lockss.plugin.Plugin.Feature;
@@ -33,6 +35,13 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 	public static final String NOT_PRIMARY_NAME_TYPE = "not_primary";
 
 	protected static Logger log = Logger.getLogger(MetadataManager.class);
+	
+	  // The number of failed reindexing operations.
+	public static long failedReindexingCount = 0;
+	  // The number of articles currently in the metadata database.
+	public static long metadataArticleCount = 0;
+	  // The number of successful reindexing operations.
+	public long successfulReindexingCount = 0;
 
 	/**
 	 * Provides a list of AuIds that require reindexing sorted by priority.
@@ -393,4 +402,40 @@ public abstract class MetadataManager extends BaseLockssDaemonManager implements
 		return isBook;
 	}
 	
+	
+	  /**
+	   * Notifies listeners that an AU is being reindexed.
+	   * 
+	   * @param au
+	   *          An ArchivalUnit with the Archival Unit.
+	   */
+	  protected void notifyStartReindexingAu(ArchivalUnit au) {
+	  }
+	  
+	  protected void incrementFailedReindexingCount() {
+		    this.failedReindexingCount++;
+		  } 
+	  
+	  protected synchronized void addToMetadataArticleCount(long count) {
+		    this.metadataArticleCount += count;
+		  }
+	  
+	  protected void incrementSuccessfulReindexingCount() {
+		    this.successfulReindexingCount++;
+		  }
+	  
+	  /**
+	   * Notifies listeners that an AU is finished being reindexed.
+	   * 
+	   * @param au
+	   *          An ArchivalUnit with the Archival Unit.
+	   * @param status
+	   *          A ReindexingStatus with the status of the reindexing process.
+	   */
+	  protected void notifyFinishReindexingAu(ArchivalUnit au,
+	      ReindexingStatus status) {
+	  }
+
+
+ 
 }

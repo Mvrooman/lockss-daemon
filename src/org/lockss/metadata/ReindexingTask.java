@@ -8,6 +8,7 @@ import java.util.Map;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.TdbAu;
 import org.lockss.daemon.PluginException;
+import org.lockss.db.DbManager;
 import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadata;
 import org.lockss.extractor.ArticleMetadataExtractor;
@@ -16,7 +17,6 @@ import org.lockss.extractor.MetadataTarget;
 import org.lockss.extractor.ArticleMetadataExtractor.Emitter;
 import org.lockss.extractor.MetadataException.ValidationException;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
-import org.lockss.metadata.SqlMetadataManager.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArticleFiles;
 import org.lockss.plugin.AuUtil;
@@ -53,7 +53,7 @@ public abstract class ReindexingTask extends StepTask {
 	protected final String auId;
 
 	// The database manager.
-	protected final SqlDbManager sqlDbManager;
+	protected final DbManager dbManager;
 
 	// The metadata manager.
 	protected MetadataManager mdManager;
@@ -83,6 +83,14 @@ public abstract class ReindexingTask extends StepTask {
 	protected final HashSet<Integer> auLogTable = new HashSet<Integer>();
 
 	protected ArticleMetadataBuffer articleMetadataInfoBuffer = null;
+	
+	/** enumeration status for reindexing tasks */
+	public enum ReindexingStatus {
+		Running, // if the reindexing task is running
+		Success, // if the reindexing task was successful
+		Failed, // if the reindexing task failed
+		Rescheduled // if the reindexing task was rescheduled
+	};
 
 	public ReindexingTask(ArchivalUnit theAu, ArticleMetadataExtractor theAe) {
 		// NOTE: estimated window time interval duration not currently used.
@@ -96,7 +104,7 @@ public abstract class ReindexingTask extends StepTask {
 		this.auName = au.getName();
 		this.auId = au.getAuId();
 		this.auNoSubstance = AuUtil.getAuState(au).hasNoSubstance();
-		sqlDbManager = (SqlDbManager) LockssDaemon.getLockssDaemon().getDbManager();
+		dbManager = (DbManager) LockssDaemon.getLockssDaemon().getDbManager();
 		mdManager = LockssDaemon.getLockssDaemon().getMetadataManager();
 
 		// The accumulator of article metadata.

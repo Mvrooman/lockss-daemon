@@ -52,6 +52,8 @@ import org.lockss.plugin.simulated.*;
 import org.lockss.util.*;
 import org.lockss.test.*;
 
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
+
 /**
  * Test class for org.lockss.metadata.SqlMetadataManager
  *

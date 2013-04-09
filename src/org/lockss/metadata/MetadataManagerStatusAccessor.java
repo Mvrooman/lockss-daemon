@@ -42,7 +42,8 @@ import org.lockss.daemon.status.OverviewAccessor;
 import org.lockss.daemon.status.StatusAccessor;
 import org.lockss.daemon.status.StatusService.NoSuchTableException;
 import org.lockss.daemon.status.StatusTable;
-import org.lockss.metadata.SqlMetadataManager.ReindexingStatus;
+
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import org.lockss.state.ArchivalUnitStatus;
 import org.lockss.util.CatalogueOrderComparator;
 import org.lockss.util.ListUtil;

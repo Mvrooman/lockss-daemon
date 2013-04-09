@@ -2,10 +2,14 @@ package org.lockss.metadata;
 
 import static org.lockss.db.DbManager.MAX_NAME_COLUMN;
 import static org.lockss.db.MongoDbManager.*;
+import static org.lockss.db.SqlDbManager.AU_SEQ_COLUMN;
+import static org.lockss.db.SqlDbManager.EXTRACT_TIME_COLUMN;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_BOOK_SERIES;
 import static org.lockss.db.SqlDbManager.MD_ITEM_TYPE_JOURNAL;
 
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +21,30 @@ import org.lockss.config.Configuration.Differences;
 import org.lockss.db.DbManager;
 import org.lockss.db.MongoDbManager;
 import org.lockss.db.MongoHelper;
+import org.lockss.db.SqlDbManager;
+import org.lockss.extractor.ArticleMetadataExtractor;
+import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.PluginManager;
 import org.lockss.util.StringUtil;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
+import com.mongodb.util.JSON;
 
 public class MongoMetadataManager extends MetadataManager {
 	
+	  /**
+	   * Map of running reindexing tasks keyed by their AuIds
+	   */
+	  final Map<String, SqlReindexingTask> activeReindexingTasks =
+	      new HashMap<String, SqlReindexingTask>();
+	  
 	private PluginManager pluginMgr = null;
 	private MongoDbManager mongoDbManager = null;
 	private DB mongoDatabase = null;
@@ -63,8 +78,18 @@ public class MongoMetadataManager extends MetadataManager {
 
 	@Override
 	Long findOrCreateAu(Long pluginSeq, String auKey) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	    final String DEBUG_HEADER = "findOrCreateAu(): ";
+	    Long auSeq = findAu(pluginSeq, auKey);
+	    log.debug3(DEBUG_HEADER + "auSeq = " + auSeq);
+
+	    // Check whether it is a new AU.
+	    if (auSeq == null) {
+	      // Yes: Add to the database the new AU.
+	      auSeq = addAu(pluginSeq, auKey);
+	      log.debug3(DEBUG_HEADER + "new auSeq = " + auSeq);
+	    }
+
+	    return auSeq;
 	}
 
 	@Override
@@ -132,9 +157,23 @@ public class MongoMetadataManager extends MetadataManager {
 	    return pluginSeq;
 	}
 
-	@Override
-	Long addAuMd(Long auSeq, int version, long extractTime) throws Exception {
-		// TODO Auto-generated method stub
+
+
+	 
+	Long addAuMd(Long auSeq, int version, long extractTime, Long publicationSeq, ArticleMetadataInfo mdinfo ) throws Exception {
+		
+		DBCollection collection = mongoDatabase.getCollection(AUS_COLLECTION);
+		BasicDBObject query = new BasicDBObject("longId", auSeq);
+		DBObject result = collection.findOne(query);
+		
+		Gson gson = new Gson();
+		String metadataJson = gson.toJson(mdinfo);
+		// JSON.serialize(mdinfo);
+		DBObject metadataBson = (DBObject) JSON.parse(metadataJson);
+		
+		((BasicDBObject) result).append("version", version).append("extractTime", extractTime).append("publicationSeq", publicationSeq).append("articleMetadata", metadataBson);
+	
+		collection.update(query, result);
 		return null;
 	}
 
@@ -1410,4 +1449,436 @@ public class MongoMetadataManager extends MetadataManager {
 	    return names;
 	  }	  
 	  
+		
+		/**
+		 * Provides the identifier of an Archival Unit.
+		 * 
+		 * @param conn
+		 *            A Connection with the database connection to be used.
+		 * @param pluginSeq
+		 *            A Long with the identifier of the plugin.
+		 * @param auKey
+		 *            A String with the Archival Unit key.
+		 * @return a Long with the identifier of the Archival Unit.
+		 * @throws SQLException
+		 *             if any problem occurred accessing the database.
+		 */
+		Long findAu(Long pluginSeq, String auKey)
+				throws Exception {
+			final String DEBUG_HEADER = "findAu(): ";	
+		    Long auSeq = null;
+		    
+			DBCollection collection = mongoDatabase.getCollection(AUS_COLLECTION);
+			DBObject finalQuery = QueryBuilder.start().and(
+	                QueryBuilder.start("pluginSeq").is(pluginSeq).get(),
+	                QueryBuilder.start("auKey").is(auKey).get()).get();
+			DBObject result = collection.findOne(finalQuery);
+			
+			
+			if(result != null) {
+				log.debug3(DEBUG_HEADER + "Found auSeq = " + auSeq);
+				return MongoHelper.readLong(result, "longId");
+			}
+			
+			return null;			
+			
+		}	  
+	  
+
+	
+	  /**
+	   * Provides the extraction time of an Archival Unit metadata.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param auSeq
+	   *          A Long with the identifier of the Archival Unit.
+	   * @return a long with the extraction time of the Archival Unit metadata.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  long getAuExtractionTime(Long auSeq)
+		throws Exception {
+	    final String DEBUG_HEADER = "getAuExtractionTime(): ";
+	    long timestamp = NEVER_EXTRACTED_EXTRACTION_TIME;
+	  //  PreparedStatement selectLastExtractionTime = null;
+	  //  ResultSet resultSet = null;
+
+	    //TODO: CMU ... do this...
+//	    try {
+//	      selectLastExtractionTime = sqlDbManager.prepareStatement(conn,
+//		  FIND_AU_MD_EXTRACT_TIME_BY_AUSEQ_QUERY);
+//	      selectLastExtractionTime.setLong(1, auSeq);
+//	      resultSet = sqlDbManager.executeQuery(selectLastExtractionTime);
+//
+//	      if (resultSet.next()) {
+//		timestamp = resultSet.getLong(EXTRACT_TIME_COLUMN);
+//		log.debug2(DEBUG_HEADER + "timestamp = " + timestamp);
+//	      }
+//	    } finally {
+//	      SqlDbManager.safeCloseResultSet(resultSet);
+//	      SqlDbManager.safeCloseStatement(selectLastExtractionTime);
+//	    }
+//
+//	    return timestamp;
+	    
+	    
+	    return 111L;
+	  }	
+	  
+	  /**
+	   * Provides an indication of whether the version of the metadata of an AU
+	   * stored in the database has been obtained with an obsolete version of the
+	   * plugin.
+	   * 
+	   * @param au
+	   *          An ArchivalUnit with the AU involved.
+	   * @return <code>true</code> if the metadata was obtained with a version of
+	   *         the plugin previous to the current version, <code>false</code>
+	   *         otherwise.
+	   */
+	  boolean isAuMetadataForObsoletePlugin(ArchivalUnit au) {
+	    final String DEBUG_HEADER = "isAuMetadataForObsoletePlugin(): ";
+
+	    // Get the plugin version of the stored AU metadata. 
+//	    int auVersion = getAuMetadataVersion(au);
+//	    log.debug(DEBUG_HEADER + "auVersion = " + auVersion);
+//
+//	    // Get the current version of the plugin. 
+//	    int pVersion = getPluginMetadataVersionNumber(au.getPlugin());
+//	    log.debug(DEBUG_HEADER + "pVersion = " + pVersion);
+//
+//	    return pVersion > auVersion;
+	    
+	    return true;
+	  } 
+	  
+	  /**
+	   * Removes all metadata items for an AU.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param auId
+	   *          A String with the AU identifier.
+	   * @return an int with the number of metadata items deleted.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  int removeAuMetadataItems(String auId) throws Exception {
+	    final String DEBUG_HEADER = "removeAuMetadataItems(): ";
+	    log.debug3(DEBUG_HEADER + "auid = " + auId);
+	    
+	    //TODO: CMU ...
+	//    log.debug3(DEBUG_HEADER + "SQL = '" + DELETE_MD_ITEM_QUERY + "'.");
+	    int count = -1;
+//	    PreparedStatement deletePendingAu =
+//		sqlDbManager.prepareStatement(conn, DELETE_MD_ITEM_QUERY);
+//
+//	    try {
+//	      String pluginId = PluginManager.pluginIdFromAuId(auId);
+//	      log.debug3(DEBUG_HEADER + "pluginId = " + pluginId);
+//	      String auKey = PluginManager.auKeyFromAuId(auId);
+//	      log.debug3(DEBUG_HEADER + "auKey = " + auKey);
+//
+//	      deletePendingAu.setString(1, pluginId);
+//	      deletePendingAu.setString(2, auKey);
+//	      count = sqlDbManager.executeUpdate(deletePendingAu);
+//	    } catch (SQLException sqle) {
+//	      log.error("Cannot delete AU metadata items", sqle);
+//	      log.error("auid = " + auId);
+//	      log.error("SQL = '" + DELETE_MD_ITEM_QUERY + "'.");
+//	      throw sqle;
+//	    } finally {
+//	      SqlDbManager.safeCloseStatement(deletePendingAu);
+//	    }
+//
+//	    log.debug3(DEBUG_HEADER + "count = " + count);
+//	    return count;
+	    return 1;
+	  }	  
+	  
+	  /**
+	   * Removes an AU from the pending Aus table.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param auId
+	   *          A String with the AU identifier.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  void removeFromPendingAus(String auId) throws Exception {
+		  //TODO: CMU...
+//	    PreparedStatement deletePendingAu =
+//		sqlDbManager.prepareStatement(conn, DELETE_PENDING_AU_QUERY);
+//
+//	    try {
+//	      String pluginId = PluginManager.pluginIdFromAuId(auId);
+//	      String auKey = PluginManager.auKeyFromAuId(auId);
+//	  
+//	      deletePendingAu.setString(1, pluginId);
+//	      deletePendingAu.setString(2, auKey);
+//	      sqlDbManager.executeUpdate(deletePendingAu);
+//	    } catch (SQLException sqle) {
+//	      log.error("Cannot remove AU from pending table", sqle);
+//	      log.error("auId = '" + auId + "'.");
+//	      log.error("SQL = '" + DELETE_PENDING_AU_QUERY + "'.");
+//	      throw sqle;
+//	    } finally {
+//	      SqlDbManager.safeCloseStatement(deletePendingAu);
+//	    }
+//
+//	    pendingAusCount = getEnabledPendingAusCount(conn);
+	  }	  
+
+	  /**
+	   * Adds AUs to the list of pending AUs to reindex.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param aus
+	   *          A Collection<ArchivalUnit> with the AUs to add.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  void addToPendingAus(Collection<ArchivalUnit> aus)
+	      throws Exception {
+	    addToPendingAus(aus, false);
+	  }	  
+
+	  /**
+	   * Adds AUs to the list of pending AUs to reindex.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param aus
+	   *          A Collection<ArchivalUnit> with the AUs to add.
+	   * @param inBatch
+	   *          A boolean indicating whether adding these AUs to the list of
+	   *          pending AUs to reindex should be performed as part of a batch.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  void addToPendingAus(Collection<ArchivalUnit> aus,
+	      boolean inBatch) throws Exception {
+	    final String DEBUG_HEADER = "addToPendingAus(): ";
+	    
+	    //TODO: CMU.....
+//	    PreparedStatement selectPendingAu =
+//		sqlDbManager.prepareStatement(conn, FIND_PENDING_AU_QUERY);
+//
+//	    if (insertPendingAuBatchStatement == null) {
+//	      insertPendingAuBatchStatement =
+//		  sqlDbManager.prepareStatement(conn, INSERT_ENABLED_PENDING_AU_QUERY);
+//	    }
+//
+//	    ResultSet results = null;
+//	    log.debug2(DEBUG_HEADER + "maxPendingAuBatchSize = " + maxPendingAuBatchSize);
+//	    log.debug2(DEBUG_HEADER + "Number of pending aus to add: " + aus.size());
+//
+//	    try {
+//	      // Loop through all the AUs.
+//	      for (ArchivalUnit au : aus) {
+//	        // Only add for extraction iff it has article metadata.
+//	        if (!hasArticleMetadata(au)) {
+//	          log.debug3(DEBUG_HEADER + "Not adding au " + au.getName()
+//	              + " to pending list because it has no metadata");
+//	        } else {
+//	          String auid = au.getAuId();
+//	          String pluginId = PluginManager.pluginIdFromAuId(auid);
+//	          String auKey = PluginManager.auKeyFromAuId(auid);
+//
+//	          // Find the AU in the table.
+//	          selectPendingAu.setString(1, pluginId);
+//	          selectPendingAu.setString(2, auKey);
+//	          results = sqlDbManager.executeQuery(selectPendingAu);
+//
+//	          if (!results.next()) {
+//	            // Only insert if entry does not exist.
+//		    log.debug3(DEBUG_HEADER + "Adding au " + au.getName()
+//			+ " to pending list");
+//	            insertPendingAuBatchStatement.setString(1, pluginId);
+//	            insertPendingAuBatchStatement.setString(2, auKey);
+//	            insertPendingAuBatchStatement.addBatch();
+//	            pendingAuBatchCurrentSize++;
+//		    log.debug3(DEBUG_HEADER + "pendingAuBatchCurrentSize = "
+//			+ pendingAuBatchCurrentSize);
+//
+//		    // Check whether the maximum batch size has been reached.
+//		    if (pendingAuBatchCurrentSize >= maxPendingAuBatchSize) {
+//		      // Yes: Perform the insertion of all the AUs in the batch.
+//		      log.debug3(DEBUG_HEADER + "Executing batch...");
+//		      insertPendingAuBatchStatement.executeBatch();
+//		      pendingAuBatchCurrentSize = 0;
+//		      log.debug3(DEBUG_HEADER + "pendingAuBatchCurrentSize = "
+//			  + pendingAuBatchCurrentSize);
+//		    }
+//	          } else {
+//	            log.debug3(DEBUG_HEADER+ "Not adding au " + au.getName()
+//	                       + " to pending list becuase it is already on the list");
+//	          }
+//
+//	          SqlDbManager.safeCloseResultSet(results);
+//		}
+//	      }
+//
+//	      // Check whether there are no more AUs to be batched and the batch is not
+//	      // empty.
+//	      if (!inBatch && pendingAuBatchCurrentSize > 0) {
+//		// Yes: Perform the insertion of all the AUs in the batch.
+//		log.debug3(DEBUG_HEADER + "Executing batch...");
+//		insertPendingAuBatchStatement.executeBatch();
+//		pendingAuBatchCurrentSize = 0;
+//		log.debug3(DEBUG_HEADER + "pendingAuBatchCurrentSize = "
+//		    + pendingAuBatchCurrentSize);
+//	      }
+//	    } finally {
+//	      SqlDbManager.safeCloseResultSet(results);
+//
+//	      // Check whether there are no more AUs to be batched.
+//	      if (!inBatch) {
+//		// Yes: Perform the insertion of all the AUs in the batch.
+//		SqlDbManager.safeCloseStatement(insertPendingAuBatchStatement);
+//		insertPendingAuBatchStatement = null;
+//	      }
+//
+//	      SqlDbManager.safeCloseStatement(selectPendingAu);
+//	    }
+
+//	    pendingAusCount = getEnabledPendingAusCount(conn);
+	  }	  
+	  
+	  /**
+	   * Ensures that as many re-indexing tasks as possible are running if the
+	   * manager is enabled.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @return an int with the number of reindexing tasks started.
+	   */
+	  int startReindexing() {
+	    final String DEBUG_HEADER = "startReindexing(): ";
+
+	    //TODO: CMU
+//	    if (!getDaemon().isDaemonInited()) {
+//	      log.debug(DEBUG_HEADER + "Daemon not initialized: No reindexing tasks.");
+//	      return 0;
+//	    }
+//
+//	    // Don't run reindexing tasks run if reindexing is disabled.
+//	    if (!reindexingEnabled) {
+//	      log.debug(DEBUG_HEADER
+//		  + "Metadata manager reindexing is disabled: No reindexing tasks.");
+//	      return 0;
+//	    }
+//
+//	    int reindexedTaskCount = 0;
+//
+//	    synchronized (activeReindexingTasks) {
+//	      // Try to add more concurrent reindexing tasks as long as the maximum
+//	      // number of them is not reached.
+//	      while (activeReindexingTasks.size() < maxReindexingTasks) {
+//	        // Get the list of pending AUs to reindex.
+//		List<String> auIds =
+//		    getPrioritizedAuIdsToReindex(conn, maxReindexingTasks
+//			- activeReindexingTasks.size());
+//
+//		// Nothing more to do if there are no pending AUs to reindex.
+//	        if (auIds.isEmpty()) {
+//	          break;
+//	        }
+//
+//	        // Loop through all the pending AUs. 
+//	        for (String auId : auIds) {
+//	          // Get the next pending AU.
+//	          ArchivalUnit au = pluginMgr.getAuFromId(auId);
+//
+//	          // Check whether it does not exist.
+//	          if (au == null) {
+//		    // Yes: Cancel any running tasks associated with the AU and delete
+//		    // the AU metadata.
+//	            try {
+//	              int count = deleteAu(conn, auId);
+//	              notifyDeletedAu(auId, count);
+//	            } catch (SQLException sqle) {
+//		      log.error("Error removing AU for auId " + auId
+//			  + " from the table of pending AUs", sqle);
+//	            }
+//	          } else {
+//	            // No: Get the metadata extractor.
+//	            ArticleMetadataExtractor ae = getMetadataExtractor(au);
+//
+//	            // Check whether it does not exist.
+//	            if (ae == null) {
+//		      // Yes: It shouldn't happen because it was checked before adding
+//		      // the AU to the pending AUs list.
+//		      log.debug(DEBUG_HEADER + "Not running reindexing task for AU '"
+//			  + au.getName() + "' because it nas no metadata extractor");
+//
+//		      // Remove it from the table of pending AUs.
+//	              try {
+//	                removeFromPendingAus(conn, au.getAuId());
+//	              } catch (SQLException sqle) {
+//	                log.error("Error removing AU " + au.getName()
+//	                          + " from the table of pending AUs", sqle);
+//	                break;
+//	              }
+//	            } else {
+//	              // No: Schedule the pending AU.
+//		      log.debug3(DEBUG_HEADER + "Creating the reindexing task for AU: "
+//			  + au.getName());
+//	              SqlReindexingTask task = new SqlReindexingTask(au, ae);
+//	              activeReindexingTasks.put(au.getAuId(), task);
+//
+//	              // Add the reindexing task to the history; limit history list
+//	              // size.
+//	              addToHistory(task);
+//
+//		      log.debug(DEBUG_HEADER + "Running the reindexing task for AU: "
+//			  + au.getName());
+//	              runReindexingTask(task);
+//	              reindexedTaskCount++;
+//	            }
+//	          }
+//	        }
+//	      }
+//	    }
+//
+//	    log.debug(DEBUG_HEADER + "Started " + reindexedTaskCount
+//	              + " AU reindexing tasks");
+	    //return reindexedTaskCount;
+	    return 1;
+	  }	  
+	  
+	  /**
+	   * Adds an Archival Unit to the database.
+	   * 
+	   * @param conn
+	   *          A Connection with the database connection to be used.
+	   * @param pluginSeq
+	   *          A Long with the identifier of the plugin.
+	   * @param auKey
+	   *          A String with the Archival Unit key.
+	   * @return a Long with the identifier of the Archival Unit just added.
+	   * @throws SQLException
+	   *           if any problem occurred accessing the database.
+	   */
+	  private Long addAu(Long pluginSeq, String auKey)
+	      throws Exception {
+	    final String DEBUG_HEADER = "addAu(): ";
+	    
+		DBCollection collection = mongoDatabase
+				.getCollection(AUS_COLLECTION);
+		BasicDBObject publisherDocument = new BasicDBObject("pluginSeq", pluginSeq).append("auKey", auKey);
+
+		collection.insert(publisherDocument);
+		return mongoDbManager.createLongId(publisherDocument, collection);	    
+	  }
+
+	 //Not implemented
+	@Override
+	Long addAuMd(Long auSeq, int version, long extractTime) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}	  
 }

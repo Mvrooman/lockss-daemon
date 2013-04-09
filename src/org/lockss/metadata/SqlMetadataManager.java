@@ -39,6 +39,7 @@ import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.BaseArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuUtil;
 import org.lockss.plugin.Plugin;
@@ -511,17 +512,13 @@ public class SqlMetadataManager extends MetadataManager {
   /** Disable crawl completion rescheduling a running task for same AU */
   boolean disableCrawlRescheduleTask = DEFAULT_DISABLE_CRAWL_RESCHEDULE_TASK;
 
-  // The number of articles currently in the metadata database.
-  private long metadataArticleCount = 0;
+
 
   // The number of AUs pending to be reindexed.
   private long pendingAusCount = 0;
 
-  // The number of successful reindexing operations.
-  private long successfulReindexingCount = 0;
 
-  // The number of failed reindexing operations.
-  private long failedReindexingCount = 0;
+
 
   private int maxReindexingTaskHistory = DEFAULT_HISTORY_MAX;
 
@@ -541,13 +538,7 @@ public class SqlMetadataManager extends MetadataManager {
   private Connection pendingAusBatchConnection = null;
   private PreparedStatement insertPendingAuBatchStatement = null;
 
-  /** enumeration status for reindexing tasks */
-  public enum ReindexingStatus {
-    Running, // if the reindexing task is running
-    Success, // if the reindexing task was successful
-    Failed, // if the reindexing task failed
-    Rescheduled // if the reindexing task was rescheduled
-  };
+
 
   /**
    * Starts the SqlMetadataManager service.
@@ -3811,26 +3802,9 @@ public class SqlMetadataManager extends MetadataManager {
     return (au.getTdbAu() != null);
   }
 
-  /**
-   * Notifies listeners that an AU is being reindexed.
-   * 
-   * @param au
-   *          An ArchivalUnit with the Archival Unit.
-   */
-  protected void notifyStartReindexingAu(ArchivalUnit au) {
-  }
 
-  /**
-   * Notifies listeners that an AU is finished being reindexed.
-   * 
-   * @param au
-   *          An ArchivalUnit with the Archival Unit.
-   * @param status
-   *          A ReindexingStatus with the status of the reindexing process.
-   */
-  protected void notifyFinishReindexingAu(ArchivalUnit au,
-      ReindexingStatus status) {
-  }
+
+
 
   /**
    * Deletes an AU and starts the next reindexing task.
@@ -3873,17 +3847,11 @@ public class SqlMetadataManager extends MetadataManager {
     }
   }
 
-  void incrementSuccessfulReindexingCount() {
-    this.successfulReindexingCount++;
-  }
 
-  synchronized void addToMetadataArticleCount(long count) {
-    this.metadataArticleCount += count;
-  }
 
-  void incrementFailedReindexingCount() {
-    this.failedReindexingCount++;
-  }
+
+
+
 
   /**
    * Provides an indication of whether the version of the metadata of an AU
