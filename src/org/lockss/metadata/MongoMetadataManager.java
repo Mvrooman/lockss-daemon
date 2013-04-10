@@ -21,12 +21,12 @@ import org.lockss.config.Configuration.Differences;
 import org.lockss.db.DbManager;
 import org.lockss.db.MongoDbManager;
 import org.lockss.db.MongoHelper;
-import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.PluginManager;
 import org.lockss.util.StringUtil;
+import org.lockss.util.TimeBase;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
@@ -419,9 +419,17 @@ public class MongoMetadataManager extends MetadataManager {
 	}
 
 	@Override
-	public void updateAuLastExtractionTime(Long auMdSeq) throws Exception {
-		// TODO Auto-generated method stub
-
+	public void updateAuLastExtractionTime(Long auSeq) throws Exception {
+		long time = TimeBase.nowMs();
+		
+		DBCollection collection = mongoDatabase.getCollection(AUS_COLLECTION);
+		BasicDBObject query = new BasicDBObject("longId", auSeq);
+		DBObject result = collection.findOne(query);
+		
+		
+		((BasicDBObject) result).append("extractTime", time);
+		collection.update(query, result);
+		
 	}
 
 	  /**

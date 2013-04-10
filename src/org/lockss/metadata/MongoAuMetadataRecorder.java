@@ -46,11 +46,11 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 					+ task.getUpdatedArticleCount());
 		}
 
-		if (auMdSeq != null) {
+		if (auSeq != null) {
 			// Update the AU last extraction timestamp.
-			mdManager.updateAuLastExtractionTime(auMdSeq);
+			mdManager.updateAuLastExtractionTime(auSeq);
 		} else {
-			log.warning("auMdSeq is null for auid = '" + au.getAuId() + "'.");
+			log.warning("auSeq is null for auid = '" + au.getAuId() + "'.");
 		}
 	}
 

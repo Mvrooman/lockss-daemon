@@ -66,7 +66,7 @@ import static org.lockss.db.SqlDbManager.*;
 public class SqlMetadataManager extends MetadataManager {
 
   /** prefix for config properties */
-  public static final String PREFIX = Configuration.PREFIX + "sqlMetadataManager.";
+  public static final String PREFIX = Configuration.PREFIX + "metadataManager.";
 
   /**
    * Determines whether MedataExtractor specified by plugin should be used if it
