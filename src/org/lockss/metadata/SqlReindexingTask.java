@@ -38,8 +38,11 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+
 import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
@@ -299,15 +302,23 @@ public class SqlReindexingTask extends ReindexingTask {
 					mongoMetadataManager.initalize();
 					Iterator<ArticleMetadataInfo> mditr = articleMetadataInfoBuffer
 							.iterator();
+					
+					List<ArticleMetadataInfo> listMdItr = new ArrayList<ArticleMetadataInfo>();
+                    while(mditr.hasNext())
+                    {
+                        listMdItr.add(mditr.next());
+                    }
+
+
 
 					// Check whether there is any metadata to record.
-					if (mditr.hasNext()) {
+					if (listMdItr.size() > 0) {
 
 						// Yes: Write the AU metadata to the database.
 						new SqlAuMetadataRecorder((SqlReindexingTask) task,
-								sqlMetadataManager, au).recordMetadata(conn, mditr);
+								sqlMetadataManager, au).recordMetadata(conn, listMdItr.iterator());
 						
-						new MongoAuMetadataRecorder((ReindexingTask)task, mongoMetadataManager, au).recordMetadata(mditr);
+						new MongoAuMetadataRecorder((ReindexingTask)task, mongoMetadataManager, au).recordMetadata(listMdItr.iterator());
 						
 
 					}

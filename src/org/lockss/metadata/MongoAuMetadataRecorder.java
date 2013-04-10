@@ -64,7 +64,7 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 	 * @throws Exception 
 	 */
 	private void storeMetadata(ArticleMetadataInfo mdinfo) throws Exception {
-		final String DEBUG_HEADER = "storeMetadata(): ";
+		final String DEBUG_HEADER = "storeMongoMetadata(): ";
 		if (log.isDebug3()) {
 			log.debug3(DEBUG_HEADER + "Starting: auId = " + auId);
 			log.debug3(DEBUG_HEADER + "auKey = " + auKey);
@@ -76,7 +76,7 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 		if (publisherSeq == null) {
 			// Yes: Get the publisher received in the metadata.
 			String publisher = mdinfo.publisher;
-			log.debug3(DEBUG_HEADER + "publisher = " + publisher);
+			log.debug3(DEBUG_HEADER + "Mongo -- publisher = " + publisher);
 
 			// Find the publisher or create it.
 			publisherSeq = mdManager.findOrCreatePublisher(publisher);

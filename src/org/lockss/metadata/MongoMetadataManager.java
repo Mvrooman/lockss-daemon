@@ -57,7 +57,7 @@ public class MongoMetadataManager extends MetadataManager {
 	    log.debug(DEBUG_HEADER + "Starting mongoMetadataManager");
 
 	    //pluginMgr = getDaemon().getPluginManager();
-	    LockssDaemon ld =  getDaemon();
+	    LockssDaemon ld = LockssDaemon.getLockssDaemon();
 	    pluginMgr = ld.getPluginManager();
 	    mongoDbManager = new MongoDbManager();
 	    mongoDbManager.startService();
