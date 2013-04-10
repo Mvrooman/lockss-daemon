@@ -295,6 +295,8 @@ public class SqlReindexingTask extends ReindexingTask {
 								+ removedArticleCount);
 					}
 
+					MongoMetadataManager mongoMetadataManager = new MongoMetadataManager();
+					mongoMetadataManager.initalize();
 					Iterator<ArticleMetadataInfo> mditr = articleMetadataInfoBuffer
 							.iterator();
 
@@ -304,6 +306,9 @@ public class SqlReindexingTask extends ReindexingTask {
 						// Yes: Write the AU metadata to the database.
 						new SqlAuMetadataRecorder((SqlReindexingTask) task,
 								sqlMetadataManager, au).recordMetadata(conn, mditr);
+						
+						new MongoAuMetadataRecorder((ReindexingTask)task, mongoMetadataManager, au).recordMetadata(mditr);
+						
 
 					}
 
@@ -323,7 +328,7 @@ public class SqlReindexingTask extends ReindexingTask {
 							- removedArticleCount);
 
 					break;
-				} catch (SQLException sqle) {
+				} catch (Exception sqle) {
 					log.warning("Error updating metadata at FINISH for "
 							+ status + " -- rescheduling", sqle);
 					status = ReindexingStatus.Rescheduled;

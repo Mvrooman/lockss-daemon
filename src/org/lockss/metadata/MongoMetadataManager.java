@@ -51,6 +51,19 @@ public class MongoMetadataManager extends MetadataManager {
 	
 	
 	
+	
+	public void initalize() {
+	    final String DEBUG_HEADER = "startService(): ";
+	    log.debug(DEBUG_HEADER + "Starting mongoMetadataManager");
+
+	    //pluginMgr = getDaemon().getPluginManager();
+	    LockssDaemon ld =  getDaemon();
+	    pluginMgr = ld.getPluginManager();
+	    mongoDbManager = new MongoDbManager();
+	    mongoDbManager.startService();
+	    mongoDatabase = mongoDbManager.getDb();
+	}
+	
 	@Override
 	public void startService() {
 	    final String DEBUG_HEADER = "startService(): ";
@@ -61,7 +74,7 @@ public class MongoMetadataManager extends MetadataManager {
 	    pluginMgr = ld.getPluginManager();
 	    mongoDbManager = (MongoDbManager) getDaemon().getDbManager();
 	    mongoDatabase = mongoDbManager.getDb();
-	}
+	}	
 
 	@Override
 	public void setConfig(Configuration newConfig, Configuration prevConfig,
@@ -1889,4 +1902,6 @@ public class MongoMetadataManager extends MetadataManager {
 		// TODO Auto-generated method stub
 		return null;
 	}	  
+	
+
 }
