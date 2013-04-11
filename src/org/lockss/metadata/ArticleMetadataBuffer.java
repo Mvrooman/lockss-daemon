@@ -100,6 +100,7 @@ class ArticleMetadataBuffer {
     String doi;
     String accessUrl;
     Map<String, String> featuredUrlMap;
+    Map<String, String> additionalMetadata;
     Set<String> keywordSet;
     String endPage;
     String coverage;

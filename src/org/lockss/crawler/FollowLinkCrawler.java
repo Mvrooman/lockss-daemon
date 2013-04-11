@@ -478,7 +478,8 @@ public abstract class FollowLinkCrawler extends BaseCrawler {
   /** We always want our UrlCacher to store all redirected copies */
   public UrlCacher makeUrlCacher(String url) {
     UrlCacher uc = super.makeUrlCacher(url);
-    uc.setRedirectScheme(UrlCacher.REDIRECT_SCHEME_STORE_ALL_IN_SPEC);
+    //uc.setRedirectScheme(UrlCacher.REDIRECT_SCHEME_STORE_ALL_IN_SPEC);
+    uc.setRedirectScheme(UrlCacher.REDIRECT_SCHEME_FOLLOW);      //TODO: CMU  how to get CIF redirects?
     if (proxyHost != null) {
       uc.setProxy(proxyHost, proxyPort);
     }
