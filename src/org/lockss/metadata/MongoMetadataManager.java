@@ -184,9 +184,16 @@ public class MongoMetadataManager extends MetadataManager {
 		// JSON.serialize(mdinfo);
 		DBObject metadataBson = (DBObject) JSON.parse(metadataJson);
 		
-		((BasicDBObject) result).append("version", version).append("extractTime", extractTime).append("publicationSeq", publicationSeq).append("articleMetadata", metadataBson);
+		((BasicDBObject) result).append("version", version).append("extractTime", extractTime).append("publicationSeq", publicationSeq);
 	
 		collection.update(query, result);
+		
+		DBObject listItem = new BasicDBObject("articleMetadata", metadataBson);
+		DBObject updateQuery = new BasicDBObject("$push", listItem);
+		collection.update(query, updateQuery);
+
+
+		
 		return null;
 	}
 
