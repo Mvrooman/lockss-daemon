@@ -50,7 +50,9 @@ public class InternationalUnionOfCrystallographyArticleIteratorFactory
 
   protected static final String ROOT_TEMPLATE = "\"%s%s/issues/%d/%s/00/\", base_url, journal_id, year, issue";
   
-  protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+/index\\.html$\", base_url, journal_id, year, issue";
+ // protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+/index\\.html$\", base_url, journal_id, year, issue";
+
+  protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+((/index\\.html)|(/[^/]*\\.cif))$\", base_url, journal_id, year, issue";
 
   @Override
   public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
@@ -64,7 +66,8 @@ public class InternationalUnionOfCrystallographyArticleIteratorFactory
   
   protected static class InternationalUnionOfCrystallographyArticleIterator extends SubTreeArticleIterator {
 
-    protected static Pattern PATTERN = Pattern.compile("/([^/]+)/index\\.html$", Pattern.CASE_INSENSITIVE);
+    //protected static Pattern PATTERN = Pattern.compile("/([^/]+)/index\\.html$", Pattern.CASE_INSENSITIVE);
+	  protected static Pattern PATTERN = Pattern.compile("/([^/]+)((/index\\.html)|(/[^/]*\\.cif))$", Pattern.CASE_INSENSITIVE);
     
     public InternationalUnionOfCrystallographyArticleIterator(ArchivalUnit au,
                                                               SubTreeArticleIterator.Spec spec) {
