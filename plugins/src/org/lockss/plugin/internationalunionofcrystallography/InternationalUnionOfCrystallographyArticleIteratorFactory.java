@@ -41,6 +41,7 @@ import org.lockss.extractor.ArticleMetadataExtractorFactory;
 import org.lockss.extractor.BaseArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.plugin.*;
+import org.lockss.util.ListUtil;
 import org.lockss.util.Logger;
 
 public class InternationalUnionOfCrystallographyArticleIteratorFactory 
@@ -48,24 +49,27 @@ public class InternationalUnionOfCrystallographyArticleIteratorFactory
 
   protected static Logger log = Logger.getLogger("InternationalUnionOfCrystallographyArticleIteratorFactory");
 
-  protected static final String ROOT_TEMPLATE = "\"%s%s/issues/%d/%s/00/\", base_url, journal_id, year, issue";
+  protected static final String HTML_ROOT_TEMPLATE = "\"%s%s/issues/%d/%s/00/\", base_url, journal_id, year, issue";
+  protected static final String CIF_ROOT_TEMPLATE = "\"%s\",scripts_url";
+
   
  // protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+/index\\.html$\", base_url, journal_id, year, issue";
 
   //protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+((/index\\.html)|(/[^/]*\\.cif))$\", base_url, journal_id, year, issue";
   protected static final String PATTERN_TEMPLATE = "\"(^%s%s/issues/%d/%s/00/[^/]+((/index\\.html)|(/[^/]*\\.cif)))|(/([^/]+)/[^/]*sup1)$\", base_url, journal_id, year, issue";
 
-  @Override
-  public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
-                                                      MetadataTarget target)
-      throws PluginException {
-    return new InternationalUnionOfCrystallographyArticleIterator(au, new SubTreeArticleIterator.Spec()
-                                                                      .setTarget(target)
-                                                                      .setRootTemplate(ROOT_TEMPLATE)
-                                                                      .setPatternTemplate(PATTERN_TEMPLATE));
-  }
-  
-  protected static class InternationalUnionOfCrystallographyArticleIterator extends SubTreeArticleIterator {
+    @Override
+    public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
+                                                        MetadataTarget target)
+            throws PluginException {
+        return new InternationalUnionOfCrystallographyArticleIterator(au, new SubTreeArticleIterator.Spec()
+                .setTarget(target)
+                        //.setRootTemplate(ROOT_TEMPLATE)
+                .setRootTemplates(ListUtil.list(HTML_ROOT_TEMPLATE, CIF_ROOT_TEMPLATE))
+                .setPatternTemplate(PATTERN_TEMPLATE));
+    }
+
+    protected static class InternationalUnionOfCrystallographyArticleIterator extends SubTreeArticleIterator {
 
       protected static Pattern URL_PATTERN = Pattern.compile("/([^/]+)/index\\.html$", Pattern.CASE_INSENSITIVE);
 	 // protected static Pattern CIF_PATTERN = Pattern.compile("/([^/]+)/[^/]*\\.cif$", Pattern.CASE_INSENSITIVE);

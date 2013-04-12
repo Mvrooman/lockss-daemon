@@ -148,7 +148,7 @@
   <entry>
     <string>au_substance_url_pattern</string>
     <list>
-      <string>"^%s%s/issues/%d/%s/00/[^/]+/index\.html$", base_url, journal_id, year, issue</string>
+      <string>"(^%s%s/issues/%d/%s/00/[^/]+((/index\.html)|(/[^/]*\.cif)))|(/([^/]+)/[^/]*sup1)$", base_url, journal_id, year, issue</string>
     </list>
   </entry>
     <entry>

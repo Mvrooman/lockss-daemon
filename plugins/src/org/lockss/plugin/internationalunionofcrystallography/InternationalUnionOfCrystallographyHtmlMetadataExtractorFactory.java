@@ -94,6 +94,7 @@ public class InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory
     @Override
     public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
         throws IOException {
+        //TODO: CMU  Check URL type and Create a class similar to SimpleHtmlMetaTagMetadataExtractor to extract CID data.
       ArticleMetadata am = 
         new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
       am.cook(tagMap);    	  
