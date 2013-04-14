@@ -43,8 +43,9 @@ public class MongoDbManager extends DbManager {
 		MongoClient mongoClient = null;
 
 		try {
-			mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
-			mongoDatabase = mongoClient.getDB("lockss");
+			//mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
+			mongoClient = new MongoClient("24.10.146.230", 27017);
+			mongoDatabase = mongoClient.getDB("lockss");  
 			initializeCollections();
 		} catch (UnknownHostException e) {
 			log.error(e.getMessage());

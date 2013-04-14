@@ -223,6 +223,11 @@ public class MetadataField {
   public static final MetadataField FIELD_KEYWORDS = new MetadataField(
       KEY_KEYWORDS, Cardinality.Multi);
 
+  
+  public static final String KEY_ADDITIONAL_METADATA = "addition.metadata";
+  public static final MetadataField FIELD_ADDITIONAL_METADATA = new MetadataField(
+		  KEY_ADDITIONAL_METADATA, Cardinality.Multi);
+  
   // Dublin code fields. See http://dublincore.org/documents/dces/ for
   // more information on the fields. See also
   // http://scholar.google.com/intl/en/scholar/inclusion.html for

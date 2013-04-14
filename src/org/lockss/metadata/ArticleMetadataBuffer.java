@@ -155,7 +155,13 @@ class ArticleMetadataBuffer {
       featuredUrlMap =
 	  new HashMap<String, String>(md.getRawMap(MetadataField
 	                                           .FIELD_FEATURED_URL_MAP));
+      
+      
       log.debug3("featuredUrlMap = " + featuredUrlMap);
+      
+      additionalMetadata =
+	  new HashMap<String, String>(md.getRawMap(MetadataField
+	                                           .FIELD_ADDITIONAL_METADATA));
       keywordSet = getKeywordSet(md);
       coverage = md.get(MetadataField.FIELD_COVERAGE);
       itemNumber = md.get(MetadataField.FIELD_ITEM_NUMBER);

@@ -92,13 +92,24 @@ public class InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory
     }
 
     @Override
-    public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
-        throws IOException {
-        //TODO: CMU  Check URL type and Create a class similar to SimpleHtmlMetaTagMetadataExtractor to extract CID data.
-      ArticleMetadata am = 
-        new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
-      am.cook(tagMap);    	  
-      emitter.emitMetadata(cu, am);
-    }
+		public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
+				throws IOException {
+
+			if (cu.getUrl().toString().contains(".html")) {
+				ArticleMetadata am = new SimpleHtmlMetaTagMetadataExtractor()
+						.extract(target, cu);
+				am.cook(tagMap);
+				emitter.emitMetadata(cu, am);
+			} else {
+				
+				// TODO: CMU Check URL type and Create a class similar to
+				// SimpleHtmlMetaTagMetadataExtractor to extract CID data.
+				
+				CIFMetadataExtractor extractor = new CIFMetadataExtractor();
+				ArticleMetadata articleMetadata = extractor.extract(target, cu);
+				//extractor.cook(articleMetadata);
+				emitter.emitMetadata(cu, articleMetadata);
+			}
+		}
   }
 }
