@@ -158,10 +158,19 @@
   <entry>
     <string>text/html_metadata_extractor_factory_map</string>
     <map>
-      <entry>
-        <string>*;DublinCore</string>
-        <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory</string>
-      </entry>
+        <entry>
+            <string>*;DublinCore</string>
+            <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory</string>
+        </entry>
     </map>
-  </entry>
+</entry>
+    <entry>
+        <string>text/plain_metadata_extractor_factory_map</string>
+        <map>
+            <entry>
+                <string>*</string>
+                <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory</string>
+            </entry>
+        </map>
+    </entry>
 </map>

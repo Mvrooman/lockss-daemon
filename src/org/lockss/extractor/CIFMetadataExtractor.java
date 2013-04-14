@@ -21,34 +21,33 @@ public class CIFMetadataExtractor extends SimpleFileMetadataExtractor {
 	static Logger log = Logger.getLogger("CIFMetadataExtractor");
 	private MultiMap cifTagMap = new MultiValueMap();
 
-	public ArticleMetadata extract(MetadataTarget target, CachedUrl cu)
-			throws IOException {
-		if (cu == null) {
-			throw new IllegalArgumentException(
-					"extract() called with null CachedUrl");
-		}
+    public ArticleMetadata extract(MetadataTarget target, CachedUrl cu)
+            throws IOException {
+        if (cu == null) {
+            throw new IllegalArgumentException(
+                    "extract() called with null CachedUrl");
+        }
+        log.info("Starting CIFMetadataExtractor for " + cu.getUrl());
+        ArticleMetadata metadata = new ArticleMetadata();
+        BufferedReader bReader = new BufferedReader(cu.openForReading());
+        Map<String, String> map = new HashMap<String, String>();
+        for (String line = bReader.readLine(); line != null; line = bReader
+                .readLine()) {
 
-		ArticleMetadata metadata = new ArticleMetadata();
-		BufferedReader bReader = new BufferedReader(cu.openForReading());
-		Map<String, String> map = new HashMap<String, String>();
-		for (String line = bReader.readLine(); line != null; line = bReader
-				.readLine()) {
-			
-			if (line.length() > 0 && line.startsWith("_")) {
+            if (line.length() > 0 && line.startsWith("_")) {
+                log.debug3("reading line " + line);
+                String regex = "([^\\s]+)\\s+(.+)";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(line);
+                if (m.find()) {
+                    log.debug3("Found netadata for:" + m.group(1) + " with value:" + m.group(2));
+                    map.put(m.group(1), m.group(2));
+                    cifTagMap.put(m.group(1), new MetadataField(m.group(1)));
+                }
+            }
+        }
 
-				String regex = "([^\\s]+)\\s+(.+)";
-				Pattern p = Pattern.compile(regex);
-				Matcher m = p.matcher(line);
-				if (m.find())
-				{
-					map.put(m.group(1), m.group(2));
-					cifTagMap.put(m.group(1), new MetadataField(m.group(1)));
-				
-				}
-			}
-		}
-		
-		metadata.putRaw(MetadataField.FIELD_ADDITIONAL_METADATA.getKey(), map);
+        metadata.putRaw(MetadataField.FIELD_ADDITIONAL_METADATA.getKey(), map);
 		IOUtil.safeClose(bReader);
 		return metadata;
 	}
