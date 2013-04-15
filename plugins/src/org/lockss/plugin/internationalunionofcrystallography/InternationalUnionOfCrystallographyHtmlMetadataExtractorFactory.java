@@ -29,6 +29,7 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.internationalunionofcrystallography;
 
 import java.io.*;
+import java.util.Map;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -94,20 +95,22 @@ public class InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory
       @Override
       public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
               throws IOException {
-          log.info("Checking URL " + cu.getUrl());
-          if (cu.getUrl().contains(".html")) {
-              log.info("Checking HTML Data " + cu.getUrl());
-              ArticleMetadata am = new SimpleHtmlMetaTagMetadataExtractor()
-                      .extract(target, cu);
-              am.cook(tagMap);
-              emitter.emitMetadata(cu, am);
-          } else {
-              log.info("Checking CIF Data " + cu.getUrl());
-              CIFMetadataExtractor extractor = new CIFMetadataExtractor();
-              ArticleMetadata articleMetadata = extractor.extract(target, cu);
-              //extractor.cook(articleMetadata);
-              emitter.emitMetadata(cu, articleMetadata);
-          }
+          log.info("Checking URL " + cu.getUrl());         //expecting a url like //http://journals.iucr.org/e/issues/2011/01/00/bg2370/index.html
+          log.info("Checking HTML Data " + cu.getUrl());
+          //Get base article metadata
+          ArticleMetadata am = new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
+          am.cook(tagMap);
+          //Get CIF metadata
+          String accessUrl = am.get(MetadataField.KEY_ACCESS_URL);   //similar to http://scripts.iucr.org/cgi-bin/paper?rz2523
+          String cifUrl = accessUrl.replace("paper?", "sendcif") + "sup1";  //create http://scripts.iucr.org/cgi-bin/sendcifbg2370sup1
+          ArchivalUnit au = cu.getArchivalUnit();
+          CachedUrl cachedCifUrl = au.makeCachedUrl(cifUrl);
+          log.info("Checking CIF Data " + cachedCifUrl.getUrl());
+          CIFMetadataExtractor extractor = new CIFMetadataExtractor();
+          Map<String, String> map = extractor.getAdditionalMetadata(cachedCifUrl);
+          am.putRaw(MetadataField.FIELD_ADDITIONAL_METADATA.getKey(), map);
+
+          emitter.emitMetadata(cu, am);
       }
   }
 }
