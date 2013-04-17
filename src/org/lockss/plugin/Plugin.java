@@ -184,6 +184,13 @@ public interface Plugin {
     public ArticleMetadataExtractor
       getArticleMetadataExtractor(MetadataTarget target,
 				  ArchivalUnit au);
+    
+    /**
+     * Return an {@link JenaMetadataExtractor} that knows how to interpret
+     * the AU's metadata for Jena.
+     * @return A JenaMetadataExtractor or null
+     */
+	public JenaMetadataExtractor getJenaMetadataExtractor();
 
   /**
    * Return a {@link FileMetadataExtractor} that knows how to extract

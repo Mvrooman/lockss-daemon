@@ -320,7 +320,7 @@ public class SqlReindexingTask extends ReindexingTask {
 						
 						new MongoAuMetadataRecorder((ReindexingTask)task, mongoMetadataManager, au).recordMetadata(listMdItr.iterator());
 						
-
+						new JenaMetadataRecorder(au, mongoMetadataManager.getDbManager()).recordMetadata();
 					}
 
 					// Remove the AU just re-indexed from the list of AUs

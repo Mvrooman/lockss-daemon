@@ -4,31 +4,31 @@
 
 /*
 
-Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
-all rights reserved.
+ Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
+ all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-STANFORD UNIVERSITY BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ STANFORD UNIVERSITY BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Except as contained in this notice, the name of Stanford University shall not
-be used in advertising or otherwise to promote the sale, use or other dealings
-in this Software without prior written authorization from Stanford University.
+ Except as contained in this notice, the name of Stanford University shall not
+ be used in advertising or otherwise to promote the sale, use or other dealings
+ in this Software without prior written authorization from Stanford University.
 
-*/
+ */
 
 package org.lockss.test;
 
@@ -50,603 +50,605 @@ import org.lockss.util.urlconn.*;
 import org.lockss.extractor.*;
 
 /**
- * Base class for test plugins that don't want to implement all the
- * required methods.
- * Extend only the nested classes to which you need to add bahavior.
+ * Base class for test plugins that don't want to implement all the required
+ * methods. Extend only the nested classes to which you need to add bahavior.
  */
 public class NullPlugin {
 
-  /**
-   * Base class for test <code>Plugin</code>s.  Default methods do nothing
-   * or return constants.
-   */
-  public static class Plugin implements org.lockss.plugin.Plugin {
-    protected Plugin() {
-    }
-
-    public void initPlugin(LockssDaemon daemon) {
-    }
-
-    public void stopPlugin() {
-    }
-
-    public void stopAu(org.lockss.plugin.ArchivalUnit au) {
-    }
-
-    public String getPluginId() {
-      return "NullPlugin";
-    }
-
-    public String getVersion() {
-      return "NullVersion";
-    }
-
-    public String getRequiredDaemonVersion() {
-      return "0.0.0";
-    }
-
-    public String getFeatureVersion(Plugin.Feature feat) {
-      return null;
-    }
-
-    public String getPluginName() {
-      return "Null Plugin";
-    }
-
-    public String getPublishingPlatform() {
-      return null;
-    }
-
-    public LockssDaemon getDaemon() {
-      return null;
-    }
-
-    public List getSupportedTitles() {
-      return null;
-    }
-
-    public TitleConfig getTitleConfig(String title) {
-      return null;
-    }
-
-    public List getAuConfigDescrs() {
-      return null;
-    }
-
-    public ConfigParamDescr findAuConfigDescr(String key) {
-      return null;
-    }
-
-    public org.lockss.plugin.ArchivalUnit configureAu(Configuration config,
-						      org.lockss.plugin.ArchivalUnit au)
-	throws org.lockss.plugin.ArchivalUnit.ConfigurationException {
-      return null;
-    }
-
-    public org.lockss.plugin.ArchivalUnit createAu(Configuration auConfig)
-	throws org.lockss.plugin.ArchivalUnit.ConfigurationException {
-      return null;
-    }
-
-    public Collection getAllAus() {
-      return null;
-    }
-
-    public Object newAuxClass(String className, Class expectedType) {
-      return null;
-    }
-
-    public String getDefaultArticleMimeType() {
-      return null;
-    }
-
-    public org.lockss.extractor.ArticleMetadataExtractor
-	getArticleMetadataExtractor(MetadataTarget target,
-				    org.lockss.plugin.ArchivalUnit au) {
-      return null;
-    }
-
-    public ArticleIteratorFactory getArticleIteratorFactory() {
-      return null;
-    }
-
-    public FileMetadataExtractor
-      getFileMetadataExtractor(MetadataTarget target,
-			       String contentType,
-			       org.lockss.plugin.ArchivalUnit au) {
-      return null;
-    }
-  }
-
-  /**
-   * Base class for test <code>CachedUrl</code>s.  Default methods do nothing
-   * or return constants.
-   */
-  public static class CachedUrl implements org.lockss.plugin.CachedUrl {
-
-    protected CachedUrl() {
-    }
-
-    public String toString() {
-      return "[NullPlugin.CachedUrl]";
-    }
-
-    public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
-      return null;
-    }
-
-    public String getUrl() {
-      return null;
-    }
-
-    public boolean hasContent() {
-      return false;
-    }
-
-    public boolean isLeaf() {
-      return true;
-    }
-
-    public int getType() {
-      return CachedUrlSetNode.TYPE_CACHED_URL;
-    }
-
-    public org.lockss.plugin.CachedUrl getCuVersion(int version) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public org.lockss.plugin.CachedUrl[] getCuVersions() {
-      return new org.lockss.plugin.CachedUrl[0];
-    }
-
-    public org.lockss.plugin.CachedUrl[] getCuVersions(int maxVersions) {
-      return new org.lockss.plugin.CachedUrl[0];
-    }
-
-    public int getVersion() {
-      return 1;
-    }
-
-    public InputStream getUnfilteredInputStream() {
-      return new StringInputStream("");
-    }
-
-    public InputStream openForHashing() {
-      return getUnfilteredInputStream();
-    }
-
-    public Reader openForReading() {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public long getContentSize() {
-      return 0;
-    }
-
-    public String getContentType(){
-      return null;
-    }
-
-    public String getEncoding(){
-      return null;
-    }
-
-    public LinkRewriterFactory getLinkRewriterFactory() {
-      return null;
-    }
-
-    public FileMetadataExtractor getFileMetadataExtractor(MetadataTarget target) {
-      return null;
-    }
-
-    public CIProperties getProperties() {
-      return new CIProperties();
-    }
-
-    public void release() {
-    }
-
-    public CachedUrl getArchiveMemberCu(ArchiveMemberSpec ams) {
-      return null;
-    }
-  }
-
-  /**
-   * Base class for test <code>UrlCacher</code>s.  Default methods do nothing
-   * or return constants.
-   */
-  public static class UrlCacher implements org.lockss.plugin.UrlCacher {
-    private String url;
-    private String contents = null;
-    private CIProperties props = new CIProperties();
-
-    protected UrlCacher() {
-    }
-
-    public String getUrl() {
-      return null;
-    }
-
-    public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
-      return null;
-    }
-    /** @deprecated */
-    public org.lockss.plugin.CachedUrlSet getCachedUrlSet() {
-      return null;
-    }
+	/**
+	 * Base class for test <code>Plugin</code>s. Default methods do nothing or
+	 * return constants.
+	 */
+	public static class Plugin implements org.lockss.plugin.Plugin {
+		protected Plugin() {
+		}
+
+		public void initPlugin(LockssDaemon daemon) {
+		}
+
+		public void stopPlugin() {
+		}
+
+		public void stopAu(org.lockss.plugin.ArchivalUnit au) {
+		}
+
+		public String getPluginId() {
+			return "NullPlugin";
+		}
+
+		public String getVersion() {
+			return "NullVersion";
+		}
+
+		public String getRequiredDaemonVersion() {
+			return "0.0.0";
+		}
+
+		public String getFeatureVersion(Plugin.Feature feat) {
+			return null;
+		}
+
+		public String getPluginName() {
+			return "Null Plugin";
+		}
+
+		public String getPublishingPlatform() {
+			return null;
+		}
+
+		public LockssDaemon getDaemon() {
+			return null;
+		}
+
+		public List getSupportedTitles() {
+			return null;
+		}
+
+		public TitleConfig getTitleConfig(String title) {
+			return null;
+		}
+
+		public List getAuConfigDescrs() {
+			return null;
+		}
+
+		public ConfigParamDescr findAuConfigDescr(String key) {
+			return null;
+		}
+
+		public org.lockss.plugin.ArchivalUnit configureAu(Configuration config,
+				org.lockss.plugin.ArchivalUnit au)
+				throws org.lockss.plugin.ArchivalUnit.ConfigurationException {
+			return null;
+		}
+
+		public org.lockss.plugin.ArchivalUnit createAu(Configuration auConfig)
+				throws org.lockss.plugin.ArchivalUnit.ConfigurationException {
+			return null;
+		}
+
+		public Collection getAllAus() {
+			return null;
+		}
+
+		public Object newAuxClass(String className, Class expectedType) {
+			return null;
+		}
+
+		public String getDefaultArticleMimeType() {
+			return null;
+		}
+
+		public org.lockss.extractor.ArticleMetadataExtractor getArticleMetadataExtractor(
+				MetadataTarget target, org.lockss.plugin.ArchivalUnit au) {
+			return null;
+		}
+		
+		public org.lockss.extractor.JenaMetadataExtractor getJenaMetadataExtractor() {
+			return null;
+		}
+
+		public ArticleIteratorFactory getArticleIteratorFactory() {
+			return null;
+		}
+
+		public FileMetadataExtractor getFileMetadataExtractor(
+				MetadataTarget target, String contentType,
+				org.lockss.plugin.ArchivalUnit au) {
+			return null;
+		}
+	}
+
+	/**
+	 * Base class for test <code>CachedUrl</code>s. Default methods do nothing
+	 * or return constants.
+	 */
+	public static class CachedUrl implements org.lockss.plugin.CachedUrl {
+
+		protected CachedUrl() {
+		}
+
+		public String toString() {
+			return "[NullPlugin.CachedUrl]";
+		}
+
+		public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
+			return null;
+		}
+
+		public String getUrl() {
+			return null;
+		}
+
+		public boolean hasContent() {
+			return false;
+		}
+
+		public boolean isLeaf() {
+			return true;
+		}
+
+		public int getType() {
+			return CachedUrlSetNode.TYPE_CACHED_URL;
+		}
+
+		public org.lockss.plugin.CachedUrl getCuVersion(int version) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public org.lockss.plugin.CachedUrl[] getCuVersions() {
+			return new org.lockss.plugin.CachedUrl[0];
+		}
+
+		public org.lockss.plugin.CachedUrl[] getCuVersions(int maxVersions) {
+			return new org.lockss.plugin.CachedUrl[0];
+		}
+
+		public int getVersion() {
+			return 1;
+		}
+
+		public InputStream getUnfilteredInputStream() {
+			return new StringInputStream("");
+		}
+
+		public InputStream openForHashing() {
+			return getUnfilteredInputStream();
+		}
+
+		public Reader openForReading() {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public long getContentSize() {
+			return 0;
+		}
+
+		public String getContentType() {
+			return null;
+		}
+
+		public String getEncoding() {
+			return null;
+		}
 
-    public String toString() {
-      return "[NullPlugin.UrlCacher]";
-    }
+		public LinkRewriterFactory getLinkRewriterFactory() {
+			return null;
+		}
 
-    public org.lockss.plugin.CachedUrl getCachedUrl() {
-      return new CachedUrl();
-    }
+		public FileMetadataExtractor getFileMetadataExtractor(
+				MetadataTarget target) {
+			return null;
+		}
+
+		public CIProperties getProperties() {
+			return new CIProperties();
+		}
+
+		public void release() {
+		}
 
-    public boolean shouldBeCached() {
-      return false;
-    }
+		public CachedUrl getArchiveMemberCu(ArchiveMemberSpec ams) {
+			return null;
+		}
+	}
+
+	/**
+	 * Base class for test <code>UrlCacher</code>s. Default methods do nothing
+	 * or return constants.
+	 */
+	public static class UrlCacher implements org.lockss.plugin.UrlCacher {
+		private String url;
+		private String contents = null;
+		private CIProperties props = new CIProperties();
+
+		protected UrlCacher() {
+		}
+
+		public String getUrl() {
+			return null;
+		}
+
+		public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
+			return null;
+		}
+
+		/** @deprecated */
+		public org.lockss.plugin.CachedUrlSet getCachedUrlSet() {
+			return null;
+		}
 
-    public void setFetchFlags(BitSet fetchFlags) {
-    }
-
-    public BitSet getFetchFlags() {
-      return new BitSet();
-    }
-
-    public void setRequestProperty(String key, String value) {
-    }
+		public String toString() {
+			return "[NullPlugin.UrlCacher]";
+		}
 
-    public void setRedirectScheme(RedirectScheme scheme) {
-    }
+		public org.lockss.plugin.CachedUrl getCachedUrl() {
+			return new CachedUrl();
+		}
 
-    public void setWatchdog(LockssWatchdog wdog) {
-    }
-
-    public void setPreviousContentType(String previousContentType) {
-    }
-
-    public void setCrawlRateLimiter(CrawlRateLimiter crl) {
-    }
+		public boolean shouldBeCached() {
+			return false;
+		}
 
-    public int cache() throws IOException {
-      return CACHE_RESULT_NOT_MODIFIED;
-    }
+		public void setFetchFlags(BitSet fetchFlags) {
+		}
+
+		public BitSet getFetchFlags() {
+			return new BitSet();
+		}
+
+		public void setRequestProperty(String key, String value) {
+		}
 
-    public void storeContent(InputStream input,
-			     CIProperties headers) throws IOException {
-    }
+		public void setRedirectScheme(RedirectScheme scheme) {
+		}
 
-    public InputStream getUncachedInputStream() {
-      return new StringInputStream("");
-    }
+		public void setWatchdog(LockssWatchdog wdog) {
+		}
+
+		public void setPreviousContentType(String previousContentType) {
+		}
+
+		public void setCrawlRateLimiter(CrawlRateLimiter crl) {
+		}
 
-    public CIProperties getUncachedProperties() {
-      return new CIProperties();
-    }
+		public int cache() throws IOException {
+			return CACHE_RESULT_NOT_MODIFIED;
+		}
 
-    public void reset() {
-    }
-
-    public void setConnectionPool(LockssUrlConnectionPool connectionPool) {
-      throw new UnsupportedOperationException();
-    }
-
-    public void setLocalAddress(IPAddr addr) {
-      throw new UnsupportedOperationException();
-    }
+		public void storeContent(InputStream input, CIProperties headers)
+				throws IOException {
+		}
 
-    public void setProxy(String proxyHost, int proxyPort) {
-      throw new UnsupportedOperationException();
-    }
+		public InputStream getUncachedInputStream() {
+			return new StringInputStream("");
+		}
 
-    public void setPermissionMapSource(PermissionMapSource source) {
-      throw new UnsupportedOperationException();
-    }
+		public CIProperties getUncachedProperties() {
+			return new CIProperties();
+		}
 
-  }
+		public void reset() {
+		}
+
+		public void setConnectionPool(LockssUrlConnectionPool connectionPool) {
+			throw new UnsupportedOperationException();
+		}
 
-  /**
-   * Base class for test <code>CachedUrlSet</code>s.  Default methods do
-   * nothing or return constants or empty enumerations.
-   */
-  public static class CachedUrlSet implements org.lockss.plugin.CachedUrlSet {
+		public void setLocalAddress(IPAddr addr) {
+			throw new UnsupportedOperationException();
+		}
 
-    public String toString() {
-      return "[NullPlugin.CachedUrlSet]";
-    }
+		public void setProxy(String proxyHost, int proxyPort) {
+			throw new UnsupportedOperationException();
+		}
 
-    public CachedUrlSetSpec getSpec() {
-      return null;
-    }
+		public void setPermissionMapSource(PermissionMapSource source) {
+			throw new UnsupportedOperationException();
+		}
 
-    public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
-      return null;
-    }
+	}
+
+	/**
+	 * Base class for test <code>CachedUrlSet</code>s. Default methods do
+	 * nothing or return constants or empty enumerations.
+	 */
+	public static class CachedUrlSet implements org.lockss.plugin.CachedUrlSet {
 
-    public void storeActualHashDuration(long elapsed, Exception err) {
-    }
+		public String toString() {
+			return "[NullPlugin.CachedUrlSet]";
+		}
 
-    public void setExcludeFilesUnchangedAfter(long date) {
-    }
+		public CachedUrlSetSpec getSpec() {
+			return null;
+		}
 
-    public Iterator flatSetIterator() {
-      return null;
-    }
+		public org.lockss.plugin.ArchivalUnit getArchivalUnit() {
+			return null;
+		}
 
-    public Iterator treeSetIterator() {
-      return null;
-    }
+		public void storeActualHashDuration(long elapsed, Exception err) {
+		}
+
+		public void setExcludeFilesUnchangedAfter(long date) {
+		}
+
+		public Iterator flatSetIterator() {
+			return null;
+		}
+
+		public Iterator treeSetIterator() {
+			return null;
+		}
+
+		public Iterator contentHashIterator() {
+			return null;
+		}
+
+		public Iterator<org.lockss.plugin.CachedUrl> archiveMemberIterator() {
+			return null;
+		}
+
+		public boolean isLeaf() {
+			return false;
+		}
+
+		public int getType() {
+			return CachedUrlSetNode.TYPE_CACHED_URL_SET;
+		}
+
+		public org.lockss.daemon.CachedUrlSetHasher getContentHasher(
+				MessageDigest digest) {
+			return new CachedUrlSetHasher();
+		}
+
+		public org.lockss.daemon.CachedUrlSetHasher getNameHasher(
+				MessageDigest digest) {
+			return new CachedUrlSetHasher();
+		}
 
-    public Iterator contentHashIterator() {
-      return null;
-    }
+		public long estimatedHashDuration() {
+			return 1000;
+		}
 
-    public Iterator<org.lockss.plugin.CachedUrl> archiveMemberIterator() {
-      return null;
-    }
+		public boolean hasContent() {
+			return false;
+		}
 
-    public boolean isLeaf() {
-      return false;
-    }
+		public boolean containsUrl(String url) {
+			return false;
+		}
 
-    public int getType() {
-      return CachedUrlSetNode.TYPE_CACHED_URL_SET;
-    }
+		public int hashCode() {
+			return 0;
+		}
 
-    public org.lockss.daemon.CachedUrlSetHasher
-      getContentHasher(MessageDigest digest) {
-      return new CachedUrlSetHasher();
-    }
+		public String getUrl() {
+			return "null";
+		}
 
-    public org.lockss.daemon.CachedUrlSetHasher
-      getNameHasher(MessageDigest digest) {
-      return new CachedUrlSetHasher();
-    }
+		public int cusCompare(org.lockss.plugin.CachedUrlSet cus2) {
+			return -1;
+		}
+	}
 
-    public long estimatedHashDuration() {
-      return 1000;
-    }
+	public static class ArchivalUnit implements org.lockss.plugin.ArchivalUnit {
 
-    public boolean hasContent() {
-      return false;
-    }
+		public void setConfiguration(Configuration config) {
+		}
+
+		public Configuration getConfiguration() {
+			return null;
+		}
+
+		public org.lockss.plugin.CachedUrlSet makeCachedUrlSet(
+				CachedUrlSetSpec spec) {
+			return null;
+		}
 
-    public boolean containsUrl(String url) {
-      return false;
-    }
+		public org.lockss.plugin.CachedUrl makeCachedUrl(String url) {
+			return null;
+		}
 
-    public int hashCode() {
-      return 0;
-    }
+		public org.lockss.plugin.UrlCacher makeUrlCacher(String url) {
+			return null;
+		}
 
-    public String getUrl() {
-      return "null";
-    }
+		public org.lockss.plugin.CachedUrlSet getAuCachedUrlSet() {
+			return null;
+		}
 
-    public int cusCompare(org.lockss.plugin.CachedUrlSet cus2) {
-      return -1;
-    }
-  }
+		public CrawlSpec getCrawlSpec() {
+			return null;
+		}
 
-  public static class ArchivalUnit
-    implements org.lockss.plugin.ArchivalUnit {
+		public List<Pattern> makeNonSubstanceUrlPatterns() {
+			return null;
+		}
 
+		public List<Pattern> makeSubstanceUrlPatterns() {
+			return null;
+		}
 
-    public void setConfiguration(Configuration config) {
-    }
+		public SubstancePredicate makeSubstancePredicate() {
+			return null;
+		}
 
-    public Configuration getConfiguration() {
-      return null;
-    }
+		public String getPerHostPermissionPath() {
+			return null;
+		}
 
-    public org.lockss.plugin.CachedUrlSet makeCachedUrlSet(CachedUrlSetSpec spec) {
-      return null;
-    }
+		public List<String> getHttpCookies() {
+			return Collections.EMPTY_LIST;
+		}
 
-    public org.lockss.plugin.CachedUrl makeCachedUrl(String url) {
-      return null;
-    }
+		public List<String> getHttpRequestHeaders() {
+			return Collections.EMPTY_LIST;
+		}
 
-    public org.lockss.plugin.UrlCacher makeUrlCacher(String url) {
-      return null;
-    }
-
-    public org.lockss.plugin.CachedUrlSet getAuCachedUrlSet() {
-      return null;
-    }
-
-    public CrawlSpec getCrawlSpec() {
-      return null;
-    }
-
-    public List<Pattern> makeNonSubstanceUrlPatterns() {
-      return null;
-    }
-
-    public List<Pattern> makeSubstanceUrlPatterns() {
-      return null;
-    }
-
-    public SubstancePredicate makeSubstancePredicate() {
-      return null;
-    }
-
-    public String getPerHostPermissionPath() {
-      return null;
-    }
-
-    public List<String> getHttpCookies() {
-      return Collections.EMPTY_LIST;
-    }
-
-    public List<String> getHttpRequestHeaders() {
-      return Collections.EMPTY_LIST;
-    }
-
-    public boolean shouldBeCached(String url) {
-      return false;
-    }
-
-    public boolean isLoginPageUrl(String url) {
-      return false;
-    }
-
-    public String siteNormalizeUrl(String url) {
-      return url;
-    }
-
-    public Collection getUrlStems() {
-      return Collections.EMPTY_LIST;
-    }
-
-    public org.lockss.plugin.Plugin getPlugin() {
-      return null;
-    }
-
-    public String getPluginId() {
-      return "null_plugin_id";
-    }
-
-    public String getAuId() {
-      return "null_au_id";
-    }
-
-    public String getName() {
-      return "null_name";
-    }
-
-    public TitleConfig getTitleConfig() {
-      return null;
-    }
-
-    public TdbAu getTdbAu() {
-      return null;
-    }
-
-    public void pauseBeforeFetch(String previousContentType) {
-    }
-
-    public RateLimiter findFetchRateLimiter() {
-      return RateLimiter.UNLIMITED;
-    }
-
-    public String getFetchRateLimiterKey() {
-      return null;
-    }
-
-    public RateLimiterInfo getRateLimiterInfo() {
-      return null;
-    }
-
-    public int hashCode() {
-      return 0;
-    }
-
-    public List getNewContentCrawlUrls() {
-      return null;
-    }
-
-    public boolean shouldCrawlForNewContent(AuState aus) {
-      return false;
-    }
-
-    public boolean shouldCallTopLevelPoll(AuState aus) {
-      return false;
-    }
-
-    public LinkExtractor getLinkExtractor(String mimeType) {
-      throw new UnsupportedOperationException("not implemented");
-    }
-
-    public FilterRule getFilterRule(String mimeType) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public FilterFactory getHashFilterFactory(String mimeType) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public FilterFactory getCrawlFilterFactory(String mimeType) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public LinkRewriterFactory getLinkRewriterFactory(String mimeType) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public Iterator<ArticleFiles> getArticleIterator() {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public Iterator<ArticleFiles> getArticleIterator(MetadataTarget target) {
-      throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public FileMetadataExtractor getFileMetadataExtractor(MetadataTarget target,
-							  String contentType) {
-      return null;
-    }
-
-    public TypedEntryMap getProperties() {
-      return null;
-    }
-
-    public Comparator<CrawlUrl> getCrawlUrlComparator() {
-      return null;
-    }
-
-    public List<String> getAuFeatureUrls(String auFeature) {
-      return null;
-    }
-
-    public boolean isBulkContent() {
-      return false;
-    }
-
-    public ArchiveFileTypes getArchiveFileTypes() {
-      return null;
-    }
-  }
-
-  /**
-   * Base class for test <code>CachedUrlSetHasher</code>s.  Default methods
-   * do nothing or return constants.
-   */
-  public static class CachedUrlSetHasher
-    implements org.lockss.daemon.CachedUrlSetHasher {
-
-    public void setFiltered(boolean val) {
-    }
-
-    public org.lockss.plugin.CachedUrlSet getCachedUrlSet() {
-      return null;
-    }
-
-    public long getEstimatedHashDuration() {
-      return 0;
-    }
-
-    public void storeActualHashDuration(long elapsed, Exception err) {
-    }
-
-    public String typeString() {
-      return null;
-    }
-
-    public MessageDigest[] getDigests() {
-      return null;
-    }
-
-    public boolean finished() {
-      return false;
-    }
-
-    public void abortHash() {
-    }
-
-    public int hashStep(int numBytes) {
-      return 0;
-    }
-  }
+		public boolean shouldBeCached(String url) {
+			return false;
+		}
+
+		public boolean isLoginPageUrl(String url) {
+			return false;
+		}
+
+		public String siteNormalizeUrl(String url) {
+			return url;
+		}
+
+		public Collection getUrlStems() {
+			return Collections.EMPTY_LIST;
+		}
+
+		public org.lockss.plugin.Plugin getPlugin() {
+			return null;
+		}
+
+		public String getPluginId() {
+			return "null_plugin_id";
+		}
+
+		public String getAuId() {
+			return "null_au_id";
+		}
+
+		public String getName() {
+			return "null_name";
+		}
+
+		public TitleConfig getTitleConfig() {
+			return null;
+		}
+
+		public TdbAu getTdbAu() {
+			return null;
+		}
+
+		public void pauseBeforeFetch(String previousContentType) {
+		}
+
+		public RateLimiter findFetchRateLimiter() {
+			return RateLimiter.UNLIMITED;
+		}
+
+		public String getFetchRateLimiterKey() {
+			return null;
+		}
+
+		public RateLimiterInfo getRateLimiterInfo() {
+			return null;
+		}
+
+		public int hashCode() {
+			return 0;
+		}
+
+		public List getNewContentCrawlUrls() {
+			return null;
+		}
+
+		public boolean shouldCrawlForNewContent(AuState aus) {
+			return false;
+		}
+
+		public boolean shouldCallTopLevelPoll(AuState aus) {
+			return false;
+		}
+
+		public LinkExtractor getLinkExtractor(String mimeType) {
+			throw new UnsupportedOperationException("not implemented");
+		}
+
+		public FilterRule getFilterRule(String mimeType) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public FilterFactory getHashFilterFactory(String mimeType) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public FilterFactory getCrawlFilterFactory(String mimeType) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public LinkRewriterFactory getLinkRewriterFactory(String mimeType) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public Iterator<ArticleFiles> getArticleIterator() {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public Iterator<ArticleFiles> getArticleIterator(MetadataTarget target) {
+			throw new UnsupportedOperationException("Not implemented");
+		}
+
+		public FileMetadataExtractor getFileMetadataExtractor(
+				MetadataTarget target, String contentType) {
+			return null;
+		}
+
+		public TypedEntryMap getProperties() {
+			return null;
+		}
+
+		public Comparator<CrawlUrl> getCrawlUrlComparator() {
+			return null;
+		}
+
+		public List<String> getAuFeatureUrls(String auFeature) {
+			return null;
+		}
+
+		public boolean isBulkContent() {
+			return false;
+		}
+
+		public ArchiveFileTypes getArchiveFileTypes() {
+			return null;
+		}
+	}
+
+	/**
+	 * Base class for test <code>CachedUrlSetHasher</code>s. Default methods do
+	 * nothing or return constants.
+	 */
+	public static class CachedUrlSetHasher implements
+			org.lockss.daemon.CachedUrlSetHasher {
+
+		public void setFiltered(boolean val) {
+		}
+
+		public org.lockss.plugin.CachedUrlSet getCachedUrlSet() {
+			return null;
+		}
+
+		public long getEstimatedHashDuration() {
+			return 0;
+		}
+
+		public void storeActualHashDuration(long elapsed, Exception err) {
+		}
+
+		public String typeString() {
+			return null;
+		}
+
+		public MessageDigest[] getDigests() {
+			return null;
+		}
+
+		public boolean finished() {
+			return false;
+		}
+
+		public void abortHash() {
+		}
+
+		public int hashStep(int numBytes) {
+			return 0;
+		}
+	}
 }
