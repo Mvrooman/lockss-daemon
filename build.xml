@@ -207,6 +207,17 @@ Args:
   <property name="protorpm.rpms" value="${protorpm.top}/RPMS" />
 
   <!-- Library jars -->
+  <!-- START Jena jars -->
+  <property name="httpclient.jar"      value="${lib}/jena/httpclient-4.2.3.jar"/>
+  <property name="httpcore.jar"      value="${lib}/jena/httpcore-4.2.2.jar"/>
+  <property name="jcl-over-slf4j.jar"      value="${lib}/jena/jcl-over-slf4j-1.6.4.jar"/>
+  <property name="jena-arq.jar"      value="${lib}/jena/jena-arq-2.10.0.jar"/>
+  <property name="jena-core.jar"      value="${lib}/jena/jena-core-2.10.0.jar"/>
+  <property name="jena-iri.jar"      value="${lib}/jena/jena-iri-0.9.5.jar"/>
+  <property name="jena-tdb.jar"      value="${lib}/jena/jena-tdb-0.10.0.jar"/>
+  <property name="slf4j-api.jar"      value="${lib}/jena/slf4j-api-1.6.4.jar"/>
+  <property name="slf4j-log4j12.jar"      value="${lib}/jena/slf4j-log4j12-1.6.4.jar"/>
+  <!-- END Jena jars -->
   <property name="gson.jar"      value="${lib}/gson-2.2.2.jar"/>
   <property name="mongodb.jar"      value="${lib}/mongo-2.10.1.jar"/>
   <property name="rhino.jar"      value="${lib}/rhino.jar"/>
@@ -382,6 +393,17 @@ Args:
 <!-- XXX Shouldn't need this - figure out how to avoid dependency -->
     <pathelement path="${gson.jar}" />
     <pathelement path="${mongodb.jar}" />
+  	
+    <pathelement path="${httpclient.jar}" />
+    <pathelement path="${httpcore.jar}" />
+    <pathelement path="${jcl-over-slf4j.jar}" />
+    <pathelement path="${jena-arq.jar}" />
+    <pathelement path="${jena-core.jar}" />
+    <pathelement path="${jena-iri.jar}"  />
+    <pathelement path="${jena-tdb.jar}" />
+    <pathelement path="${slf4j-api.jar}" />
+    <pathelement path="${slf4j-log4j12.jar}" />
+  	
     <pathelement path="${truezip-swing.jar}" />
     <pathelement path="${javatar.jar}" />
     <pathelement path="${log4j.jar}" />
