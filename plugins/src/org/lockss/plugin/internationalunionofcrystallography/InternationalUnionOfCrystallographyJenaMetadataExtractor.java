@@ -1,12 +1,28 @@
 package org.lockss.plugin.internationalunionofcrystallography;
 
+import static org.lockss.db.MongoDbManager.*;
+
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.lockss.daemon.PluginException;
+import org.lockss.db.DbManager;
+import org.lockss.db.MongoDbManager;
+import org.lockss.db.MongoHelper;
 import org.lockss.extractor.JenaMetadataExtractor;
-import org.lockss.extractor.MetadataTarget;
-import org.lockss.plugin.ArticleFiles;
+import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
+import org.lockss.plugin.ArchivalUnit;
 import org.lockss.util.Logger;
+
+import com.google.gson.Gson;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.QueryBuilder;
 
 public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		JenaMetadataExtractor {
@@ -15,8 +31,42 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 					.getName());
 
 	@Override
-	public void extract() throws IOException, PluginException {
+	public void extract(ArchivalUnit au, DbManager dbManager)
+			throws IOException, PluginException {
 		log.info("EXTRACTION STARTED!");
+		
+		String auId = au.getAuId();
+		String pluginId = au.getPluginId();
+		
+		// TODO: CHEATING
+		DB mongoDatabase = ((MongoDbManager)dbManager).getDb();
+		
+		// find plugin sequence number
+		DBCollection collection = mongoDatabase.getCollection(PLUGIN_COLLECTION);
+		BasicDBObject query = new BasicDBObject("pluginId", pluginId);
+		DBObject result = collection.findOne(query);
+		Long pluginSeq = MongoHelper.readLong(result, "longId");
+		
+		// find raw au
+		DBCollection auCollection = mongoDatabase.getCollection(AUS_COLLECTION);
+		DBObject finalQuery = QueryBuilder.start().and(
+                QueryBuilder.start("pluginSeq").is(pluginSeq).get(),
+                QueryBuilder.start("auKey").is(auId).get()).get();
+		DBObject auTarget = auCollection.findOne(finalQuery);
+		
+		// get the list of metadata
+		BasicDBList articleMetadata = (BasicDBList) auTarget.get("articleMetadata");
+		Iterator<Object> it = articleMetadata.iterator();
+		
+		while(it.hasNext()){
+			DBObject obj = (DBObject) it.next();
+			Gson gson = new Gson();
+			ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
+			log.info("" + metadataJson.additionalMetadata.size());
+		}
+
+		Model m = ModelFactory.createDefaultModel();
+		
 	}
 
 }

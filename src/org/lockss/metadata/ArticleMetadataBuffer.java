@@ -65,7 +65,7 @@ import org.lockss.util.StringUtil;
  * @author Philip Gust
  *
  */
-class ArticleMetadataBuffer {
+public class ArticleMetadataBuffer {
   private static Logger log = Logger.getLogger(ArticleMetadataBuffer.class);
 
   File collectedMetadataFile = null;
@@ -81,7 +81,7 @@ class ArticleMetadataBuffer {
    * @author Philip Gust
    *
    */
-  static class ArticleMetadataInfo implements Serializable {
+  public static class ArticleMetadataInfo implements Serializable {
     private static final long serialVersionUID = -2372571567706061080L;
     String publisher;
     String journalTitle;
@@ -100,7 +100,7 @@ class ArticleMetadataBuffer {
     String doi;
     String accessUrl;
     Map<String, String> featuredUrlMap;
-    Map<String, String> additionalMetadata;
+    public Map<String, String> additionalMetadata;
     Set<String> keywordSet;
     String endPage;
     String coverage;

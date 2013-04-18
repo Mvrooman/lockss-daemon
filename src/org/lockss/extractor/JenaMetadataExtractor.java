@@ -3,6 +3,7 @@ package org.lockss.extractor;
 import java.io.*;
 
 import org.lockss.daemon.*;
+import org.lockss.db.DbManager;
 import org.lockss.plugin.*;
 
 public interface JenaMetadataExtractor {
@@ -15,7 +16,7 @@ public interface JenaMetadataExtractor {
 	 * @param af describes the files making up the article
 	 * @param emitter
 	 */
-	public void extract()
+	public void extract(ArchivalUnit au, DbManager dbManager)
 			throws IOException, PluginException;
 
 	/** Functor to emit ArticleMetadata object(s) created by extractor */

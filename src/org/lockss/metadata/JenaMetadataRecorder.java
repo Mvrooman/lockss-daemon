@@ -24,7 +24,7 @@ public class JenaMetadataRecorder {
 		JenaMetadataExtractor jme = plugin.getJenaMetadataExtractor();
 		
 		try {
-			jme.extract();
+			jme.extract(au, dbManager);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
