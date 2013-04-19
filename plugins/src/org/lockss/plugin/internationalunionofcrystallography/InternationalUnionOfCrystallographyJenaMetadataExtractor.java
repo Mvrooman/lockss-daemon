@@ -2,6 +2,7 @@ package org.lockss.plugin.internationalunionofcrystallography;
 
 import static org.lockss.db.MongoDbManager.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -15,8 +16,10 @@ import org.lockss.plugin.ArchivalUnit;
 import org.lockss.util.Logger;
 
 import com.google.gson.Gson;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.vocabulary.VCARD;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -58,15 +61,40 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		BasicDBList articleMetadata = (BasicDBList) auTarget.get("articleMetadata");
 		Iterator<Object> it = articleMetadata.iterator();
 		
-		while(it.hasNext()){
+		// get the Jena store
+		String directory = "db/jena/DB1";
+		new File(directory).mkdirs();
+		Dataset dataset = TDBFactory.createDataset(directory);
+		Model m = dataset.getDefaultModel();
+		
+		// establish some properties
+		String baseUri = "http://www.iucr.org/__data/iucr/cif/standard#";
+		Property PDRM = m.createProperty(baseUri, "_diffrn_radiation_monochromator");
+		
+		while(it.hasNext()) {
 			DBObject obj = (DBObject) it.next();
 			Gson gson = new Gson();
 			ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
-			log.info("" + metadataJson.additionalMetadata.size());
+			
+			String drm = metadataJson.additionalMetadata.get("_diffrn_radiation_monochromator");
+			
+			Resource article = m.createResource(metadataJson.accessUrl);
+			
+			if(drm != null) {
+				article.addProperty(PDRM, drm);
+			}
 		}
-
-		Model m = ModelFactory.createDefaultModel();
 		
+		m.write(System.out);
+		
+		StmtIterator iter = m.listStatements(
+			    new SimpleSelector(null, PDRM, (RDFNode) null) {
+			        public boolean selects(Statement s)
+			            {return s.getString().endsWith("ite");}
+			    });
+			
+		log.info(""+iter.toList().size());
+		
+		dataset.close();
 	}
-
 }

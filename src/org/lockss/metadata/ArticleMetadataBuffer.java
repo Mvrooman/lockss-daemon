@@ -98,7 +98,7 @@ public class ArticleMetadataBuffer {
     final String authors;
     Set<String> authorSet;
     String doi;
-    String accessUrl;
+    public String accessUrl;
     Map<String, String> featuredUrlMap;
     public Map<String, String> additionalMetadata;
     Set<String> keywordSet;
