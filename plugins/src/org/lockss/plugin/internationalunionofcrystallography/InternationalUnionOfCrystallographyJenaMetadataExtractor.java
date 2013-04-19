@@ -17,6 +17,7 @@ import org.lockss.util.Logger;
 
 import com.google.gson.Gson;
 import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.VCARD;
@@ -85,7 +86,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 			}
 		}
 		
-		m.write(System.out);
+		m.write(System.out, "N-TRIPLE");
 		
 		StmtIterator iter = m.listStatements(
 			    new SimpleSelector(null, PDRM, (RDFNode) null) {
@@ -95,6 +96,25 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 			
 		log.info(""+iter.toList().size());
 		
+		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
+		Query qery = QueryFactory.create(queryString);
+		
+		QueryExecution qexec = QueryExecutionFactory.create(qery, m);
+
+		try {
+			ResultSet results = qexec.execSelect();
+			for( ; results.hasNext();){
+				QuerySolution soln = results.nextSolution();
+				RDFNode n = soln.get("o");
+				if(n.isLiteral()){
+				log.info(""+((Literal)n).getLexicalForm() );
+				}else{
+					Resource r = (Resource)n;
+					log.info(""+r.getURI());
+				}
+			}
+		
+		}finally {qexec.close();}
 		dataset.close();
 	}
 }
