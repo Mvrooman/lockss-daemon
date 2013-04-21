@@ -5,6 +5,7 @@ import static org.lockss.db.MongoDbManager.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
@@ -69,52 +70,59 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		Model m = dataset.getDefaultModel();
 		
 		// establish some properties
-		String baseUri = "http://www.iucr.org/__data/iucr/cif/standard#";
-		Property PDRM = m.createProperty(baseUri, "_diffrn_radiation_monochromator");
-		
-		while(it.hasNext()) {
-			DBObject obj = (DBObject) it.next();
-			Gson gson = new Gson();
-			ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
-			
-			String drm = metadataJson.additionalMetadata.get("_diffrn_radiation_monochromator");
-			
-			Resource article = m.createResource(metadataJson.accessUrl);
-			
-			if(drm != null) {
-				article.addProperty(PDRM, drm);
-			}
-		}
-		
-		m.write(System.out, "N-TRIPLE");
-		
-		StmtIterator iter = m.listStatements(
-			    new SimpleSelector(null, PDRM, (RDFNode) null) {
-			        public boolean selects(Statement s)
-			            {return s.getString().endsWith("ite");}
-			    });
-			
-		log.info(""+iter.toList().size());
-		
-		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
+		String predicateBaseUri = "http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#";
+
+        while (it.hasNext()) {
+            DBObject obj = (DBObject) it.next();
+            Gson gson = new Gson();
+            ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
+            Iterator additionalMetadataIterator = metadataJson.additionalMetadata.entrySet().iterator();
+            Resource article = m.createResource(metadataJson.accessUrl);
+            while (additionalMetadataIterator.hasNext()) {
+                Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
+                String key = pair.getKey();
+                String value = pair.getValue();
+                Property property = m.getProperty(key);
+                if (property == null) {
+                    property = m.createProperty(predicateBaseUri, key);
+                }
+                article.addProperty(property, value);
+            }
+        }
+
+        //m.write(System.out, "N-TRIPLE");
+
+        //SimpleSelector Example for querying
+        Property propertyForQuery = m.getProperty("_diffrn_radiation_monochromator");
+        StmtIterator iter = m.listStatements(
+                new SimpleSelector(null, propertyForQuery, (RDFNode) null) {
+                    public boolean selects(Statement s) {
+                        return s.getString().endsWith("ite");
+                    }
+                });
+        log.info("Found Results!! - " + iter.toList().size());
+        //QueryFactory Example for querying
+		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
 		Query qery = QueryFactory.create(queryString);
 		
 		QueryExecution qexec = QueryExecutionFactory.create(qery, m);
 
-		try {
-			ResultSet results = qexec.execSelect();
-			for( ; results.hasNext();){
-				QuerySolution soln = results.nextSolution();
-				RDFNode n = soln.get("o");
-				if(n.isLiteral()){
-				log.info(""+((Literal)n).getLexicalForm() );
-				}else{
-					Resource r = (Resource)n;
-					log.info(""+r.getURI());
-				}
-			}
-		
-		}finally {qexec.close();}
-		dataset.close();
-	}
+        try {
+            ResultSet results = qexec.execSelect();
+            for (; results.hasNext(); ) {
+                QuerySolution soln = results.nextSolution();
+                RDFNode n = soln.get("o");
+                if (n.isLiteral()) {
+                    log.info("" + ((Literal) n).getLexicalForm());
+                } else {
+                    Resource r = (Resource) n;
+                    log.info("" + r.getURI());
+                }
+            }
+
+        } finally {
+            qexec.close();
+        }
+        dataset.close();
+    }
 }
