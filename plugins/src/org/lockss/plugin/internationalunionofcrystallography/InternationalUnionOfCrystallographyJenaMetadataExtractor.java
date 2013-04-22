@@ -32,6 +32,12 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 	static Logger log = Logger
 			.getLogger(InternationalUnionOfCrystallographyJenaMetadataExtractor.class
 					.getName());
+	
+	private Model model = null;
+	private Resource article = null;
+	
+	// TODO: Where is the URI for "normal" attributes?
+	private String cifPredicateBaseUri = "http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#";
 
 	@Override
 	public void extract(ArchivalUnit au, DbManager dbManager)
@@ -64,10 +70,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		String directory = "db/jena/DB1";
 		new File(directory).mkdirs();
 		Dataset dataset = TDBFactory.createDataset(directory);
-		Model m = dataset.getDefaultModel();
-		
-		// establish some properties
-		String predicateBaseUri = "http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#";
+		model = dataset.getDefaultModel();
 
         while (it.hasNext()) {
             DBObject obj = (DBObject) it.next();
@@ -75,70 +78,17 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
             Gson gson = new Gson();
             ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
             
-            Resource article = m.createResource(metadataJson.accessUrl);
+            article = model.createResource(metadataJson.accessUrl);
 
             for( String key : obj.keySet()) {
             	Object value = obj.get(key);
-            	if(value instanceof String){
-//            		log.info("Storing " + key + " " + value);
-            		Property property = m.getProperty(key);
-                    if (property == null) {
-                        property = m.createProperty(predicateBaseUri, key);
-                    }
-                    article.addProperty(property, (String) value);
-            	}
-            	else if (value instanceof BasicDBObject) {
-            		BasicDBObject dbValue = (BasicDBObject) value;
-//            		log.info("Non string values! " + dbValue.getClass() );
-            		Map<String, String> dbValueMap = dbValue.toMap();
-            		Iterator additionalMetadataIterator = dbValueMap.entrySet().iterator();
-            		while (additionalMetadataIterator.hasNext()) {
-            			Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
-            			String pairKey = pair.getKey();
-            			String pairValue = pair.getValue();
-            			Property property = m.getProperty(pairKey);
-            			if (property == null) {
-            				property = m.createProperty(predicateBaseUri, pairKey);
-            			}
-            			article.addProperty(property, pairValue);
-            		}
-            	}
-            	else if (value instanceof BasicDBList) {
-            		BasicDBList dbValue = (BasicDBList) value;
-            		Iterator listIt = dbValue.iterator();
-            		StringBuilder str = new StringBuilder();
-            		
-            		// let's not save information about an empty list
-            		if(!listIt.hasNext()){
-            			continue;
-            		}
-            		
-            		while(listIt.hasNext()) {
-            			Object listObj = listIt.next();
-            			if(!(listObj instanceof DBObject)){
-            				str.append(listObj.toString() + ";");
-            			}
-            		}
-            		
-        			Property property = m.getProperty(key);
-        			if (property == null) {
-        				property = m.createProperty(predicateBaseUri, key);
-        			}
-//        			log.info("Generated Substring: " + str.substring(0, str.length() - 2));
-        			// we don't want the trailing semicolon
-        			article.addProperty(property, str.substring(0, str.length() - 2));
-            		
-            	} 
-            	else {
-            		log.info("Unhandled Type: " + value.getClass().toString());
-            	}
-
+            	storeObject(key, value);
             }       
         }
 
         //SimpleSelector Example for querying
-        Property propertyForQuery = m.getProperty("_diffrn_radiation_monochromator");
-        StmtIterator iter = m.listStatements(
+        Property propertyForQuery = model.getProperty("_diffrn_radiation_monochromator");
+        StmtIterator iter = model.listStatements(
                 new SimpleSelector(null, propertyForQuery, (RDFNode) null) {
                     public boolean selects(Statement s) {
                         return s.getString().endsWith("ite");
@@ -149,7 +99,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
 		Query qery = QueryFactory.create(queryString);
 		
-		QueryExecution qexec = QueryExecutionFactory.create(qery, m);
+		QueryExecution qexec = QueryExecutionFactory.create(qery, model);
 
         try {
             ResultSet results = qexec.execSelect();
@@ -169,20 +119,88 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
         }
         dataset.close();
     }
-	
-	public void storeMetadata(Resource article, String key, Object value) {
-		
+
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void storeObject(String key, Object value) {
+    	if(value instanceof String) {
+    		storeString(key, (String) value);
+    	}
+    	else if (value instanceof BasicDBObject) {
+    		storeDBObject(key, (BasicDBObject) value);
+    	}
+    	else if (value instanceof BasicDBList) {  
+    		storeList(key, (BasicDBList) value);
+    	} 
+    	else {
+    		log.info("Unhandled Type: " + value.getClass().toString());
+    	}
 	}
 	
-	public void storeList(Resource artcile, String key, BasicDBList value) {
-		
+	/**
+	 * Store a DBObject in Jena's model
+	 * @param key The key with which to reference the object
+	 * @param value The DBObject itself
+	 */
+	public void storeDBObject(String key, BasicDBObject value) {
+		Map<String, String> dbValueMap = value.toMap();
+		Iterator additionalMetadataIterator = dbValueMap.entrySet().iterator();
+		while (additionalMetadataIterator.hasNext()) {
+			Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
+			String pairKey = pair.getKey();
+			String pairValue = pair.getValue();
+			Property property = model.getProperty(pairKey);
+			if (property == null) {
+				property = model.createProperty(cifPredicateBaseUri, pairKey);
+			}
+			article.addProperty(property, pairValue);
+		}
 	}
 	
-	public void storeString(Resource artcile, String key, String value) {
+	/**
+	 * Store a BasicDBList in Jena's Model
+	 * @param key The key with which to reference the list
+	 * @param value The List itself
+	 */
+	public void storeList(String key, BasicDBList value) {
+		BasicDBList dbValue = (BasicDBList) value;
+		Iterator listIt = dbValue.iterator();
+		StringBuilder str = new StringBuilder();
 		
+		// let's not save information about an empty list
+		if(!listIt.hasNext()){
+			return;
+		}
+		
+		while(listIt.hasNext()) {
+			Object listObj = listIt.next();
+			if(!(listObj instanceof DBObject)){
+				str.append(listObj.toString() + ";");
+			}
+		}
+		
+		Property property = model.getProperty(key);
+		if (property == null) {
+			property = model.createProperty(cifPredicateBaseUri, key);
+		}
+
+		// we don't want the trailing semicolon
+		article.addProperty(property, str.substring(0, str.length() - 2));	
 	}
-	
-	public void traverseMap(){
-		
+
+	/**
+	 * Store a string in Jena's model
+	 * @param key The key with which to reference the string
+	 * @param value The string itself
+	 */
+	public void storeString(String key, String value) {
+		Property property = model.getProperty(key);
+        if (property == null) {
+            property = model.createProperty(cifPredicateBaseUri, key);
+        }
+        article.addProperty(property, (String) value);
 	}
 }
