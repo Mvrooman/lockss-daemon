@@ -17,11 +17,9 @@ import org.lockss.plugin.ArchivalUnit;
 import org.lockss.util.Logger;
 
 import com.google.gson.Gson;
-import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.vocabulary.VCARD;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -43,7 +41,6 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		String auId = au.getAuId();
 		String pluginId = au.getPluginId();
 		
-		// TODO: CHEATING
 		DB mongoDatabase = ((MongoDbManager)dbManager).getDb();
 		
 		// find plugin sequence number
@@ -74,23 +71,70 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 
         while (it.hasNext()) {
             DBObject obj = (DBObject) it.next();
+
             Gson gson = new Gson();
             ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
-            Iterator additionalMetadataIterator = metadataJson.additionalMetadata.entrySet().iterator();
+            
             Resource article = m.createResource(metadataJson.accessUrl);
-            while (additionalMetadataIterator.hasNext()) {
-                Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
-                String key = pair.getKey();
-                String value = pair.getValue();
-                Property property = m.getProperty(key);
-                if (property == null) {
-                    property = m.createProperty(predicateBaseUri, key);
-                }
-                article.addProperty(property, value);
-            }
-        }
 
-        //m.write(System.out, "N-TRIPLE");
+            for( String key : obj.keySet()) {
+            	Object value = obj.get(key);
+            	if(value instanceof String){
+//            		log.info("Storing " + key + " " + value);
+            		Property property = m.getProperty(key);
+                    if (property == null) {
+                        property = m.createProperty(predicateBaseUri, key);
+                    }
+                    article.addProperty(property, (String) value);
+            	}
+            	else if (value instanceof BasicDBObject) {
+            		BasicDBObject dbValue = (BasicDBObject) value;
+//            		log.info("Non string values! " + dbValue.getClass() );
+            		Map<String, String> dbValueMap = dbValue.toMap();
+            		Iterator additionalMetadataIterator = dbValueMap.entrySet().iterator();
+            		while (additionalMetadataIterator.hasNext()) {
+            			Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
+            			String pairKey = pair.getKey();
+            			String pairValue = pair.getValue();
+            			Property property = m.getProperty(pairKey);
+            			if (property == null) {
+            				property = m.createProperty(predicateBaseUri, pairKey);
+            			}
+            			article.addProperty(property, pairValue);
+            		}
+            	}
+            	else if (value instanceof BasicDBList) {
+            		BasicDBList dbValue = (BasicDBList) value;
+            		Iterator listIt = dbValue.iterator();
+            		StringBuilder str = new StringBuilder();
+            		
+            		// let's not save information about an empty list
+            		if(!listIt.hasNext()){
+            			continue;
+            		}
+            		
+            		while(listIt.hasNext()) {
+            			Object listObj = listIt.next();
+            			if(!(listObj instanceof DBObject)){
+            				str.append(listObj.toString() + ";");
+            			}
+            		}
+            		
+        			Property property = m.getProperty(key);
+        			if (property == null) {
+        				property = m.createProperty(predicateBaseUri, key);
+        			}
+//        			log.info("Generated Substring: " + str.substring(0, str.length() - 2));
+        			// we don't want the trailing semicolon
+        			article.addProperty(property, str.substring(0, str.length() - 2));
+            		
+            	} 
+            	else {
+            		log.info("Unhandled Type: " + value.getClass().toString());
+            	}
+
+            }       
+        }
 
         //SimpleSelector Example for querying
         Property propertyForQuery = m.getProperty("_diffrn_radiation_monochromator");
@@ -125,4 +169,20 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
         }
         dataset.close();
     }
+	
+	public void storeMetadata(Resource article, String key, Object value) {
+		
+	}
+	
+	public void storeList(Resource artcile, String key, BasicDBList value) {
+		
+	}
+	
+	public void storeString(Resource artcile, String key, String value) {
+		
+	}
+	
+	public void traverseMap(){
+		
+	}
 }
