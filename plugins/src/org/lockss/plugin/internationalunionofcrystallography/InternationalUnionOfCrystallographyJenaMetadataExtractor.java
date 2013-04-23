@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
@@ -83,10 +84,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
             
             article = model.createResource(metadataJson.accessUrl);
 
-            for( String key : obj.keySet()) {
-            	Object value = obj.get(key);
-            	storeObject(key, value);
-            }       
+            storeMap(obj.toMap());       
         }
 
         //SimpleSelector Example for querying
@@ -97,6 +95,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
                         return s.getString().endsWith("ite");
                     }
                 });
+        
         log.info("Found Results!! - " + iter.toList().size());
         //QueryFactory Example for querying
 		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
@@ -124,9 +123,19 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
     }
 
 	/**
-	 * 
-	 * @param key
-	 * @param value
+	 * Store a Map's contents into Jena.
+	 * @param map The map whose contents should be stored.
+	 */
+	public void storeMap(Map<String, Object> map) {
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			storeObject(entry.getKey(), entry.getValue());
+		}  
+	}
+	
+	/**
+	 * Store an Object in Jena's model.
+	 * @param key The key with which to reference the object.
+	 * @param value The Object itself
 	 */
 	public void storeObject(String key, Object value) {
     	if(value instanceof String) {
@@ -149,18 +158,8 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 	 * @param value The DBObject itself
 	 */
 	public void storeDBObject(String key, BasicDBObject value) {
-		Map<String, String> dbValueMap = value.toMap();
-		Iterator additionalMetadataIterator = dbValueMap.entrySet().iterator();
-		while (additionalMetadataIterator.hasNext()) {
-			Map.Entry<String, String> pair = (Map.Entry<String, String>) additionalMetadataIterator.next();
-			String pairKey = pair.getKey();
-			String pairValue = pair.getValue();
-			Property property = model.getProperty(pairKey);
-			if (property == null) {
-				property = model.createProperty(cifPredicateBaseUri, pairKey);
-			}
-			article.addProperty(property, pairValue);
-		}
+		// TODO: What do we actually want to do with this key?
+		storeMap(value.toMap());
 	}
 	
 	/**
