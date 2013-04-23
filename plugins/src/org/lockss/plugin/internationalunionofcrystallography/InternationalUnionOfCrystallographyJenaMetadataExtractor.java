@@ -33,11 +33,20 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 			.getLogger(InternationalUnionOfCrystallographyJenaMetadataExtractor.class
 					.getName());
 	
+	// TODO: Where is the URI for "normal" attributes?
+	private final String metadataPredicateBaseUri = "http://www.todo.com/metadata/info#";
+	private final String cifPredicateBaseUri = "http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#";
+	private final String jenaDirectory = "db/jena/DB1";
+	
+	private Dataset dataset = null;
 	private Model model = null;
 	private Resource article = null;
 	
-	// TODO: Where is the URI for "normal" attributes?
-	private String cifPredicateBaseUri = "http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#";
+	public InternationalUnionOfCrystallographyJenaMetadataExtractor() {
+		new File(jenaDirectory).mkdirs();
+		dataset = TDBFactory.createDataset(jenaDirectory);
+		model = dataset.getDefaultModel();	
+	}
 
 	@Override
 	public void extract(ArchivalUnit au, DbManager dbManager)
@@ -65,12 +74,6 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		// get the list of metadata
 		BasicDBList articleMetadata = (BasicDBList) auTarget.get("articleMetadata");
 		Iterator<Object> it = articleMetadata.iterator();
-		
-		// get the Jena store
-		String directory = "db/jena/DB1";
-		new File(directory).mkdirs();
-		Dataset dataset = TDBFactory.createDataset(directory);
-		model = dataset.getDefaultModel();
 
         while (it.hasNext()) {
             DBObject obj = (DBObject) it.next();
