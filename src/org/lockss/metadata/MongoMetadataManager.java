@@ -1488,7 +1488,7 @@ public class MongoMetadataManager extends MetadataManager {
 		 * @param auKey
 		 *            A String with the Archival Unit key.
 		 * @return a Long with the identifier of the Archival Unit.
-		 * @throws SQLException
+		 * @throws Exception
 		 *             if any problem occurred accessing the database.
 		 */
 		Long findAu(Long pluginSeq, String auKey)
@@ -1510,9 +1510,7 @@ public class MongoMetadataManager extends MetadataManager {
 			
 			return null;			
 			
-		}	  
-	  
-
+		}
 	
 	  /**
 	   * Provides the extraction time of an Archival Unit metadata.

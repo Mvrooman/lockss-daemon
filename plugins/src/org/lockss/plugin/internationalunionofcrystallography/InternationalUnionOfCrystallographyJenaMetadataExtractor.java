@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
