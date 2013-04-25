@@ -96,8 +96,9 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
                 });
         
         log.info("Found Results!! - " + iter.toList().size());
-        //QueryFactory Example for querying
-		String queryString = "SELECT * WHERE { ?o <http://www.iucr.org/__data/iucr/cif/standard/cifstd7.html#_diffrn_radiation_monochromator> \"'silicon 111'\" }";
+
+        //QueryFactory Example for querying 
+		String queryString = "SELECT * WHERE { ?o ?p ?s . FILTER (contains(?s, 'New Guy')) }";
 		Query qery = QueryFactory.create(queryString);
 		
 		QueryExecution qexec = QueryExecutionFactory.create(qery, model);
@@ -189,7 +190,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 		}
 
 		// we don't want the trailing semicolon
-		article.addProperty(property, str.substring(0, str.length() - 2));	
+		article.addProperty(property, str.substring(0, str.length() - 1));	
 	}
 
 	/**

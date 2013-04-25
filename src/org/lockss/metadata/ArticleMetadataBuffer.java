@@ -100,7 +100,7 @@ public class ArticleMetadataBuffer {
     String doi;
     public String accessUrl;
     Map<String, String> featuredUrlMap;
-    public Map<String, String> additionalMetadata;
+    public Map<String, Object> additionalMetadata;
     Set<String> keywordSet;
     String endPage;
     String coverage;
@@ -160,7 +160,7 @@ public class ArticleMetadataBuffer {
       log.debug3("featuredUrlMap = " + featuredUrlMap);
       
       additionalMetadata =
-	  new HashMap<String, String>(md.getRawMap(MetadataField
+	  new HashMap<String, Object>(md.getRawMap(MetadataField
 	                                           .FIELD_ADDITIONAL_METADATA));
       keywordSet = getKeywordSet(md);
       coverage = md.get(MetadataField.FIELD_COVERAGE);
