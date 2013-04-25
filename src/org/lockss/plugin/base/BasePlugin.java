@@ -557,6 +557,15 @@ public abstract class BasePlugin
   	getJenaMetadataExtractorFactory() {
 	  return null;
   }
+  
+  /**
+   * Returns the Jena inference engine factory
+   * @return JenaMetadataExtractorFactory
+   */
+  public JenaInferenceEngineFactory
+  	getJenaInferenceEngineFactory() {
+	  return null;
+  }
 
   /**
    * Return a {@link ArticleMetadataExtractor} that knows how to extract
@@ -593,6 +602,26 @@ public abstract class BasePlugin
     		try {
     			return WrapperUtil.wrap(fact.createJenaMetadataExtractor(),
     					JenaMetadataExtractor.class);
+    		} catch (PluginException e) {
+    			throw new RuntimeException(e);
+    		}
+    	}
+    	return null;
+    }
+ 
+    /**
+     * Return a {@link JenaInferenceEngine} that knows how to extract
+     * metadata from Jena.
+     * @return An JenaInferenceEngine or null
+     */
+    public JenaInferenceEngine
+    getJenaInferenceEngine() {
+    	JenaInferenceEngineFactory fact =
+    			getJenaInferenceEngineFactory();
+    	if (fact != null) {
+    		try {
+    			return WrapperUtil.wrap(fact.createJenaInferenceEngine(),
+    					JenaInferenceEngine.class);
     		} catch (PluginException e) {
     			throw new RuntimeException(e);
     		}

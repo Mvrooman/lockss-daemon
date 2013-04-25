@@ -1,15 +1,15 @@
 package org.lockss.extractor;
 
-import java.io.*;
+import java.io.IOException;
 
-import org.lockss.daemon.*;
+import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
-import org.lockss.plugin.*;
+import org.lockss.plugin.ArchivalUnit;
 
-public interface JenaMetadataExtractor {
+public interface JenaInferenceEngine {
 	
 	/**
-	 * Generate Jena metadata for this AU
+	 * Generate Jena inference data about this AU.
 	 * 
 	 * @param au
 	 * @param dbManager
@@ -18,5 +18,4 @@ public interface JenaMetadataExtractor {
 	 */
 	public void extract(ArchivalUnit au, DbManager dbManager)
 			throws IOException, PluginException;
-
 }

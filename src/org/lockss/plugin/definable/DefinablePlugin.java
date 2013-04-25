@@ -104,6 +104,9 @@ public class DefinablePlugin extends BasePlugin {
   public static final String KEY_PLUGIN_JENA_METADATA_EXTRACTOR_FACTORY =
 		    "plugin_jena_metadata_extractor_factory";
   
+  public static final String KEY_PLUGIN_JENA_INFERENCE_ENGINE_FACTORY =
+		    "plugin_jena_inference_engine_factory";
+  
   public static final String KEY_PLUGIN_SUBSTANCE_PREDICATE_FACTORY =
     "plugin_substance_predicate_factory";
 
@@ -925,6 +928,7 @@ public class DefinablePlugin extends BasePlugin {
   protected ArticleIteratorFactory articleIteratorFact = null;
   protected ArticleMetadataExtractorFactory articleMetadataFact = null;
   protected JenaMetadataExtractorFactory jenaMetadataFact = null;
+  protected JenaInferenceEngineFactory jenaInferenceEng = null;
 
   /**
    * Returns the plugin's article iterator factory, if any
@@ -1000,6 +1004,24 @@ public class DefinablePlugin extends BasePlugin {
 			}
 		}
 		return jenaMetadataFact;
+	}
+	
+	/**
+	 * Returns the article iterator factory for the content type, if any
+	 * 
+	 * @param contentType the content type
+	 * @return the ArticleIteratorFactory
+	 */
+	public JenaInferenceEngineFactory getJenaInferenceEngineFactory() {
+		if (jenaInferenceEng == null) {
+			String factClass = definitionMap.getString(
+					KEY_PLUGIN_JENA_INFERENCE_ENGINE_FACTORY, null);
+			if (factClass != null) {
+				jenaInferenceEng = (JenaInferenceEngineFactory) newAuxClass(
+						factClass, JenaInferenceEngineFactory.class);
+			}
+		}
+		return jenaInferenceEng;
 	}
 
   public String getPluginId() {

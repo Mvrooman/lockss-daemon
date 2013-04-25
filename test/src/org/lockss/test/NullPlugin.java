@@ -148,6 +148,10 @@ public class NullPlugin {
 			return null;
 		}
 
+		public org.lockss.extractor.JenaInferenceEngine getJenaInferenceEngine() {
+			return null;
+		}
+
 		public ArticleIteratorFactory getArticleIteratorFactory() {
 			return null;
 		}

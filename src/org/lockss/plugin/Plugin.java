@@ -192,6 +192,13 @@ public interface Plugin {
      */
 	public JenaMetadataExtractor getJenaMetadataExtractor();
 
+    /**
+     * Return an {@link JenaInferenceEngine} that knows how to interpret
+     * the AU's metadata for Jena.
+     * @return A JenaInferenceEngine or null
+     */
+	public JenaInferenceEngine getJenaInferenceEngine();
+
   /**
    * Return a {@link FileMetadataExtractor} that knows how to extract
    * metadata from content of the given content type

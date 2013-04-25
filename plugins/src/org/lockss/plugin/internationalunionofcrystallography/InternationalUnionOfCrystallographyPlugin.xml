@@ -160,6 +160,10 @@
     <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyJenaMetadataExtractorFactory</string>
   </entry>
   <entry>
+    <string>plugin_jena_inference_engine_factory</string>
+    <string>org.lockss.plugin.internationalunionofcrystallography.InternationalUnionOfCrystallographyJenaInferenceEngineFactory</string>
+  </entry>
+  <entry>
     <string>text/html_metadata_extractor_factory_map</string>
     <map>
         <entry>

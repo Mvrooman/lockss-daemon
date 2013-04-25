@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
+import org.lockss.extractor.JenaInferenceEngine;
 import org.lockss.extractor.JenaMetadataExtractor;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.Plugin;
@@ -32,6 +33,20 @@ public class JenaMetadataRecorder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void inferMetadata() {
+		JenaInferenceEngine jie = plugin.getJenaInferenceEngine();
+		
+		try {
+			jie.extract(au, dbManager);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PluginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 }
