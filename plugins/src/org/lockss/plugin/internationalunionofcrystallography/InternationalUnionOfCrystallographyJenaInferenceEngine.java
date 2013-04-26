@@ -6,6 +6,7 @@ import static org.lockss.db.MongoDbManager.PLUGIN_COLLECTION;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.jena.atlas.logging.Log;
 import org.lockss.daemon.PluginException;
@@ -62,41 +63,41 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 	public void extract(ArchivalUnit au, DbManager dbManager)
 			throws IOException, PluginException {
 		log.info("--- INFERENCE STARTED ---");
-		
-		
-		
+
 		String auId = au.getAuId();
 		String pluginId = au.getPluginId();
-		
-		DB mongoDatabase = ((MongoDbManager)dbManager).getDb();
-		
+
+		DB mongoDatabase = ((MongoDbManager) dbManager).getDb();
+
 		// find plugin sequence number
-		DBCollection collection = mongoDatabase.getCollection(PLUGIN_COLLECTION);
+		DBCollection collection = mongoDatabase
+				.getCollection(PLUGIN_COLLECTION);
 		BasicDBObject query = new BasicDBObject("pluginId", pluginId);
 		DBObject result = collection.findOne(query);
 		Long pluginSeq = MongoHelper.readLong(result, "longId");
-		
+
 		// find raw au
 		DBCollection auCollection = mongoDatabase.getCollection(AUS_COLLECTION);
-		DBObject finalQuery = QueryBuilder.start().and(
-                QueryBuilder.start("pluginSeq").is(pluginSeq).get(),
-                QueryBuilder.start("auKey").is(auId).get()).get();
+		DBObject finalQuery = QueryBuilder
+				.start()
+				.and(QueryBuilder.start("pluginSeq").is(pluginSeq).get(),
+						QueryBuilder.start("auKey").is(auId).get()).get();
 		DBObject auTarget = auCollection.findOne(finalQuery);
-		
+
 		// get the list of metadata
-		BasicDBList articleMetadata = (BasicDBList) auTarget.get("articleMetadata");
+		BasicDBList articleMetadata = (BasicDBList) auTarget
+				.get("articleMetadata");
 		Iterator<Object> it = articleMetadata.iterator();
 
-        while (it.hasNext()) {
-            DBObject obj = (DBObject) it.next();
+		while (it.hasNext()) {
+			DBObject obj = (DBObject) it.next();
 
-            Gson gson = new Gson();
-            ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(), ArticleMetadataInfo.class);
-            
-            
+			Gson gson = new Gson();
+			ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(),
+					ArticleMetadataInfo.class);
+
 			// Property propertyForQuery = model.getProperty("");
-			article = model
-					.getResource(metadataJson.accessUrl);
+			article = model.getResource(metadataJson.accessUrl);
 			StmtIterator iter = model.listStatements(new SimpleSelector(
 					article, null, (RDFNode) null) {
 				public boolean selects(Statement s) {
@@ -105,36 +106,74 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 			});
 
 			log.info("Found Results!! - " + iter.toList().size());
-            
-                   
+			getMachineByAuthor(metadataJson);
+
+		}
+		
+		
+        Property propertyForQuery = model.getProperty("usesMachine");
+        StmtIterator iter = model.listStatements(
+                new SimpleSelector(null, propertyForQuery, (RDFNode) null) {
+                    public boolean selects(Statement s) {
+                        return s.getString().equalsIgnoreCase("'SMART (Bruker, 2007)'");
+                    }
+                });
+        
+        
+        while(iter.hasNext())
+        {
+        	log.info(iter.next().getSubject().toString());
         }
+		
 
+	}
+	
+	private void getMachineByAuthor(ArticleMetadataInfo metadataJson)
+	{
+		Statement authorSet = getStatementFromProperty("authorSet");
+		
+		
+		Statement machineSet = getStatementFromProperty("_computing_data_collection");
+		//log.info("Objecg Found - "  + machineSet.getObject().toString());
+		
+		if(machineSet == null) return;
+		
+		String [] authors = authorSet.getObject().toString().split(";");
+		Property property = model.getProperty("usesMachine");
+		for(int i = 0 ; i<authors.length; i++)
+		{
+			Resource authorResource = model.createResource(authors[i]);
+			authorResource.addProperty(property, (String) machineSet.getObject().toString());
+		}
+	
+	}
+	
+	private Statement getStatementFromProperty(String predicate)
+	{
+		
+		Property property = model.createProperty(predicate);
+		StmtIterator iter = model.listStatements(new SimpleSelector(
+				article, property, (RDFNode) null) {
+		
+			public boolean selects(Statement s) {
+				return true;
+			}
+		});
+		
+		
+		if(iter.hasNext())
+		{
+			return iter.next();
+		}
+		else
+			return null;
+	}
 
-//		String query = "SELECT ?o ?p ?s WHERE { ?o ?p ?s . FILTER (contains (?o , 'bg2370')) }";
-//				//"SELECT * WHERE { ?o ?p ?s . FILTER (contains(?o, 'http://scripts.iucr.org/cgi-bin/sendcifsu2236sup1')) }";
-//		Query qery = QueryFactory.create(query);
-//
-//		QueryExecution qexec = QueryExecutionFactory.create(qery, model);
-//
-//		try {
-//			ResultSet results = qexec.execSelect();
-//			for (; results.hasNext();) {
-//				QuerySolution soln = results.nextSolution();
-//				RDFNode n = soln.get("o");
-//				if (n.isLiteral()) {
-//					log.info("" + ((Literal) n).getLexicalForm());
-//				} else {
-//					Resource r = (Resource) n;
-//					log.info("" + r.getURI());
-//		
-//					log.info("" + r.getNameSpace());
-//				}
-//			}
-//
-//		} finally {
-//			qexec.close();
-//		}
-
+	private void processRDF(List<Statement> list) {
+		
+		Iterator it = list.iterator();
+		
+	
 	}
 
 }
