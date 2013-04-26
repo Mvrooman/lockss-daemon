@@ -92,38 +92,38 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
         }
 
 //        SimpleSelector Example for querying
-//        Property propertyForQuery = model.getProperty("_diffrn_radiation_monochromator");
-//        StmtIterator iter = model.listStatements(
-//                new SimpleSelector(null, propertyForQuery, (RDFNode) null) {
-//                    public boolean selects(Statement s) {
-//                        return s.getString().endsWith("ite");
-//                    }
-//                });
-//        
-//        log.info("Found Results!! - " + iter.toList().size());
+        Property propertyForQuery = model.getProperty("_diffrn_radiation_monochromator");
+        StmtIterator iter = model.listStatements(
+                new SimpleSelector(null, propertyForQuery, (RDFNode) null) {
+                    public boolean selects(Statement s) {
+                        return s.getString().endsWith("ite");
+                    }
+                });
+        
+        log.info("Found Results!! - " + iter.toList().size());
 
 //        SPARQL Example for querying 
-//		String queryString = "SELECT * WHERE { ?o ?p ?s . FILTER (contains(?s, 'New Guy')) }";
-//		Query qery = QueryFactory.create(queryString);
-//		
-//		QueryExecution qexec = QueryExecutionFactory.create(qery, model);
-//
-//        try {
-//            ResultSet results = qexec.execSelect();
-//            for (; results.hasNext(); ) {
-//                QuerySolution soln = results.nextSolution();
-//                RDFNode n = soln.get("o");
-//                if (n.isLiteral()) {
-//                    log.info("" + ((Literal) n).getLexicalForm());
-//                } else {
-//                    Resource r = (Resource) n;
-//                    log.info("" + r.getURI());
-//                }
-//            }
-//
-//        } finally {
-//            qexec.close();
-//        }
+		String queryString = "SELECT * WHERE { ?o ?p ?s . FILTER (contains(?s, 'New Guy')) }";
+		Query qery = QueryFactory.create(queryString);
+		
+		QueryExecution qexec = QueryExecutionFactory.create(qery, model);
+
+        try {
+            ResultSet results = qexec.execSelect();
+            for (; results.hasNext(); ) {
+                QuerySolution soln = results.nextSolution();
+                RDFNode n = soln.get("o");
+                if (n.isLiteral()) {
+                    log.info("" + ((Literal) n).getLexicalForm());
+                } else {
+                    Resource r = (Resource) n;
+                    log.info("" + r.getURI());
+                }
+            }
+
+        } finally {
+            qexec.close();
+        }
         
         dataset.close();
     }
