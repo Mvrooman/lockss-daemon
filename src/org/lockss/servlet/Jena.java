@@ -1,24 +1,31 @@
 package org.lockss.servlet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.*;
 
+import org.lockss.db.JenaDbManager;
 import org.mortbay.html.*;
+
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class Jena extends LockssServlet {
 	
-	private final String HEADING = "Enter a SPARQL query, then press enter";
+	private final String HEADING = "Enter a SPARQL query, then click \"Query\"";
 	
 	private final String NAME_QUERY_PARAMETER = "name";
+	
+	private JenaDbManager jenaDbManager = null;
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		jenaDbManager = new JenaDbManager();
 	}
 
 	@Override
 	protected void lockssHandleRequest() throws ServletException, IOException {
-		String action = getParameter(NAME_QUERY_PARAMETER);
 		displayPage();
 	}
 	
@@ -45,7 +52,7 @@ public class Jena extends LockssServlet {
 	    form.method("POST");
 	    
 	    form.add("<center>");
-	    TextArea query = new TextArea(NAME_QUERY_PARAMETER);
+	    TextArea query = new TextArea(NAME_QUERY_PARAMETER, getParameter(NAME_QUERY_PARAMETER));
 	    query.setSize(70, 10);
 	    query.attribute("style", "border: 1px solid black; resize: none;");
 	    form.add(query);
@@ -58,14 +65,24 @@ public class Jena extends LockssServlet {
 	    return form;
 	}
 	
-	private Element createResultsContainer() {
+	private Element createResultsContainer() throws IOException {
+		String queryString = String.valueOf(getParameter(NAME_QUERY_PARAMETER));
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		
+		try {
+			ResultSet results = jenaDbManager.query(queryString);
+			ResultSetFormatter.outputAsJSON(output, results);
+		} catch (Exception e) {
+			output.write(e.getMessage().getBytes());
+		}
+
+		
 		Composite comp = new Composite();
 		comp.add("<center>");
 		comp.add("<h2>Results</h2>");
-		comp.add("<div style=\"width: 512px; height: 136px; overflow: scroll; border: 1px solid black;\">");
+		comp.add("<div style=\"width: 512px; height: 136px; overflow: scroll; border: 1px solid black; text-align: left;\">");
 		
-		Table results = new Table();
-		comp.add(results);
+		comp.add(output.toString());
 		
 		comp.add("</div></center>");
 		
