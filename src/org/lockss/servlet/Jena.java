@@ -2,12 +2,9 @@ package org.lockss.servlet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.servlet.*;
 
-import com.hp.hpl.jena.query.QuerySolution;
 import org.lockss.db.JenaDbManager;
 import org.mortbay.html.*;
 
@@ -15,9 +12,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class Jena extends LockssServlet {
-	
+
 	private final String HEADING = "Enter a SPARQL query, then click \"Query\"";
-	
 	private final String NAME_QUERY_PARAMETER = "name";
 	
 	private JenaDbManager jenaDbManager = null;
@@ -56,8 +52,8 @@ public class Jena extends LockssServlet {
 	    
 	    form.add("<center>");
 	    TextArea query = new TextArea(NAME_QUERY_PARAMETER, getParameter(NAME_QUERY_PARAMETER));
-	    query.setSize(70, 10);
-	    query.attribute("style", "border: 1px solid black; resize: none;");
+	    query.setSize(70, 3);
+	    query.attribute("style", "border: 1px solid black; resize: none; padding: 5px;");
 	    form.add(query);
 	    
 	    form.add("<br/>");
@@ -83,7 +79,7 @@ public class Jena extends LockssServlet {
 		Composite comp = new Composite();
 		comp.add("<center>");
 		comp.add("<h2>Results</h2>");
-		comp.add("<div style=\"width: 512px; height: 136px; overflow: scroll; border: 1px solid black; text-align: left;\">");
+		comp.add("<div style=\"width: 512px; height: 200px; overflow: scroll; border: 1px solid black; text-align: left; padding: 5px;\">");
 		
 		comp.add(output.toString());
 		

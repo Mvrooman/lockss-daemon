@@ -19,31 +19,54 @@ public class JenaDbManager extends DbManager {
     static Logger log = Logger
             .getLogger(JenaDbManager.class
                     .getName());
+    /**
+     * Create a JenaDbManager and initialize a dataset
+     */
 	public JenaDbManager() {
 		new File(jenaDirectory).mkdirs();
 		dataset = TDBFactory.createDataset(jenaDirectory);
 	}
 
+	/**
+	 * Not implemented.
+	 */
 	@Override
 	public void setConfig(Configuration newConfig, Configuration prevConfig,
 			Differences changedKeys) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Not implemented.
+	 */
 	@Override
 	public OpenUrlResolverDbManager getOpenUrlResolverDbManager() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Not implemented
+	 */
 	@Override
 	public boolean isConnectionReady() throws Exception {
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Retrieve the dataset.
+	 * 
+	 * @return Dataset The Jena dataset
+	 */
 	public Dataset getDataset() {
 		return dataset;
 	}
 
+	/**
+	 * Execute a query on the Jena model.
+	 * 
+	 * @param queryString The query to be executed
+	 * @return ResultSet The results of the query.
+	 */
     public ResultSet query(String queryString) {
         Model model = dataset.getDefaultModel();
 
