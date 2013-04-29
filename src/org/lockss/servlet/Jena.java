@@ -2,9 +2,12 @@ package org.lockss.servlet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.*;
 
+import com.hp.hpl.jena.query.QuerySolution;
 import org.lockss.db.JenaDbManager;
 import org.mortbay.html.*;
 
@@ -70,7 +73,7 @@ public class Jena extends LockssServlet {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		
 		try {
-			ResultSet results = jenaDbManager.query(queryString);
+            ResultSet results = jenaDbManager.query(queryString);
 			ResultSetFormatter.outputAsJSON(output, results);
 		} catch (Exception e) {
 			output.write(e.getMessage().getBytes());
