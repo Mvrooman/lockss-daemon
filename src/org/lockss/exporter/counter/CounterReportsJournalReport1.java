@@ -35,9 +35,9 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.exporter.counter.CounterReportsManager.*;
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 
@@ -233,7 +233,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
 
     try {
       // Get the journals to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -244,7 +244,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the journals to be included in the report.
       while (resultSet.next()) {
@@ -287,8 +287,8 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       log.error("SQL = '" + sql + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     // Remember the data rows in the report.
@@ -392,7 +392,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       // Each result will correspond to an item (month) in the report.
       // They will be sorted by journal in exactly the same order as the
       // journals are when using the rowIterator to walk the rows.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -403,7 +403,7 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the request count items to be included in the report.
       // There will be possibly multiple items for a journal. Once all the
@@ -484,8 +484,8 @@ public class CounterReportsJournalReport1 extends CounterReportsJournalReport {
       log.error("SQL = '" + sql + "'.");
       throw cre;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "Done.");

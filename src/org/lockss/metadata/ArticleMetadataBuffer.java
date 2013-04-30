@@ -31,7 +31,7 @@
  */
 package org.lockss.metadata;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -65,7 +65,7 @@ import org.lockss.util.StringUtil;
  * @author Philip Gust
  *
  */
-class ArticleMetadataBuffer {
+public class ArticleMetadataBuffer {
   private static Logger log = Logger.getLogger(ArticleMetadataBuffer.class);
 
   File collectedMetadataFile = null;
@@ -81,7 +81,7 @@ class ArticleMetadataBuffer {
    * @author Philip Gust
    *
    */
-  static class ArticleMetadataInfo implements Serializable {
+  public static class ArticleMetadataInfo implements Serializable {
     private static final long serialVersionUID = -2372571567706061080L;
     String publisher;
     String journalTitle;
@@ -98,8 +98,9 @@ class ArticleMetadataBuffer {
     final String authors;
     Set<String> authorSet;
     String doi;
-    String accessUrl;
+    public String accessUrl;
     Map<String, String> featuredUrlMap;
+    public Map<String, Object> additionalMetadata;
     Set<String> keywordSet;
     String endPage;
     String coverage;
@@ -154,7 +155,13 @@ class ArticleMetadataBuffer {
       featuredUrlMap =
 	  new HashMap<String, String>(md.getRawMap(MetadataField
 	                                           .FIELD_FEATURED_URL_MAP));
+      
+      
       log.debug3("featuredUrlMap = " + featuredUrlMap);
+      
+      additionalMetadata =
+	  new HashMap<String, Object>(md.getRawMap(MetadataField
+	                                           .FIELD_ADDITIONAL_METADATA));
       keywordSet = getKeywordSet(md);
       coverage = md.get(MetadataField.FIELD_COVERAGE);
       itemNumber = md.get(MetadataField.FIELD_ITEM_NUMBER);
@@ -282,7 +289,7 @@ class ArticleMetadataBuffer {
   public ArticleMetadataBuffer() throws IOException {
     if (outstream == null) {
       collectedMetadataFile = 
-          FileUtil.createTempFile("MetadataManager", "md");
+          FileUtil.createTempFile("SqlMetadataManager", "md");
       outstream =
           new ObjectOutputStream(
               new BufferedOutputStream(

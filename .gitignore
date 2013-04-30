@@ -1,3 +1,5 @@
+scripts/tdb/*.pyc
+*.pyo
 .classpath
 .depend
 .project

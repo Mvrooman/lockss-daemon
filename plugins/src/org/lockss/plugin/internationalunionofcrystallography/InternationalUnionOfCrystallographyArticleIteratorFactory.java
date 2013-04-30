@@ -41,6 +41,7 @@ import org.lockss.extractor.ArticleMetadataExtractorFactory;
 import org.lockss.extractor.BaseArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.plugin.*;
+import org.lockss.util.ListUtil;
 import org.lockss.util.Logger;
 
 public class InternationalUnionOfCrystallographyArticleIteratorFactory 
@@ -48,23 +49,31 @@ public class InternationalUnionOfCrystallographyArticleIteratorFactory
 
   protected static Logger log = Logger.getLogger("InternationalUnionOfCrystallographyArticleIteratorFactory");
 
-  protected static final String ROOT_TEMPLATE = "\"%s%s/issues/%d/%s/00/\", base_url, journal_id, year, issue";
-  
-  protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+/index\\.html$\", base_url, journal_id, year, issue";
+  protected static final String HTML_ROOT_TEMPLATE = "\"%s%s/issues/%d/%s/00/\", base_url, journal_id, year, issue";
+  protected static final String CIF_ROOT_TEMPLATE = "\"%s\",scripts_url";
 
-  @Override
-  public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
-                                                      MetadataTarget target)
-      throws PluginException {
-    return new InternationalUnionOfCrystallographyArticleIterator(au, new SubTreeArticleIterator.Spec()
-                                                                      .setTarget(target)
-                                                                      .setRootTemplate(ROOT_TEMPLATE)
-                                                                      .setPatternTemplate(PATTERN_TEMPLATE));
-  }
   
-  protected static class InternationalUnionOfCrystallographyArticleIterator extends SubTreeArticleIterator {
+ // protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+/index\\.html$\", base_url, journal_id, year, issue";
 
-    protected static Pattern PATTERN = Pattern.compile("/([^/]+)/index\\.html$", Pattern.CASE_INSENSITIVE);
+  //protected static final String PATTERN_TEMPLATE = "\"^%s%s/issues/%d/%s/00/[^/]+((/index\\.html)|(/[^/]*\\.cif))$\", base_url, journal_id, year, issue";
+  protected static final String PATTERN_TEMPLATE = "\"(^%s%s/issues/%d/%s/00/[^/]+((/index\\.html)|(/[^/]*\\.cif)))|(/([^/]+)/[^/]*sup1)$\", base_url, journal_id, year, issue";
+
+    @Override
+    public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
+                                                        MetadataTarget target)
+            throws PluginException {
+        return new InternationalUnionOfCrystallographyArticleIterator(au, new SubTreeArticleIterator.Spec()
+                .setTarget(target)
+                        //.setRootTemplate(ROOT_TEMPLATE)
+                .setRootTemplates(ListUtil.list(HTML_ROOT_TEMPLATE, CIF_ROOT_TEMPLATE))
+                .setPatternTemplate(PATTERN_TEMPLATE));
+    }
+
+    protected static class InternationalUnionOfCrystallographyArticleIterator extends SubTreeArticleIterator {
+
+      protected static Pattern URL_PATTERN = Pattern.compile("/([^/]+)/index\\.html$", Pattern.CASE_INSENSITIVE);
+	 // protected static Pattern CIF_PATTERN = Pattern.compile("/([^/]+)/[^/]*\\.cif$", Pattern.CASE_INSENSITIVE);
+     protected static Pattern CIF_PATTERN = Pattern.compile("/([^/]+)/[^/]*sup1$", Pattern.CASE_INSENSITIVE);
     
     public InternationalUnionOfCrystallographyArticleIterator(ArchivalUnit au,
                                                               SubTreeArticleIterator.Spec spec) {
@@ -73,16 +82,26 @@ public class InternationalUnionOfCrystallographyArticleIteratorFactory
     
     @Override
     protected ArticleFiles createArticleFiles(CachedUrl cu) {
-      String url = cu.getUrl();
-      Matcher mat = PATTERN.matcher(url);
-      if (mat.find()) {
-        return processFullTextHtml(cu, mat);
-      }
-      log.warning("Mismatch between article iterator factory and article iterator: " + url);
-      return null;
+        String url = cu.getUrl();
+        log.info("Creating ArticleFile for " + url);
+        Matcher mat = URL_PATTERN.matcher(url);
+        if (mat.find()) {
+            return processFullTextHtml(cu, mat);
+        } else if (CIF_PATTERN.matcher(url).find()) {
+            return processCif(cu, mat);
+        }
+        log.warning("Mismatch between article iterator factory and article iterator: " + url);
+        return null;
     }
-    
-    protected ArticleFiles processFullTextHtml(CachedUrl htmlCu, Matcher htmlMat) {
+
+      private ArticleFiles processCif(CachedUrl cu, Matcher mat) {
+          ArticleFiles af = new ArticleFiles();
+          af.setFullTextCu(cu);
+          af.setRoleCu(ArticleFiles.ROLE_ARTICLE_METADATA, cu);
+          return af;
+      }
+
+      protected ArticleFiles processFullTextHtml(CachedUrl htmlCu, Matcher htmlMat) {
       ArticleFiles af = new ArticleFiles();
       af.setFullTextCu(htmlCu);
       af.setRoleCu(ArticleFiles.ROLE_FULL_TEXT_HTML, htmlCu);

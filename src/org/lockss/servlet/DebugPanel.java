@@ -38,6 +38,7 @@ import org.mortbay.html.*;
 import org.lockss.app.*;
 import org.lockss.util.*;
 import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.poller.*;
 import org.lockss.crawler.*;
 import org.lockss.state.*;

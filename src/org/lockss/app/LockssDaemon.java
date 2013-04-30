@@ -37,11 +37,13 @@ import org.lockss.util.*;
 import org.lockss.alert.*;
 import org.lockss.daemon.*;
 import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsManager;
 import org.lockss.account.*;
 import org.lockss.hasher.*;
 import org.lockss.scheduler.*;
 import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.plugin.*;
 import org.lockss.truezip.*;
 import org.lockss.poller.*;
@@ -119,7 +121,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String IDENTITY_MANAGER = "IdentityManager";
   public static final String CRAWL_MANAGER = "CrawlManager";
   public static final String PLUGIN_MANAGER = "PluginManager";
-  public static final String METADATA_MANAGER = "MetadataManager";
+  public static final String METADATA_MANAGER = "SqlMetadataManager";
   public static final String POLL_MANAGER = "PollManager";
   public static final String PSM_MANAGER = "PsmManager";
   public static final String REPOSITORY_MANAGER = "RepositoryManager";
@@ -143,7 +145,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   public static final String CRON = "Cron";
   public static final String CLOCKSS_PARAMS = "ClockssParams";
   public static final String TRUEZIP_MANAGER = "TrueZipManager";
-  public static final String DB_MANAGER = "DbManager";
+  public static final String DB_MANAGER = "SqlDbManager";
   public static final String COUNTER_REPORTS_MANAGER = "CounterReportsManager";
 
   // Manager descriptors.  The order of this table determines the order in
@@ -175,9 +177,9 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
     // start plugin manager after generic services
     new ManagerDesc(PLUGIN_MANAGER, "org.lockss.plugin.PluginManager"),
     // start database manager before any manager that uses it.
-    new ManagerDesc(DB_MANAGER, "org.lockss.db.DbManager"),
+    new ManagerDesc(DB_MANAGER, "org.lockss.db.SqlDbManager"),
     // start metadata manager after pluggin manager and database manager.
-    new ManagerDesc(METADATA_MANAGER, "org.lockss.metadata.MetadataManager"),
+    new ManagerDesc(METADATA_MANAGER, "org.lockss.metadata.SqlMetadataManager"),
     // start proxy and servlets after plugin manager
     new ManagerDesc(REMOTE_API, "org.lockss.remote.RemoteApi"),
     // Start the COUNTER reports manager.
@@ -452,7 +454,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
 
   /**
    * return the metadata manager instance
-   * @return the MetadataManager
+   * @return the SqlMetadataManager
    * @throws IllegalArgumentException if the manager is not available.
    */
   public MetadataManager getMetadataManager() {
@@ -547,7 +549,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
   /**
    * Provides the database manager instance.
    * 
-   * @return a DbManager with the database manager instance.
+   * @return a SqlDbManager with the database manager instance.
    * @throws IllegalArgumentException
    *           if the manager is not available.
    */

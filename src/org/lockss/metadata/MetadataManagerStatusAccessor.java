@@ -31,7 +31,7 @@
  */
 package org.lockss.metadata;
 
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -42,7 +42,8 @@ import org.lockss.daemon.status.OverviewAccessor;
 import org.lockss.daemon.status.StatusAccessor;
 import org.lockss.daemon.status.StatusService.NoSuchTableException;
 import org.lockss.daemon.status.StatusTable;
-import org.lockss.metadata.MetadataManager.ReindexingStatus;
+
+import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import org.lockss.state.ArchivalUnitStatus;
 import org.lockss.util.CatalogueOrderComparator;
 import org.lockss.util.ListUtil;
@@ -50,7 +51,7 @@ import org.lockss.util.StringUtil;
 import org.lockss.util.TimeBase;
 
 /**
- * This class is the StatusAccessor for the MetadataManager.
+ * This class is the StatusAccessor for the SqlMetadataManager.
  * It also implements an OverviewAccessor to display on the 
  * main deamon status page.
  * 
@@ -60,7 +61,7 @@ import org.lockss.util.TimeBase;
  */
 public class MetadataManagerStatusAccessor implements StatusAccessor {
 
-  final MetadataManager metadataMgr;
+  final SqlMetadataManager metadataMgr;
   
   private static final String AU_COL_NAME = "au";
   private static final String INDEX_TYPE = "index_type";
@@ -116,7 +117,7 @@ public class MetadataManagerStatusAccessor implements StatusAccessor {
    * Create new instance for metadata manager
    * @param metadataMgr the metadata manager
    */
-  public MetadataManagerStatusAccessor(MetadataManager metadataMgr) {
+  public MetadataManagerStatusAccessor(SqlMetadataManager metadataMgr) {
     this.metadataMgr = metadataMgr;
   }
   
@@ -164,7 +165,7 @@ public class MetadataManagerStatusAccessor implements StatusAccessor {
   private List<Map<String,Object>> getRows() {
     List<Map<String,Object>> rows = new ArrayList<Map<String,Object>>();
     int rowNum = 0;
-    for (ReindexingTask task : metadataMgr.getReindexingTasks()) {
+    for (SqlReindexingTask task : metadataMgr.getReindexingTasks()) {
       String auName = task.getAuName();
       String auId = task.getAuId();
       boolean auNoSubstance = task.hasNoAuSubstance();
@@ -294,9 +295,9 @@ public class MetadataManagerStatusAccessor implements StatusAccessor {
   // 3: Done, by descending end time
 
   static class IndexingOverview implements OverviewAccessor {
-    final MetadataManager metadataMgr;
+    final SqlMetadataManager metadataMgr;
     
-    public IndexingOverview(MetadataManager metadataMgr) {
+    public IndexingOverview(SqlMetadataManager metadataMgr) {
       this.metadataMgr = metadataMgr;
     }
 

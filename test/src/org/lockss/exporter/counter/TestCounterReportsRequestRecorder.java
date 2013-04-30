@@ -38,8 +38,8 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
-import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
+import static org.lockss.db.SqlDbManager.*;
+import static org.lockss.metadata.SqlMetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.File;
 import java.sql.Connection;
@@ -49,8 +49,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.db.SqlDbManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
@@ -74,8 +74,8 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
       + " where " + IS_PUBLISHER_INVOLVED_COLUMN + " = ?";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
-  private MetadataManager metadataManager;
+  private SqlDbManager sqlDbManager;
+  private SqlMetadataManager sqlMetadataManager;
   private CounterReportsManager counterReportsManager;
 
   @Override
@@ -91,7 +91,7 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     props.setProperty(LockssRepositoryImpl.PARAM_CACHE_LOCATION, tempDirPath);
     props.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST,
 	      tempDirPath);
-    props.setProperty(DbManager.PARAM_DATASOURCE_CLASSNAME,
+    props.setProperty(SqlDbManager.PARAM_DATASOURCE_CLASSNAME,
 	"org.apache.derby.jdbc.ClientDataSource");
     props.setProperty(CounterReportsManager.PARAM_COUNTER_ENABLED, "true");
     props.setProperty(CounterReportsManager.PARAM_REPORT_BASEDIR_PATH,
@@ -104,15 +104,15 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
-    metadataManager = new MetadataManager();
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
-    metadataManager.startService();
+    sqlMetadataManager = new SqlMetadataManager();
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
+    sqlMetadataManager.startService();
 
     Cron cron = new Cron();
     theDaemon.setCron(cron);
@@ -131,15 +131,15 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher("publisher");
 
       // Add the publication.
       Long publicationSeq =
-	  metadataManager.findOrCreatePublication(conn, null, null,
+	  sqlMetadataManager.findOrCreatePublication(null, null,
 						  "9876543210987",
 						  "9876543210123", publisherSeq,
 						  "The Full Book", "2009-01-01",
@@ -147,41 +147,41 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
 
       // Add the plugin.
       Long pluginSeq =
-	  metadataManager.findOrCreatePlugin(conn, "fullPluginId",
+	  sqlMetadataManager.findOrCreatePlugin("fullPluginId",
 	      "fullPlatform");
 
       // Add the AU.
-      Long auSeq = metadataManager.findOrCreateAu(conn, pluginSeq, "fullAuKey");
+      Long auSeq = sqlMetadataManager.findOrCreateAu(pluginSeq, "fullAuKey");
 
       // Add the AU metadata.
-      Long auMdSeq = metadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  metadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
-      metadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
+      sqlMetadataManager.addMdItemDoi(parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  metadataManager.findMetadataItemType(conn, MD_ITEM_TYPE_BOOK);
+	  sqlMetadataManager.findMetadataItemType(MD_ITEM_TYPE_BOOK);
 
-      Long mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                                  auMdSeq, "2009-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "TOC", PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, "", IGNORABLE_URL);
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, "", IGNORABLE_URL);
 
-      mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2009-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "The Full Book",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "The Full Book",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    RECORDABLE_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
   }
 
@@ -293,18 +293,18 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     String sql = SQL_QUERY_REQUEST_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
-      resultSet = dbManager.executeQuery(statement);
+      statement = sqlDbManager.prepareStatement(conn, sql);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     assertEquals(expected, count);
@@ -330,19 +330,19 @@ public class TestCounterReportsRequestRecorder extends LockssTestCase {
     String sql = SQL_QUERY_REQUEST_BY_INVOLVEMENT_COUNT;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
-      statement = dbManager.prepareStatement(conn, sql);
+      statement = sqlDbManager.prepareStatement(conn, sql);
       statement.setBoolean(1, isPublisherInvolved);
-      resultSet = dbManager.executeQuery(statement);
+      resultSet = sqlDbManager.executeQuery(statement);
 
       if (resultSet.next()) {
 	count = resultSet.getInt(1);
       }
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     assertEquals(expected, count);

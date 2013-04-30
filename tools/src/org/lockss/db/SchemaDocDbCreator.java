@@ -43,8 +43,8 @@ public class SchemaDocDbCreator {
 	.setProperty(ConfigManager.PARAM_PLATFORM_DISK_SPACE_LIST, tempDirPath);
     ConfigurationUtil.setCurrentConfigFromProps(props);
 
-    DbManager dbManager = daemon.getDbManager();
-    dbManager.startService();
-    dbManager.stopService();
+    SqlDbManager sqlDbManager = (SqlDbManager) daemon.getDbManager();
+    sqlDbManager.startService();
+    sqlDbManager.stopService();
   }
 }

@@ -31,17 +31,11 @@ in this Software without prior written authorization from Stanford University.
 */
 package org.lockss.daemon;
 
-import static org.lockss.db.DbManager.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +51,7 @@ import org.lockss.config.TdbTitle;
 import org.lockss.config.TdbUtil;
 import org.lockss.daemon.ConfigParamDescr.InvalidFormatException;
 import org.lockss.db.DbManager;
+import org.lockss.db.OpenUrlResolverDbManager;
 import org.lockss.exporter.biblio.BibliographicItem;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuUtil;
@@ -204,7 +199,7 @@ public class OpenUrlResolver {
     private ResolvedTo resolvedTo;
     private BibliographicItem resolvedBibliographicItem = null;
     
-    private OpenUrlInfo(String resolvedUrl, 
+    public OpenUrlInfo(String resolvedUrl, 
                         String proxySpec,
                         ResolvedTo resolvedTo) {
       this.resolvedUrl = resolvedUrl;
@@ -212,7 +207,7 @@ public class OpenUrlResolver {
       this.proxySpec = proxySpec;
     }
 
-    protected static OpenUrlInfo newInstance(
+    public static OpenUrlInfo newInstance(
         String resolvedUrl, String proxySpec, ResolvedTo resolvedTo) {
       return ((resolvedTo == ResolvedTo.NONE) || (resolvedUrl == null)) 
           ? OpenUrlResolver.noOpenUrlInfo
@@ -974,7 +969,8 @@ public class OpenUrlResolver {
     try {
       // resolve from database manager
       DbManager dbMgr = daemon.getDbManager();
-      resolved = resolveFromDoi(dbMgr, doi);
+      OpenUrlResolverDbManager openUrlResolverDbManager = dbMgr.getOpenUrlResolverDbManager();
+      resolved = openUrlResolverDbManager.resolveFromDoi(doi);
     } catch (IllegalArgumentException ex) {
     }
     
@@ -1044,38 +1040,6 @@ public class OpenUrlResolver {
     
     return null;
   }
-  /**
-   * Return the article URL from a DOI using the MDB.
-   * @param dbMgr the database manager
-   * @param doi the DOI
-   * @return the OpenUrlInfo
-   */
-  private OpenUrlInfo resolveFromDoi(DbManager dbMgr, String doi) {
-    String url = null;
-    Connection conn = null;
-    try {
-      conn = dbMgr.getConnection();
-
-      String query = "select u." + URL_COLUMN
-	  + " from " + URL_TABLE + " u,"
-	  + DOI_TABLE + " d"
-	  + " where u." + MD_ITEM_SEQ_COLUMN + " = d." + MD_ITEM_SEQ_COLUMN
-	  + " and upper(d." + DOI_COLUMN + ") = ?";
-      
-      PreparedStatement stmt = dbMgr.prepareStatement(conn, query);
-      stmt.setString(1, doi.toUpperCase());
-      ResultSet resultSet = dbMgr.executeQuery(stmt);
-      if (resultSet.next()) {
-        url = resultSet.getString(1);
-      }
-    } catch (SQLException ex) {
-      log.error("Getting DOI:" + doi, ex);
-      
-    } finally {
-      DbManager.safeRollbackAndClose(conn);
-    }
-    return new OpenUrlInfo(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
-  }
 
   /**
    * Return article URL from an ISSN, date, volume, issue, spage, and author. 
@@ -1104,7 +1068,8 @@ public class OpenUrlResolver {
       String[] issns = (title == null) ? 
         new String[] { issn } : title.getIssns();
       DbManager dbMgr = daemon.getDbManager();
-      resolved = resolveFromIssn(dbMgr, issns, date, 
+      OpenUrlResolverDbManager openUrlResolverDbManager = dbMgr.getOpenUrlResolverDbManager();
+      resolved = openUrlResolverDbManager.resolveFromIssn(issns, date, 
                                 volume, issue, spage, author, atitle);
     } catch (IllegalArgumentException ex) {
       // intentionally ignore input error
@@ -1119,202 +1084,6 @@ public class OpenUrlResolver {
       }
     }
     return resolved;
-  }
-  
-  /**
-   * Return article URL from an ISSN, date, volume, issue, spage, and author. 
-   * The first author will only be used when the starting page is not given.
-   * 
-   * @param dbMgr the database manager
-   * @param issns a list of alternate ISSNs for the title
-   * @param date the publication date
-   * @param volume the volume
-   * @param issue the issue
-   * @param spage the starting page
-   * @param author the first author's full name
-   * @param atitle the article title 
-   * @return the article URL
-   */
-  private OpenUrlInfo resolveFromIssn(
-      DbManager dbMgr,
-      String[] issns, String date, String volume, String issue, 
-      String spage, String author, String atitle) {
-          
-    Connection conn = null;
-    OpenUrlInfo resolved = noOpenUrlInfo;
-    try {
-      conn = dbMgr.getConnection();
-
-      StringBuilder query = new StringBuilder();
-      StringBuilder from = new StringBuilder();
-      StringBuilder where = new StringBuilder();
-      ArrayList<String> args = new ArrayList<String>();
-
-      query.append("select distinct ");
-      query.append("u." + URL_COLUMN);
-      query.append(",");
-      query.append("p." + PLUGIN_ID_COLUMN);
-      query.append(",");
-      query.append("a." + AU_KEY_COLUMN);
-      
-      from.append(URL_TABLE + " u");
-      from.append("," + PLUGIN_TABLE + " p");
-      from.append("," + AU_TABLE + " a");
-      from.append("," + AU_MD_TABLE + " am");
-      from.append("," + MD_ITEM_TABLE + " m");
-      from.append("," + PUBLICATION_TABLE + " pu");
-      from.append("," + ISSN_TABLE + " i");
-
-      where.append("p." + PLUGIN_SEQ_COLUMN + " = ");
-      where.append("a." + PLUGIN_SEQ_COLUMN);
-      where.append(" and a." + AU_SEQ_COLUMN + " = ");
-      where.append("am." + AU_SEQ_COLUMN);
-      where.append(" and am." + AU_MD_SEQ_COLUMN + " = ");
-      where.append("m." + AU_MD_SEQ_COLUMN);
-      where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("u." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and m." + PARENT_SEQ_COLUMN + " = ");
-      where.append("pu." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and pu." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("i." + MD_ITEM_SEQ_COLUMN);
-
-      where.append(" and i." + ISSN_COLUMN + " in (");
-
-      String plaheholder = "?";
-      for (String issn : issns) {
-        where.append(plaheholder);
-        args.add(issn.replaceAll("-", "")); // strip punctuation
-        plaheholder = ",?";
-      }
-      where.append(")");
-
-      // true if properties specify an article
-      boolean hasArticleSpec = 
-          (spage != null) || (author != null) || (atitle != null);
-
-      // true if properties specified a journal item
-      boolean hasJournalSpec =
-          (date != null) || (volume != null) || (issue != null);
-
-      if ((hasJournalSpec && (volume != null || issue != null)) ||
-	  (hasArticleSpec && (spage != null || atitle != null))) {
-	from.append("," + BIB_ITEM_TABLE + " b");
-
-	where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-	where.append("b." + MD_ITEM_SEQ_COLUMN);
-      }
-
-      if (hasJournalSpec) {
-        // can specify an issue by a combination of date, volume and issue;
-        // how these combine varies, so do the most liberal match possible
-        // and filter based on multiple results
-        if (date != null) {
-          // enables query "2009" to match "2009-05-10" in database
-          where.append(" and m." + DATE_COLUMN);
-          where.append(" like ? escape '\\'");
-          args.add(date.replace("\\","\\\\").replace("%","\\%") + "%");
-        }
-        
-        if (volume != null) {
-          where.append(" and b." + VOLUME_COLUMN + " = ?");
-          args.add(volume);
-        }
-
-        if (issue != null) {
-          where.append(" and b." + ISSUE_COLUMN + " = ?");
-          args.add(issue);
-        }
-      }
-                  
-      // handle start page, author, and article title as
-      // equivalent ways to specify an article within an issue
-      if (hasArticleSpec) {
-        // accept any of the three
-        where.append(" and ( ");
-      
-        if (spage != null) {
-          where.append("b." + START_PAGE_COLUMN + " = ?");
-          args.add(spage);
-        }
-        if (atitle != null) {
-          if (spage != null) {
-            where.append(" or ");
-          }
-
-          from.append("," + MD_ITEM_NAME_TABLE + " name");
-
-          where.append("(m." + MD_ITEM_SEQ_COLUMN + " = ");
-          where.append("name." + MD_ITEM_SEQ_COLUMN + " and ");
-          where.append("upper(name." + NAME_COLUMN);
-          where.append(") like ? escape '\\')");
-
-          args.add(atitle.toUpperCase().replace("%","\\%") + "%");
-        }
-        if ( author != null) {
-          if ((spage != null) || (atitle != null)) {
-            where.append(" or ");
-          }
-
-          from.append("," + AUTHOR_TABLE + " aut");
-
-          // add the author query to the query
-          addAuthorQuery(author, where, args);
-        }
-        
-        where.append(")");
-      }
-
-      // select the 'Access' url
-      // (what if there is no access url?)
-      where.append(" and u." + FEATURE_COLUMN + " = ");
-      where.append("'Access'");
-
-
-      String url =
-	  resolveFromQuery(conn, query.toString() + " from " + from.toString()
-	      + " where " + where.toString(), args);
-      return OpenUrlInfo.newInstance(url, null, OpenUrlInfo.ResolvedTo.ARTICLE);
-
-    } catch (SQLException ex) {
-      log.error("Getting ISSNs:" + Arrays.toString(issns), ex);
-        
-    } finally {
-      DbManager.safeRollbackAndClose(conn);
-    }
-    return resolved;
-  }
-
-  /** 
-   * Resolve query if a single URL matches.
-   * 
-   * @param conn the connection
-   * @param query the query
-   * @param args the args
-   * @return a single URL
-   * @throws SQLException
-   */
-  private String resolveFromQuery(Connection conn, String query,
-      List<String> args) throws SQLException {
-    final String DEBUG_HEADER = "resolveFromQuery(): ";
-    log.debug3(DEBUG_HEADER + "query: " + query);
-    PreparedStatement stmt =
-	daemon.getDbManager().prepareStatement(conn, query.toString());
-    for (int i = 0; i < args.size(); i++) {
-      log.debug3(DEBUG_HEADER + "  query arg:  " + args.get(i));      
-      stmt.setString(i+1, args.get(i));
-    }
-    stmt.setMaxRows(2);  // only need 2 to to determine if unique
-    ResultSet resultSet = daemon.getDbManager().executeQuery(stmt);
-    String url = null;
-    if (resultSet.next()) {
-      url = resultSet.getString(1);
-      if (resultSet.next()) {
-        log.debug3(DEBUG_HEADER + "entry not unique: " + url + " "
-            + resultSet.getString(1));
-        url = null;
-      }
-    }
-    return url;
   }
 
   /**
@@ -1939,10 +1708,12 @@ public class OpenUrlResolver {
     OpenUrlInfo resolved = noOpenUrlInfo;
     // only go to database manager if requesting individual article/chapter
     try {
-      // resolve from database manager
-      DbManager dbMgr = daemon.getDbManager();
-      resolved = resolveFromIsbn(
-          dbMgr, isbn, date, volume, edition, spage, author, atitle);
+			// resolve from database manager
+			DbManager dbMgr = daemon.getDbManager();
+			OpenUrlResolverDbManager openUrlResolverDbManager = dbMgr
+					.getOpenUrlResolverDbManager();
+			resolved = openUrlResolverDbManager.resolveFromIsbn(isbn, date,
+					volume, edition, spage, author, atitle);
     } catch (IllegalArgumentException ex) {
     }
 
@@ -1958,207 +1729,5 @@ public class OpenUrlResolver {
       resolved = resolveBookFromTdbAus(tdbAus, date, volume, edition, spage);
     }
     return resolved;
-  }
-
-  /**
-   * Return the article URL from an ISBN, edition, start page, author, and
-   * article title using the metadata database.
-   * <p>
-   * The algorithm matches the ISBN and optionally the edition, and either 
-   * the start page, author, or article title. The reason for matching on any
-   * of the three is that typos in author and article title are always 
-   * possible so we want to be more forgiving in matching an article.
-   * <p>
-   * If none of the three are specified, the URL for the book table of contents 
-   * is returned.
-   * 
-   * @param dbMgr the database manager
-   * @param isbn the isbn
-   * @param String date the date
-   * @param String volumeName the volumeName
-   * @param edition the edition
-   * @param spage the start page
-   * @param author the first author
-   * @param atitle the chapter title
-   * @return the url
-   */
-  private OpenUrlInfo resolveFromIsbn(
-      DbManager dbMgr, String isbn, 
-      String date, String volume, String edition, 
-      String spage, String author, String atitle) {
-    final String DEBUG_HEADER = "resolveFromIsbn(): ";
-    OpenUrlInfo resolved = noOpenUrlInfo;
-    Connection conn = null;
-
-    try {
-      conn = dbMgr.getConnection();
-      // strip punctuation
-      isbn = isbn.replaceAll("[- ]", "");
-      
-      StringBuilder query = new StringBuilder();
-      StringBuilder from = new StringBuilder();
-      StringBuilder where = new StringBuilder();
-      ArrayList<String> args = new ArrayList<String>();
-          
-      query.append("select distinct ");
-      query.append("u." + URL_COLUMN);
-      query.append(",");
-      query.append("p." + PLUGIN_ID_COLUMN);
-      query.append(",");
-      query.append("a." + AU_KEY_COLUMN);
-      
-      from.append(URL_TABLE + " u");
-      from.append("," + PLUGIN_TABLE + " p");
-      from.append("," + AU_TABLE + " a");
-      from.append("," + AU_MD_TABLE + " am");
-      from.append("," + MD_ITEM_TABLE + " m");
-      from.append("," + PUBLICATION_TABLE + " pu");
-      from.append("," + ISBN_TABLE + " i");
-
-      where.append("p." + PLUGIN_SEQ_COLUMN + " = ");
-      where.append("a." + PLUGIN_SEQ_COLUMN);
-      where.append(" and a." + AU_SEQ_COLUMN + " = ");
-      where.append("am." + AU_SEQ_COLUMN);
-      where.append(" and am." + AU_MD_SEQ_COLUMN + " = ");
-      where.append("m." + AU_MD_SEQ_COLUMN);
-      where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("u." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and m." + PARENT_SEQ_COLUMN + " = ");
-      where.append("pu." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and pu." + MD_ITEM_SEQ_COLUMN + " = ");
-      where.append("i." + MD_ITEM_SEQ_COLUMN);
-      where.append(" and i." + ISBN_COLUMN + " = ?");
-
-      String strippedIsbn = isbn.replaceAll("-", "");
-      args.add(strippedIsbn); // strip punctuation
-
-      boolean hasBookSpec = 
-    	(date != null) || (volume != null) || (edition != null); 
-      
-      boolean hasArticleSpec = 
-    	(spage != null) || (author != null) || (atitle != null);
-
-      if ((hasBookSpec && (volume != null || edition != null)) ||
-	  (hasArticleSpec && (spage != null || atitle != null))) {
-	from.append("," + BIB_ITEM_TABLE + " b");
-
-	where.append(" and m." + MD_ITEM_SEQ_COLUMN + " = ");
-	where.append("b." + MD_ITEM_SEQ_COLUMN);
-      }
-
-      if (hasBookSpec) {
-        // can specify an issue by a combination of date, volume and issue;
-        // how these combine varies, so do the most liberal match possible
-        // and filter based on multiple results
-        if (date != null) {
-          // enables query "2009" to match "2009-05-10" in database
-          where.append(" and m." + DATE_COLUMN);
-          where.append(" like ? escape '\\'");
-          args.add(date.replace("\\","\\\\").replace("%","\\%") + "%");
-        }
-        
-        if (volume != null) {
-          where.append(" and b." + VOLUME_COLUMN + " = ?");
-          args.add(volume);
-        }
-
-        if (edition != null) {
-          where.append(" and b." + ISSUE_COLUMN + " = ?");
-          args.add(edition);
-        }
-      }
-
-      // handle start page, author, and article title as
-      // equivalent ways to specify an article within an issue
-      if (hasArticleSpec) {
-        // accept any of the three
-        where.append(" and ( ");
-          
-        if (spage != null) {
-          where.append("b." + START_PAGE_COLUMN + " = ?");
-          args.add(spage);
-        }
-
-        if (atitle != null) {
-          if (spage != null) {
-            where.append(" or ");
-          }
-
-          from.append("," + MD_ITEM_NAME_TABLE + " name");
-
-          where.append("(m." + MD_ITEM_SEQ_COLUMN + " = ");
-          where.append("name." + MD_ITEM_SEQ_COLUMN + " and ");
-          where.append("upper(name." + NAME_COLUMN);
-          where.append(") like ? escape '\\')");
-
-          args.add(atitle.toUpperCase().replace("%","\\%") + "%");
-        }
-
-        if (author != null) {
-          if ((spage != null) || (atitle != null)) {
-            where.append(" or ");
-          }
-
-          from.append("," + AUTHOR_TABLE + " aut");
-
-          // add the author query to the query
-          addAuthorQuery(author, where, args);
-        }
-    
-        where.append(")");
-      }
-      
-      String url =
-	  resolveFromQuery(conn, query.toString() + " from " + from.toString()
-	      + " where " + where.toString(), args);
-      log.debug3(DEBUG_HEADER + "url = " + url);
-      resolved = OpenUrlInfo.newInstance(url, null, 
-                                         OpenUrlInfo.ResolvedTo.CHAPTER);
-      
-    } catch (SQLException ex) {
-      log.error("Getting ISBN:" + isbn, ex);
-        
-    } finally {
-      DbManager.safeRollbackAndClose(conn);
-    }
-    return resolved;
-  }
-  
-  /**
-   * Add author query to the query buffer and argument list.  
-   * @param author the author
-   * @param where the query buffer
-   * @param args the argument list
-   */
-  private void addAuthorQuery(String author, StringBuilder where,
-      List<String> args) {
-    where.append("m." + MD_ITEM_SEQ_COLUMN + " = ");
-    where.append("aut." + MD_ITEM_SEQ_COLUMN + " and (");
-
-    String authorUC = author.toUpperCase();
-    // match single author
-    where.append("upper(");
-    where.append(AUTHOR_NAME_COLUMN);
-    where.append(") = ?");
-    args.add(authorUC);
-
-    // escape escape character and then wildcard characters
-    String authorEsc = authorUC.replace("\\", "\\\\").replace("%","\\%");
-            
-    // match last name of author 
-    // (last, first name separated by ',')
-    where.append(" or upper(");
-    where.append(AUTHOR_NAME_COLUMN);
-    where.append(") like ? escape '\\'");
-    args.add(authorEsc+",%");
-    
-    // match last name of author
-    // (first last name separated by ' ')
-    where.append(" or upper(");
-    where.append(AUTHOR_NAME_COLUMN);
-    where.append(") like ? escape '\\'");
-    args.add("% " + authorEsc);    
-    
-    where.append(")");
   }
 }

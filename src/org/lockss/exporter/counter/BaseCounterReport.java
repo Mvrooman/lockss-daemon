@@ -50,7 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.IOUtil;
 import org.lockss.util.Logger;
 import org.lockss.util.TimeBase;
@@ -310,12 +310,12 @@ public abstract class BaseCounterReport implements CounterReport {
   private void compileReportData() throws SQLException, CounterReportsException {
     final String DEBUG_HEADER = "compileReportData(): ";
 
-    DbManager dbManager = daemon.getDbManager();
+    SqlDbManager sqlDbManager = ((SqlDbManager)daemon.getDbManager());
     Connection conn = null;
 
     try {
       // Get a connection to the database.
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Initialize the report data rows with the title data.
       initializeReportRows(conn);
@@ -326,7 +326,7 @@ public abstract class BaseCounterReport implements CounterReport {
 
       ready = true;
     } finally {
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
   }
 

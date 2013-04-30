@@ -103,7 +103,7 @@ public class BaseCachedUrl implements CachedUrl {
     return au;
   }
 
-  protected RepositoryNodeVersion getNodeVersion() {
+  public RepositoryNodeVersion getNodeVersion() {
     ensureLeafLoaded();
     return leaf;
   }
@@ -329,7 +329,7 @@ public class BaseCachedUrl implements CachedUrl {
       this.nodeVer = nodeVer;
     }
 
-    protected RepositoryNodeVersion getNodeVersion() {
+    public RepositoryNodeVersion getNodeVersion() {
       return nodeVer;
     }
 

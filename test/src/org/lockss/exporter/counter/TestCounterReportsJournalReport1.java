@@ -37,8 +37,8 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
-import static org.lockss.metadata.MetadataManager.PRIMARY_NAME_TYPE;
+import static org.lockss.db.SqlDbManager.*;
+import static org.lockss.metadata.SqlMetadataManager.PRIMARY_NAME_TYPE;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,10 +49,10 @@ import java.util.Calendar;
 import java.util.Properties;
 import org.lockss.config.ConfigManager;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.exporter.counter.CounterReportsJournalReport1;
 import org.lockss.exporter.counter.CounterReportsManager;
-import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.repository.LockssRepositoryImpl;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
@@ -66,8 +66,8 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
   private static final String PDF_URL = "http://example.com/pdf.url";
 
   private MockLockssDaemon theDaemon;
-  private DbManager dbManager;
-  private MetadataManager metadataManager;
+  private SqlDbManager sqlDbManager;
+  private SqlMetadataManager sqlMetadataManager;
   private CounterReportsManager counterReportsManager;
 
   @Override
@@ -91,15 +91,15 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
     theDaemon = getMockLockssDaemon();
     theDaemon.setDaemonInited(true);
 
-    dbManager = new DbManager();
-    theDaemon.setDbManager(dbManager);
-    dbManager.initService(theDaemon);
-    dbManager.startService();
+    sqlDbManager = new SqlDbManager();
+    theDaemon.setDbManager(sqlDbManager);
+    sqlDbManager.initService(theDaemon);
+    sqlDbManager.startService();
 
-    metadataManager = new MetadataManager();
-    theDaemon.setMetadataManager(metadataManager);
-    metadataManager.initService(theDaemon);
-    metadataManager.startService();
+    sqlMetadataManager = new SqlMetadataManager();
+    theDaemon.setMetadataManager(sqlMetadataManager);
+    sqlMetadataManager.initService(theDaemon);
+    sqlMetadataManager.startService();
 
     Cron cron = new Cron();
     theDaemon.setCron(cron);
@@ -256,59 +256,59 @@ public class TestCounterReportsJournalReport1 extends LockssTestCase {
     Connection conn = null;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Add the publisher.
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, "publisher");
+	  sqlMetadataManager.findOrCreatePublisher("publisher");
 
       // Add the publication.
       publicationSeq =
-	  metadataManager.findOrCreatePublication(conn, "12345678", "98765432",
+	  sqlMetadataManager.findOrCreatePublication("12345678", "98765432",
 						  null, null, publisherSeq,
 						  "JOURNAL", "2010-01-01", null,
 						  null);
 
       // Add the plugin.
       Long pluginSeq =
-	  metadataManager.findOrCreatePlugin(conn, "pluginId", "platform");
+	  sqlMetadataManager.findOrCreatePlugin("pluginId", "platform");
 
       // Add the AU.
       Long auSeq =
-	  metadataManager.findOrCreateAu(conn, pluginSeq, "auKey");
+	  sqlMetadataManager.findOrCreateAu(pluginSeq, "auKey");
 
       // Add the AU metadata.
-      Long auMdSeq = metadataManager.addAuMd(conn, auSeq, 1, 0L);
+      Long auMdSeq = sqlMetadataManager.addAuMd(auSeq, 1, 0L);
 
       Long parentSeq =
-	  metadataManager.findPublicationMetadataItem(conn, publicationSeq);
+	  sqlMetadataManager.findPublicationMetadataItem(publicationSeq);
 
-      metadataManager.addMdItemDoi(conn, parentSeq, "10.1000/182");
+      sqlMetadataManager.addMdItemDoi(parentSeq, "10.1000/182");
 
       Long mdItemTypeSeq =
-	  metadataManager.findMetadataItemType(conn,
+	  sqlMetadataManager.findMetadataItemType(
 	                                       MD_ITEM_TYPE_JOURNAL_ARTICLE);
 
-      Long mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      Long mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "htmlArticle",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "htmlArticle",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_HTML,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_HTML,
                                    HTML_URL);
 
-      mdItemSeq = metadataManager.addMdItem(conn, parentSeq, mdItemTypeSeq,
+      mdItemSeq = sqlMetadataManager.addMdItem(parentSeq, mdItemTypeSeq,
                                             auMdSeq, "2010-01-01", null);
 
-	  metadataManager.addMdItemName(conn, mdItemSeq, "pdfArticle",
+	  sqlMetadataManager.addMdItemName(mdItemSeq, "pdfArticle",
 					PRIMARY_NAME_TYPE);
 
-      metadataManager.addMdItemUrl(conn, mdItemSeq, ROLE_FULL_TEXT_PDF,
+      sqlMetadataManager.addMdItemUrl(mdItemSeq, ROLE_FULL_TEXT_PDF,
                                    PDF_URL);
     } finally {
       conn.commit();
-      DbManager.safeCloseConnection(conn);
+      SqlDbManager.safeCloseConnection(conn);
     }
     
     return publicationSeq;

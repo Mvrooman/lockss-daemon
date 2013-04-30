@@ -37,14 +37,14 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.plugin.ArticleFiles.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 import org.mortbay.http.HttpResponse;
 
@@ -154,28 +154,28 @@ public class CounterReportsRequestRecorder {
     PreparedStatement getUrlMdItemId = null;
     ResultSet results = null;
     Long mdItemId = null;
-    DbManager dbManager = LockssDaemon.getLockssDaemon().getDbManager();
+    SqlDbManager sqlDbManager = (SqlDbManager) LockssDaemon.getLockssDaemon().getDbManager();
 
     try {
       // Get the database connection.
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Prepare the query.
       getUrlMdItemId =
-	  dbManager.prepareStatement(conn, SQL_QUERY_MD_ITEM_ID_FROM_URL);
+	  sqlDbManager.prepareStatement(conn, SQL_QUERY_MD_ITEM_ID_FROM_URL);
       getUrlMdItemId.setString(1, url);
 
       // Get any results.
-      results = dbManager.executeQuery(getUrlMdItemId);
+      results = sqlDbManager.executeQuery(getUrlMdItemId);
 
       // Get the metadata item identifier.
       if (results.next()) {
 	mdItemId = results.getLong(MD_ITEM_SEQ_COLUMN);
       }
     } finally {
-      DbManager.safeCloseResultSet(results);
-      DbManager.safeCloseStatement(getUrlMdItemId);
-      DbManager.safeRollbackAndClose(conn);
+      SqlDbManager.safeCloseResultSet(results);
+      SqlDbManager.safeCloseStatement(getUrlMdItemId);
+      SqlDbManager.safeRollbackAndClose(conn);
     }
 
     log.debug2(DEBUG_HEADER + "mdItemId = '" + mdItemId + "'.");

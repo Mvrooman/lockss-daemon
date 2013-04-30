@@ -441,6 +441,18 @@ public class AdminServletManager extends BaseServletManager {
           "Debug Panel",
           (ServletDescr.IN_NAV | ServletDescr.NEED_ROLE_DEBUG
           | ServletDescr.NEED_ROLE_AU_ADMIN));
+  protected static final ServletDescr SERVLET_JENA =
+          new ServletDescr("Jena",
+          Jena.class,
+          "Jena Query Interface",
+          (ServletDescr.IN_NAV | ServletDescr.IN_UIHOME | ServletDescr.NEED_ROLE_AU_ADMIN),
+          "Query Jena") {
+            public boolean isInNav(LockssServlet servlet) {
+            	return true;
+            }
+            public boolean isInUiHome(LockssServlet servlet) {
+              return isInNav(servlet);
+      }};
   protected static final ServletDescr LINK_CONTACT =
           new ServletDescr(null,
           null,
@@ -515,6 +527,8 @@ public class AdminServletManager extends BaseServletManager {
     SERVLET_EXPERT_CONFIG,
     SERVLET_LIST_HOLDINGS,
     SERVLET_COUNTER_REPORTS,
+    SERVLET_JENA,
+
     //SERVLET_OPENURL_QUERY,
     LINK_LOGS,
     LINK_ISOS,
@@ -550,6 +564,7 @@ public class AdminServletManager extends BaseServletManager {
     SERVLET_EXPERT_CONFIG,
     SERVLET_LIST_HOLDINGS,
     SERVLET_COUNTER_REPORTS,
+    SERVLET_JENA,
     //SERVLET_OPENURL_QUERY,
     LINK_LOGS,
     LINK_ISOS,
@@ -585,6 +600,7 @@ public class AdminServletManager extends BaseServletManager {
     SERVLET_DEBUG_PANEL,
     SERVLET_EXPERT_CONFIG,
     SERVLET_LIST_HOLDINGS,
+    SERVLET_JENA,
     //SERVLET_OPENURL_QUERY,
     LINK_LOGS,
     LINK_ISOS,

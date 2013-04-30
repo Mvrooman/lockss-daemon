@@ -37,7 +37,7 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,8 +52,9 @@ import org.lockss.app.LockssDaemon;
 import org.lockss.config.ConfigManager;
 import org.lockss.config.Configuration;
 import org.lockss.daemon.Cron;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.metadata.MetadataManager;
+import org.lockss.metadata.SqlMetadataManager;
 import org.lockss.util.FileUtil;
 import org.lockss.util.Logger;
 import org.lockss.util.TimeBase;
@@ -143,7 +144,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
   private Long allJournalsPublicationSeq = null;
 
   /** The database manager */
-  private DbManager dbManager = null;
+  private SqlDbManager sqlDbManager = null;
 
   /** The metadata manager */
   private MetadataManager metadataManager = null;
@@ -161,11 +162,11 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       return;
     }
 
-    dbManager = getDaemon().getDbManager();
+    sqlDbManager = (SqlDbManager) getDaemon().getDbManager();
     Connection conn;
 
     try {
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
     } catch (SQLException ex) {
       log.error("Cannot connect to database", ex);
       return;
@@ -177,13 +178,13 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
     try {
       // Get a connection to the database.
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       errorMessage = "Cannot get the identifier of the publisher used for the "
 	  + "aggregation of all title requests";
 
       Long publisherSeq =
-	  metadataManager.findOrCreatePublisher(conn, ALL_PUBLISHERS_NAME);
+	  metadataManager.findOrCreatePublisher(ALL_PUBLISHERS_NAME);
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
       if (publisherSeq == null) {
@@ -197,7 +198,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       // Get the identifier of the dummy publication used for the aggregation of
       // all book requests.
       allBooksPublicationSeq = metadataManager
-	  .findOrCreatePublication(conn, null, null, "CRBPISBN", "CRBEISBN",
+	  .findOrCreatePublication(null, null, "CRBPISBN", "CRBEISBN",
 	                           publisherSeq, ALL_BOOKS_NAME, null, null,
 	                           null);
       log.debug2(DEBUG_HEADER + "allBooksPublicationSeq = "
@@ -214,7 +215,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       // Get the identifier of the dummy publication used for the aggregation of
       // all journal requests.
       allJournalsPublicationSeq = metadataManager
-	  .findOrCreatePublication(conn, "CRJPISSN", "CRJEISSN", null,null,
+	  .findOrCreatePublication("CRJPISSN", "CRJEISSN", null,null,
 	                           publisherSeq, ALL_JOURNALS_NAME, null, null,
 	                           null);
       log.debug2(DEBUG_HEADER + "allJournalsPublicationSeq = "
@@ -226,20 +227,22 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       }
 
       success = true;
-    } catch (SQLException sqle) {
-      log.error(errorMessage, sqle);
+    } catch (Exception exception) {
+      log.error(errorMessage, exception);
     } finally {
       if (success) {
 	try {
 	  conn.commit();
-	  DbManager.safeCloseConnection(conn);
+	  
+	  //TODO: Fix Me -- Static calls to SQLDBMAnager should be replaced with abstract calls to the specific type of manager...
+	  SqlDbManager.safeCloseConnection(conn);
 	} catch (SQLException sqle) {
 	  log.error("Exception caught committing the connection", sqle);
-	  DbManager.safeRollbackAndClose(conn);
+	  SqlDbManager.safeRollbackAndClose(conn);
 	  success = false;
 	}
       } else {
-	DbManager.safeRollbackAndClose(conn);
+	SqlDbManager.safeRollbackAndClose(conn);
       }
     }
 
@@ -448,7 +451,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
     try {
       // Get a connection to the database.
-      conn = dbManager.getConnection();
+      conn = sqlDbManager.getConnection();
 
       // Get the date of the request.
       Calendar calendar = Calendar.getInstance();
@@ -467,7 +470,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
 
       try {
         // Prepare the statement used to persist the request.
-        insertRequest = dbManager.prepareStatement(conn, sql);
+        insertRequest = sqlDbManager.prepareStatement(conn, sql);
 
         short index = 1;
 
@@ -488,7 +491,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
         insertRequest.setShort(index++, (short) requestDay);
 
         // Insert the record.
-        int count = dbManager.executeUpdate(insertRequest);
+        int count = sqlDbManager.executeUpdate(insertRequest);
         log.debug2(DEBUG_HEADER + "count = " + count);
       } catch (SQLException sqle) {
         log.error("Cannot persist URL request", sqle);
@@ -496,7 +499,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
         log.error("SQL = '" + sql + "'.");
         throw sqle;
       } finally {
-        DbManager.safeCloseStatement(insertRequest);
+        SqlDbManager.safeCloseStatement(insertRequest);
       }
 
       success = true;
@@ -504,9 +507,9 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       if (success) {
 	conn.commit();
 	log.debug2(DEBUG_HEADER + "Successful commit.");
-	DbManager.safeCloseConnection(conn);
+	SqlDbManager.safeCloseConnection(conn);
       } else {
-	DbManager.safeRollbackAndClose(conn);
+	SqlDbManager.safeRollbackAndClose(conn);
       }
     }
   }

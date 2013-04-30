@@ -35,9 +35,9 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.exporter.counter.CounterReportsManager.*;
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 import org.lockss.util.TimeBase;
@@ -293,7 +293,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
 
     try {
       // Get the journals to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -304,7 +304,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the journals to be included in the report.
       while (resultSet.next()) {
@@ -347,8 +347,8 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       log.error("SQL = '" + sql + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     // Remember the data rows in the report.
@@ -427,7 +427,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
 
     try {
       // Get the request counts for all the rows to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -438,7 +438,7 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the request counts to be included in the report.
       while (resultSet.next()) {
@@ -516,8 +516,8 @@ public class CounterReportsJournalReport5 extends CounterReportsJournalReport {
       log.error("SQL = '" + sql + "'.");
       throw cre;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "Done.");

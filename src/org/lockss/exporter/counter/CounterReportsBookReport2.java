@@ -35,9 +35,9 @@
  */
 package org.lockss.exporter.counter;
 
-import static org.lockss.db.DbManager.*;
+import static org.lockss.db.SqlDbManager.*;
 import static org.lockss.exporter.counter.CounterReportsManager.*;
-import static org.lockss.metadata.MetadataManager.*;
+import static org.lockss.metadata.SqlMetadataManager.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import org.lockss.app.LockssDaemon;
-import org.lockss.db.DbManager;
+import org.lockss.db.SqlDbManager;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 
@@ -212,7 +212,7 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
 
     try {
       // Get the books to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -223,7 +223,7 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the books to be included in the report.
       while (resultSet.next()) {
@@ -263,8 +263,8 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       log.error("SQL = '" + sql + "'.");
       throw sqle;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "rows.size() = " + rows.size() + ".");
@@ -342,7 +342,7 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
 
     try {
       // Get the request counts for all the rows to be included in the report.
-      statement = daemon.getDbManager().prepareStatement(conn, sql);
+      statement =  ((SqlDbManager)daemon.getDbManager()).prepareStatement(conn, sql);
 
       short index = 1;
 
@@ -353,7 +353,7 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       statement.setInt(index++, endYear);
       statement.setInt(index++, endYear);
 
-      resultSet = daemon.getDbManager().executeQuery(statement);
+      resultSet =  ((SqlDbManager)daemon.getDbManager()).executeQuery(statement);
 
       // Loop through all the request counts to be included in the report.
       while (resultSet.next()) {
@@ -429,8 +429,8 @@ public class CounterReportsBookReport2 extends CounterReportsBookReport {
       log.error("SQL = '" + sql + "'.");
       throw cre;
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(statement);
+      SqlDbManager.safeCloseResultSet(resultSet);
+      SqlDbManager.safeCloseStatement(statement);
     }
 
     log.debug2(DEBUG_HEADER + "Done.");
