@@ -5,12 +5,8 @@ import static org.lockss.db.MongoDbManager.PLUGIN_COLLECTION;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-
-import org.apache.jena.atlas.logging.Log;
 import org.lockss.daemon.PluginException;
 import org.lockss.db.DbManager;
 import org.lockss.db.MongoDbManager;
@@ -18,12 +14,10 @@ import org.lockss.db.MongoHelper;
 import org.lockss.extractor.JenaInferenceEngine;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
-import org.lockss.plugin.ArticleFiles;
 import org.lockss.util.Logger;
 
 import com.google.gson.Gson;
 import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -39,18 +33,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.QueryBuilder;
 
-/**
- * @author TofuPrd
- * 
- */
-/**
- * @author TofuPrd
- *
- */
-/**
- * @author TofuPrd
- *
- */
 public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 		JenaInferenceEngine {
 
@@ -113,7 +95,6 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 			ArticleMetadataInfo metadataJson = gson.fromJson(obj.toString(),
 					ArticleMetadataInfo.class);
 
-			// Property propertyForQuery = model.getProperty("");
 			article = model.getResource(metadataJson.accessUrl);
 			StmtIterator iter = model.listStatements(new SimpleSelector(
 					article, null, (RDFNode) null) {
@@ -168,7 +149,6 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 			Statement stmt = iter3.next();
 			log.info(stmt.getSubject().toString() + " -- "
 					+ stmt.getObject().toString());
-
 		}
 
 	}
@@ -179,9 +159,7 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 	 */
 	private void getMachineByAuthor(ArticleMetadataInfo metadataJson) {
 		Statement authorSet = getStatementFromProperty("authorSet");
-
 		Statement machineSet = getStatementFromProperty("_computing_data_collection");
-		// log.info("Objecg Found - " + machineSet.getObject().toString());
 
 		if (machineSet == null)
 			return;
@@ -193,7 +171,6 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 			authorResource.addProperty(property, (String) machineSet
 					.getObject().toString());
 		}
-
 	}
 
 	/**

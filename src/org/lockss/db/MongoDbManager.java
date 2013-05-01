@@ -17,13 +17,12 @@ public class MongoDbManager extends DbManager {
 	private static final Logger log = Logger.getLogger(MongoDbManager.class);
 	
 	public static final String PUBLISHERS_COLLECTION = "publishers";
-	
 	public static final String PLUGIN_COLLECTION = "plugins";
-	
 	public static final String PUBLICATIONS_COLLECTION = "publications";
-	
 	public static final String AUS_COLLECTION = "aus";
 
+	// alt: "ec2-54-241-200-25.us-west-1.compute.amazonaws.com"
+	private String dbLocation = "24.10.146.230";
 	private boolean ready = false;
 	
 	//The mongo database
@@ -43,8 +42,7 @@ public class MongoDbManager extends DbManager {
 		MongoClient mongoClient = null;
 
 		try {
-			//mongoClient = new MongoClient("ec2-54-241-200-25.us-west-1.compute.amazonaws.com", 27017);
-			mongoClient = new MongoClient("24.10.146.230", 27017);
+			mongoClient = new MongoClient(dbLocation, 27017);
 			mongoDatabase = mongoClient.getDB("lockss");  
 			initializeCollections();
 		} catch (UnknownHostException e) {
@@ -56,7 +54,7 @@ public class MongoDbManager extends DbManager {
 	}
 
 	/**
-	 * 
+	 * Make sure we have all the collections available.
 	 */
 	private void initializeCollections() {
 		if (!mongoDatabase.collectionExists(PUBLISHERS_COLLECTION))
@@ -66,7 +64,6 @@ public class MongoDbManager extends DbManager {
 
 	@Override
 	public OpenUrlResolverDbManager getOpenUrlResolverDbManager() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -79,8 +76,6 @@ public class MongoDbManager extends DbManager {
 	@Override
 	public void setConfig(Configuration newConfig, Configuration prevConfig,
 			Differences changedKeys) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	/**

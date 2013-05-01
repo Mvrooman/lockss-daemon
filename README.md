@@ -1,0 +1,3 @@
+# Lots of Copies Keeps Semantics Safe 
+
+The LOCKSS system stores large data sets derived from electronic journals and texts with a focus on the preservation and distribution of these sources.  Decoupling the deep integration and heavy reliance of LOCKSS on SQL and its variants by adding a database abstraction layer allows for fast schema-less key value storage and has enabled programmatic access to these large data sets. Querying and processing of this data enables the creation of semantic facts.  Adding simple inference engines allows for the generation of new facts concerning broad topics across multiple previously disparate fields of information.

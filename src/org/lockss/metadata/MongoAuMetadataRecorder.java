@@ -26,7 +26,6 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 		super(task, mdManager, au);
 		this.mdManager = (MongoMetadataManager) mdManager;
 		mongoDbManager = (MongoDbManager) mdManager.getDbManager();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -56,11 +55,8 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 
 	/**
 	 * Stores in the database metadata for the Archival Unit.
-	 * 
-	 * @param conn
-	 *          A Connection with the connection to the database
-	 * @param mdinfo
-	 *          An ArticleMetadataInfo providing the metadata.
+	 * @param conn A Connection with the connection to the database
+	 * @param mdinfo An ArticleMetadataInfo providing the metadata.
 	 * @throws Exception 
 	 */
 	private void storeMetadata(ArticleMetadataInfo mdinfo) throws Exception {
@@ -158,21 +154,17 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 		log.debug3(DEBUG_HEADER + "new auSeq = " + auMdSeq);
 
 		
-		// Update or create the metadata item.
-		//updateOrCreateMdItem(newAu, publicationSeq, mdinfo);
+		// TODO: Update or create the metadata item.
+		// updateOrCreateMdItem(newAu, publicationSeq, mdinfo);
 
 		log.debug3(DEBUG_HEADER + "Done.");
 	}
 
 	/**
 	 * Updates the metadata version an Archival Unit in the database.
-	 * 
-	 * @param auMdSeq
-	 *          A Long with the identifier of the archival unit metadata.
-	 * @param version
-	 *          A String with the archival unit metadata version.
+	 * @param auMdSeq A Long with the identifier of the archival unit metadata.
+	 * @param version A String with the archival unit metadata version.
 	 * @throws Exception
-	 *           if any problem occurred accessing the database.
 	 */
 	private void updateAuMd(Long auMdSeq, int version)
 			throws Exception {
@@ -183,14 +175,10 @@ public class MongoAuMetadataRecorder extends AuMetadataRecorder {
 	 * Updates a metadata item if it exists in the database, otherwise it creates
 	 * it.
 	 * 
-	 * @param newAu
-	 *          A boolean with the indication of whether this is a new AU.
-	 * @param publicationSeq
-	 *          A Long with the identifier of the publication.
-	 * @param mdinfo
-	 *          An ArticleMetadataInfo providing the metadata.
+	 * @param newAu A boolean with the indication of whether this is a new AU.
+	 * @param publicationSeq A Long with the identifier of the publication.
+	 * @param mdinfo An ArticleMetadataInfo providing the metadata.
 	 * @throws Exception
-	 *           if any problem occurred accessing the database.
 	 */
 	private void updateOrCreateMdItem(boolean newAu,
 			Long publicationSeq, ArticleMetadataInfo mdinfo) throws Exception {

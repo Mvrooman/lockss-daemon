@@ -1,14 +1,10 @@
 package org.lockss.metadata;
 
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.lockss.app.BaseLockssDaemonManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.db.DbManager;
-import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.metadata.ReindexingTask.ReindexingStatus;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.Plugin;

@@ -6,12 +6,15 @@ import java.io.IOException;
 import javax.servlet.*;
 
 import org.lockss.db.JenaDbManager;
+import org.lockss.util.Logger;
 import org.mortbay.html.*;
 
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class Jena extends LockssServlet {
+	
+	private static final Logger log = Logger.getLogger(Jena.class);
 
 	private final String HEADING = "Enter a SPARQL query, then click \"Query\"";
 	private final String NAME_QUERY_PARAMETER = "name";
@@ -23,11 +26,18 @@ public class Jena extends LockssServlet {
 		jenaDbManager = new JenaDbManager();
 	}
 
+	/**
+	 * Handle the display of the Jena query interface.
+	 */
 	@Override
 	protected void lockssHandleRequest() throws ServletException, IOException {
 		displayPage();
 	}
 	
+	/**
+	 * Construct and bring together the high level elements of the Jena query interface.
+	 * @throws IOException
+	 */
 	private void displayPage() throws IOException {
 		Page page = newPage();
 		page.add(createHeading());
@@ -36,6 +46,10 @@ public class Jena extends LockssServlet {
 		endPage(page);
 	}
 	
+	/**
+	 * Create the header title element.
+	 * @return Element The created heading.
+	 */
 	private Element createHeading() {
 		Composite comp = new Composite();
 		
@@ -45,7 +59,11 @@ public class Jena extends LockssServlet {
 		
 		return comp;
 	}
-	
+
+	/**
+	 * Create the form in which a user may enter a SPARQL query.
+	 * @return Element The created query form.
+	 */
 	private Element createQueryForm() {
 	    Form form = new Form(srvURL(myServletDescr()));
 	    form.method("POST");
@@ -64,6 +82,11 @@ public class Jena extends LockssServlet {
 	    return form;
 	}
 	
+	/**
+	 * Create the container that will contain the results of the query.
+	 * @return Element
+	 * @throws IOException
+	 */
 	private Element createResultsContainer() throws IOException {
 		String queryString = String.valueOf(getParameter(NAME_QUERY_PARAMETER));
 		ByteArrayOutputStream output = new ByteArrayOutputStream();

@@ -42,7 +42,8 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 	private Resource article = null;
 	
 	/**
-	 * 
+	 * Create a new InternationalUnionOfCrystallographyJenaMetadataExtractor and initialize
+	 * the relevant Jena resources.
 	 */
 	public InternationalUnionOfCrystallographyJenaMetadataExtractor() {
 		new File(jenaDirectory).mkdirs();
@@ -51,7 +52,7 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 	}
 
 	/**
-	 * 
+	 * Extract au metadata in Jena.
 	 */
 	@Override
 	public void extract(ArchivalUnit au, DbManager dbManager)

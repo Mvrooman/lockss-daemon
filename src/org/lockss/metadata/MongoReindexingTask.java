@@ -1,19 +1,15 @@
 package org.lockss.metadata;
 
-import static org.lockss.db.SqlDbManager.AU_SEQ_COLUMN;
 import static org.lockss.metadata.MetadataManager.NEVER_EXTRACTED_EXTRACTION_TIME;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
