@@ -7,6 +7,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
+import com.mongodb.gridfs.GridFS;
 import org.bson.types.ObjectId;
 import org.lockss.config.Configuration;
 import org.lockss.config.Configuration.Differences;
@@ -22,7 +23,7 @@ public class MongoDbManager extends DbManager {
 	public static final String AUS_COLLECTION = "aus";
 
 	// alt: "ec2-54-241-200-25.us-west-1.compute.amazonaws.com"
-	private String dbLocation = "24.10.146.230";
+	private String dbLocation = "127.0.0.1";
 	private boolean ready = false;
 	
 	//The mongo database
@@ -43,8 +44,8 @@ public class MongoDbManager extends DbManager {
 
 		try {
 			mongoClient = new MongoClient(dbLocation, 27017);
-			mongoDatabase = mongoClient.getDB("lockss");  
-			initializeCollections();
+			mongoDatabase = mongoClient.getDB("lockss");
+            initializeCollections();
 		} catch (UnknownHostException e) {
 			log.error(e.getMessage());
 			//TODO: Add logging/handling here

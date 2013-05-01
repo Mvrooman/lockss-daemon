@@ -36,7 +36,7 @@ public class CIFMetadataExtractor  {
                     Pattern p = Pattern.compile(regex);
                     Matcher m = p.matcher(line);
                     if (m.find()) {
-                        log.debug3("Found netadata for:" + m.group(1) + " with value:" + m.group(2));
+                        log.debug3("Found metadata for:" + m.group(1) + " with value:" + m.group(2));
                         map.put(m.group(1), m.group(2));
                     }
                 }

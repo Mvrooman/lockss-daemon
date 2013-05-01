@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.lockss.db.SqlDbManager;
 import org.lockss.extractor.ArticleMetadataExtractor;
+import org.lockss.extractor.JenaInferenceEngine;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.metadata.ArticleMetadataBuffer.ArticleMetadataInfo;
 import org.lockss.plugin.ArchivalUnit;
@@ -310,19 +311,27 @@ public class SqlReindexingTask extends ReindexingTask {
                     }
 
 
+                    // Check whether there is any metadata to record.
+                    if (listMdItr.size() > 0) {
 
-					// Check whether there is any metadata to record.
-					if (listMdItr.size() > 0) {
+                        // Yes: Write the AU metadata to the database.
+                        new SqlAuMetadataRecorder((SqlReindexingTask) task,
+                                sqlMetadataManager, au).recordMetadata(conn, listMdItr.iterator());
 
-						// Yes: Write the AU metadata to the database.
-						new SqlAuMetadataRecorder((SqlReindexingTask) task,
-								sqlMetadataManager, au).recordMetadata(conn, listMdItr.iterator());
-						
-						new MongoAuMetadataRecorder((ReindexingTask)task, mongoMetadataManager, au).recordMetadata(listMdItr.iterator());
-						
-						new JenaMetadataRecorder(au, mongoMetadataManager.getDbManager()).recordMetadata();
-					}
+                        new MongoAuMetadataRecorder((ReindexingTask) task, mongoMetadataManager, au).recordMetadata(listMdItr.iterator());
 
+                        JenaMetadataRecorder jenaRecorder = new JenaMetadataRecorder(au, mongoMetadataManager.getDbManager());
+                        try {
+                            jenaRecorder.recordMetadata();
+                        } catch (Exception recorderException) {
+                            log.warning("Error recording jena metadata "
+                                    + status, recorderException);
+                            //status = ReindexingStatus.Failed;
+                        }
+                        jenaRecorder.inferMetadata();
+                    }
+
+                    log.info("Finished Recording Metadata");
 					// Remove the AU just re-indexed from the list of AUs
 					// pending to be
 					// re-indexed.
@@ -342,7 +351,7 @@ public class SqlReindexingTask extends ReindexingTask {
 				} catch (Exception sqle) {
 					log.warning("Error updating metadata at FINISH for "
 							+ status + " -- rescheduling", sqle);
-					status = ReindexingStatus.Rescheduled;
+					status = ReindexingStatus.Failed;
 				} finally {
 					SqlDbManager.safeRollbackAndClose(conn);
 				}

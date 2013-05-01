@@ -419,8 +419,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	@Override
 	public DbManager getDbManager() {
-		// TODO Auto-generated method stub
-		return null;
+		return mongoDbManager;
 	}
 
 	@Override
@@ -445,8 +444,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of a plugin.
-	 * 
-	 * @param conn A Connection with the database connection to be used.
+	 *
 	 * @param pluginId A String with the plugin identifier.
 	 * @return a Long with the identifier of the plugin.
 	 * @throws Exception if any problem occurred accessing the database.
@@ -525,9 +523,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a book that belongs to a book series if existing
 	 * or after creating it otherwise.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param pIssn
 	 *          A String with the print ISSN of the book series.
 	 * @param eIssn
@@ -611,9 +607,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a publication by its title, publisher, ISSNs
 	 * and/or ISBNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param title
 	 *          A String with the title of the publication.
 	 * @param publisherSeq
@@ -681,9 +675,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of a book existing or after creating it otherwise.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param pIsbn
 	 *          A String with the print ISBN of the book.
 	 * @param eIsbn
@@ -698,8 +690,6 @@ public class MongoMetadataManager extends MetadataManager {
 	 *          A String with the publication date of the book.
 	 * @param proprietaryId
 	 *          A String with the proprietary identifier of the book.
-	 * @param volume
-	 *          A String with the bibliographic volume.
 	 * @return a Long with the identifier of the book.
 	 * @throws Exception
 	 *           if any problem occurred accessing the database.
@@ -755,9 +745,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds a publication to the database.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param parentSeq
 	 *          A Long with the publication parent publication identifier.
 	 * @param mdItemType
@@ -835,9 +823,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds to the database the ISSNs of a metadata item.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @param pIssn
@@ -894,9 +880,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Adds to the database the name of a metadata item, if it does not exist
 	 * already.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @param mdItemName
@@ -927,9 +911,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds to the database the ISBNs of a metadata item.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @param pIsbn
@@ -986,9 +968,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Adds to the database the ISSNs of a metadata item, if they do not exist
 	 * already.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @param pIssn
@@ -1037,9 +1017,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a journal if existing or after creating it
 	 * otherwise.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param pIssn
 	 *          A String with the print ISSN of the journal.
 	 * @param eIssn
@@ -1120,9 +1098,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a publication by its title, publisher, ISSNs and
 	 * ISBNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param title
 	 *          A String with the title of the publication.
 	 * @param publisherSeq
@@ -1157,9 +1133,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of a publication by its publisher and ISSNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param publisherSeq
 	 *          A Long with the publisher identifier.
 	 * @param pIssn
@@ -1213,9 +1187,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of a publication by its publisher and ISBNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param publisherSeq
 	 *          A Long with the publisher identifier.
 	 * @param pIsbn
@@ -1267,9 +1239,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a publication by its publisher and title or
 	 * ISSNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param title
 	 *          A String with the title of the publication.
 	 * @param publisherSeq
@@ -1301,9 +1271,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Provides the identifier of a publication by its publisher and title or
 	 * ISBNs.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param title
 	 *          A String with the title of the publication.
 	 * @param publisherSeq
@@ -1334,9 +1302,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of a publication by its title and publisher.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param title
 	 *          A String with the title of the publication.
 	 * @param publisherSeq
@@ -1379,9 +1345,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Adds to the database the ISBNs of a metadata item, if they do not exist
 	 * already.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @param pIsbn
@@ -1428,9 +1392,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the names of a metadata item.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param mdItemSeq
 	 *          A Long with the metadata item identifier.
 	 * @return a Map<String, String> with the names and name types of the metadata
@@ -1468,9 +1430,7 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the identifier of an Archival Unit.
-	 * 
-	 * @param conn
-	 *            A Connection with the database connection to be used.
+	 *
 	 * @param pluginSeq
 	 *            A Long with the identifier of the plugin.
 	 * @param auKey
@@ -1502,13 +1462,11 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Provides the extraction time of an Archival Unit metadata.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param auSeq
 	 *          A Long with the identifier of the Archival Unit.
 	 * @return a long with the extraction time of the Archival Unit metadata.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	long getAuExtractionTime(Long auSeq)
@@ -1569,13 +1527,11 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Removes all metadata items for an AU.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param auId
 	 *          A String with the AU identifier.
 	 * @return an int with the number of metadata items deleted.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	int removeAuMetadataItems(String auId) throws Exception {
@@ -1613,12 +1569,10 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Removes an AU from the pending Aus table.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param auId
 	 *          A String with the AU identifier.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	void removeFromPendingAus(String auId) throws Exception {
@@ -1647,12 +1601,10 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds AUs to the list of pending AUs to reindex.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param aus
 	 *          A Collection<ArchivalUnit> with the AUs to add.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	void addToPendingAus(Collection<ArchivalUnit> aus)
@@ -1662,15 +1614,13 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds AUs to the list of pending AUs to reindex.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param aus
 	 *          A Collection<ArchivalUnit> with the AUs to add.
 	 * @param inBatch
 	 *          A boolean indicating whether adding these AUs to the list of
 	 *          pending AUs to reindex should be performed as part of a batch.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	void addToPendingAus(Collection<ArchivalUnit> aus,
@@ -1765,9 +1715,7 @@ public class MongoMetadataManager extends MetadataManager {
 	/**
 	 * Ensures that as many re-indexing tasks as possible are running if the
 	 * manager is enabled.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @return an int with the number of reindexing tasks started.
 	 */
 	int startReindexing() {
@@ -1866,15 +1814,13 @@ public class MongoMetadataManager extends MetadataManager {
 
 	/**
 	 * Adds an Archival Unit to the database.
-	 * 
-	 * @param conn
-	 *          A Connection with the database connection to be used.
+	 *
 	 * @param pluginSeq
 	 *          A Long with the identifier of the plugin.
 	 * @param auKey
 	 *          A String with the Archival Unit key.
 	 * @return a Long with the identifier of the Archival Unit just added.
-	 * @throws SQLException
+	 * @throws Exception
 	 *           if any problem occurred accessing the database.
 	 */
 	private Long addAu(Long pluginSeq, String auKey)

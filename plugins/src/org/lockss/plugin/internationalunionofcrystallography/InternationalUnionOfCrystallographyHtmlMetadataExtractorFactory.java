@@ -95,8 +95,8 @@ public class InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory
       @Override
       public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
               throws IOException {
-          log.info("Checking URL " + cu.getUrl());         //expecting a url like //http://journals.iucr.org/e/issues/2011/01/00/bg2370/index.html
-          log.info("Checking HTML Data " + cu.getUrl());
+          log.debug3("Checking URL " + cu.getUrl());         //expecting a url like //http://journals.iucr.org/e/issues/2011/01/00/bg2370/index.html
+          log.debug3("Checking HTML Data " + cu.getUrl());
           //Get base article metadata
           ArticleMetadata am = new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
           am.cook(tagMap);
@@ -105,7 +105,7 @@ public class InternationalUnionOfCrystallographyHtmlMetadataExtractorFactory
           String cifUrl = accessUrl.replace("paper?", "sendcif") + "sup1";  //create http://scripts.iucr.org/cgi-bin/sendcifbg2370sup1
           ArchivalUnit au = cu.getArchivalUnit();
           CachedUrl cachedCifUrl = au.makeCachedUrl(cifUrl);
-          log.info("Checking CIF Data " + cachedCifUrl.getUrl());
+          log.debug3("Checking CIF Data " + cachedCifUrl.getUrl());
           CIFMetadataExtractor extractor = new CIFMetadataExtractor();
           Map<String, String> map = extractor.getAdditionalMetadata(cachedCifUrl);
           am.putRaw(MetadataField.FIELD_ADDITIONAL_METADATA.getKey(), map);

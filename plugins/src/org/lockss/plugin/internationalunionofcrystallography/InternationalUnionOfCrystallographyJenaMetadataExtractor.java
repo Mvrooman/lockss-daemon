@@ -58,14 +58,15 @@ public class InternationalUnionOfCrystallographyJenaMetadataExtractor implements
 	public void extract(ArchivalUnit au, DbManager dbManager)
 			throws IOException, PluginException {
 		log.info("EXTRACTION STARTED!");
-		
-		String auId = au.getAuId();
-		String pluginId = au.getPluginId();
-		
+
+		String pluginId = au.getPluginId().replace('.','|');
+        String auId = au.getAuId().replace(pluginId+"&","");       //TODO: need a better way to get auKey
+
 		DB mongoDatabase = ((MongoDbManager)dbManager).getDb();
 		
 		// find plugin sequence number
 		DBCollection collection = mongoDatabase.getCollection(PLUGIN_COLLECTION);
+        log.info("Getting pluginId for: "+pluginId + " with auId "+auId);
 		BasicDBObject query = new BasicDBObject("pluginId", pluginId);
 		DBObject result = collection.findOne(query);
 		Long pluginSeq = MongoHelper.readLong(result, "longId");

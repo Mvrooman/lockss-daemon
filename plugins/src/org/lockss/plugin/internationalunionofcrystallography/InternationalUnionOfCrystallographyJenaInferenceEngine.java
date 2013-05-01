@@ -63,8 +63,8 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 			throws IOException, PluginException {
 		log.info("--- INFERENCE STARTED ---");
 
-		String auId = au.getAuId();
-		String pluginId = au.getPluginId();
+		String pluginId = au.getPluginId().replace('.','|');
+        String auId = au.getAuId().replace(pluginId+"&","");       //TODO: need a better way to get auKey
 
 		DB mongoDatabase = ((MongoDbManager) dbManager).getDb();
 
@@ -102,54 +102,53 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 					return true;
 				}
 			});
-
-			log.info("Found Results!! - " + iter.toList().size());
-			getMachineByAuthor(metadataJson);
-
+            storeMachineByAuthor(metadataJson);
 		}
 
-		getMachineCount();
+		storeMachineCount();
 
-		// Query Author that uses a machine.
-		Property propertyForQuery = model.getProperty("usesMachine");
-		StmtIterator iter = model.listStatements(new SimpleSelector(null,
-				propertyForQuery, (RDFNode) null) {
-			public boolean selects(Statement s) {
-				return s.getString().equalsIgnoreCase("'SMART (Bruker, 2007)'");
-			}
-		});
+        //Test Queries
 
-		while (iter.hasNext()) {
-			log.info(iter.next().getSubject().toString());
-		}
-
-		// Query the machines used by an author
-		Property propertyForQuery2 = model.getProperty("usesMachine");
-		StmtIterator iter2 = model.listStatements(new SimpleSelector(null,
-				propertyForQuery2, (RDFNode) null) {
-			public boolean selects(Statement s) {
-				return s.getSubject().toString().equalsIgnoreCase("Fan, Y.-Q.");
-			}
-		});
-
-		while (iter2.hasNext()) {
-			log.info(iter2.next().getObject().toString());
-		}
-
-		// Query for the machine count
-		Property propertyForQuery3 = model.getProperty("hasMachineUsageCount");
-		StmtIterator iter3 = model.listStatements(new SimpleSelector(null,
-				propertyForQuery3, (RDFNode) null) {
-			public boolean selects(Statement s) {
-				return true;
-			}
-		});
-
-		while (iter3.hasNext()) {
-			Statement stmt = iter3.next();
-			log.info(stmt.getSubject().toString() + " -- "
-					+ stmt.getObject().toString());
-		}
+//		// Query Author that uses a machine.
+//		Property propertyForQuery = model.getProperty("usesMachine");
+//		StmtIterator iter = model.listStatements(new SimpleSelector(null,
+//				propertyForQuery, (RDFNode) null) {
+//			public boolean selects(Statement s) {
+//				return s.getString().equalsIgnoreCase("'SMART (Bruker, 2007)'");
+//			}
+//		});
+//
+//		while (iter.hasNext()) {
+//			log.info(iter.next().getSubject().toString());
+//		}
+//
+//		// Query the machines used by an author
+//		Property propertyForQuery2 = model.getProperty("usesMachine");
+//		StmtIterator iter2 = model.listStatements(new SimpleSelector(null,
+//				propertyForQuery2, (RDFNode) null) {
+//			public boolean selects(Statement s) {
+//				return s.getSubject().toString().equalsIgnoreCase("Fan, Y.-Q.");
+//			}
+//		});
+//
+//		while (iter2.hasNext()) {
+//			log.info(iter2.next().getObject().toString());
+//		}
+//
+//		// Query for the machine count
+//		Property propertyForQuery3 = model.getProperty("hasMachineUsageCount");
+//		StmtIterator iter3 = model.listStatements(new SimpleSelector(null,
+//				propertyForQuery3, (RDFNode) null) {
+//			public boolean selects(Statement s) {
+//				return true;
+//			}
+//		});
+//
+//		while (iter3.hasNext()) {
+//			Statement stmt = iter3.next();
+//			log.info(stmt.getSubject().toString() + " -- "
+//					+ stmt.getObject().toString());
+//		}
 
 	}
 
@@ -157,7 +156,7 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 	 * Save the metadata to jena
 	 * @param metadataJson
 	 */
-	private void getMachineByAuthor(ArticleMetadataInfo metadataJson) {
+	private void storeMachineByAuthor(ArticleMetadataInfo metadataJson) {
 		Statement authorSet = getStatementFromProperty("authorSet");
 		Statement machineSet = getStatementFromProperty("_computing_data_collection");
 
@@ -176,7 +175,7 @@ public class InternationalUnionOfCrystallographyJenaInferenceEngine implements
 	/**
 	 *Used to get the machine Count and save it to jena 
 	 */
-	private void getMachineCount() {
+	private void storeMachineCount() {
 		Property property = model.getProperty("usesMachine");
 		Hashtable<String, Integer> map = new Hashtable<String, Integer>();
 		StmtIterator iter2 = model.listStatements(new SimpleSelector(null,
