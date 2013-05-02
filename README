@@ -1,13 +1,12 @@
-This is the source tree for the LOCKSS daemon.
+This is the source tree for the LOCKSS-Jena CMU extended daemon.
 See http://www.lockss.org/ for information about the project.
 
 Obtaining Source
 ----------------
 
-The latest version of this code can be obtained via CVS with
+The latest version of this code can be obtained via GIT with
 
- export CVSROOT=:pserver:anonymous@lockss.cvs.sourceforge.net:/cvsroot/lockss
- cvs checkout lockss-daemon
+git clone https://github.com/Mvrooman/lockss-daemon
 
 Prerequisites
 -------------
@@ -25,6 +24,12 @@ Installed Packages:
 (On Debian or Ubuntu,
   apt-get install python sun-java6-jdk ant ant-optional
 )
+
+- MongoDB 2.2.4 or greater ( Preferably latest MongoDB for performance)
+	www.mongodb.org
+
+- Apache Jena 2.10 or greater
+	www.apache.org/dist/jena
 
 
 Other Prerequisites:
